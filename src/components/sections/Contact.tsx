@@ -11,19 +11,19 @@ export const Contact = () => {
     {
       icon: <Mail size={24} />,
       label: "Email",
-      value: "john.doe@email.com",
+      value: "cungpro2@gmail.com",
       href: "mailto:john.doe@email.com"
     },
     {
       icon: <Phone size={24} />,
       label: "Phone",
-      value: "+1 (555) 123-4567",
+      value: "+84 379073956 ",
       href: "tel:+15551234567"
     },
     {
       icon: <MapPin size={24} />,
       label: "Location",
-      value: "Available Globally",
+      value: "Ho Chi Minh city, Viet Nam",
       href: null
     }
   ];
@@ -32,13 +32,13 @@ export const Contact = () => {
     {
       icon: <Linkedin size={24} />,
       label: "LinkedIn",
-      href: "https://linkedin.com/in/johndoe",
+      href: "https://www.linkedin.com/in/h%C3%A0-sinh-cung-22480637b/",
       color: "hover:text-blue-600"
     },
     {
       icon: <Github size={24} />,
       label: "GitHub",
-      href: "https://github.com/johndoe",
+      href: "https://github.com/kung-da",
       color: "hover:text-gray-800"
     }
   ];

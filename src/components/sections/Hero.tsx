@@ -40,7 +40,7 @@ export const Hero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-4xl md:text-6xl font-bold text-foreground mb-6"
           >
-            John Doe
+            Hi, i'm Kung
           </motion.h1>
 
           {/* Title */}
@@ -58,7 +58,7 @@ export const Hero = () => {
                 Data Engineering
               </span>
               <span className="px-4 py-2 bg-primary-soft text-primary rounded-full text-sm font-medium">
-                Math Tutor
+                Gamer
               </span>
               <span className="px-4 py-2 bg-primary-soft text-primary rounded-full text-sm font-medium">
                 Freelancer
@@ -73,9 +73,8 @@ export const Hero = () => {
             transition={{ duration: 0.6, delay: 0.8 }}
             className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            Passionate about transforming data into insights and helping students 
-            excel in mathematics. Currently pursuing Data Engineering while building 
-            innovative solutions for real-world problems.
+            I am currently a third-year student at Ho Chi Minh City University of Technology and Education (UTE).
+             After more than two years of studying and training, I have built a solid foundation of specialized knowledge, combined with essential soft skills for both academic and professional environments.
           </motion.p>
 
           {/* CTA Button */}

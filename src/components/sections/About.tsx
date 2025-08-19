@@ -90,11 +90,11 @@ export const About = () => {
               </div>
               <div>
                 <span className="font-medium text-foreground">💼 Experience:</span>
-                <span className="text-muted-foreground ml-2">3+ Years Teaching & Freelancing</span>
+                <span className="text-muted-foreground ml-2">0 Years Freelancing</span>
               </div>
               <div>
                 <span className="font-medium text-foreground">🌍 Location:</span>
-                <span className="text-muted-foreground ml-2">Available Globally</span>
+                <span className="text-muted-foreground ml-2">Viet Nam</span>
               </div>
               <div>
                 <span className="font-medium text-foreground">🎯 Focus:</span>
