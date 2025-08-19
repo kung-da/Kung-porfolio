@@ -21,7 +21,7 @@ export const Footer = () => {
             >
               <Heart size={16} className="text-red-400 fill-current" />
             </motion.div>
-            <span>by John Doe</span>
+            <span>by Sinh Cung</span>
           </div>
           <p className="text-sm opacity-75">
             © {currentYear} All rights reserved. Built with React & Tailwind CSS.

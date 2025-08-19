@@ -134,12 +134,12 @@ export const Contact = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="bg-surface-elevated rounded-2xl p-8 shadow-card"
           >
-            <h3 className="text-xl font-semibold text-foreground mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
               Send a Message
             </h3>
             <form className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="font-medium text-gray-900">
                   Name
                 </label>
                 <input
@@ -149,7 +149,7 @@ export const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="font-medium text-gray-900">
                   Email
                 </label>
                 <input
@@ -159,7 +159,7 @@ export const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="font-medium text-gray-900">
                   Message
                 </label>
                 <textarea

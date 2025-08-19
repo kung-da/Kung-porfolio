@@ -80,25 +80,25 @@ export const About = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="bg-surface-elevated rounded-2xl p-8 shadow-card"
           >
-            <h3 className="text-xl font-semibold text-foreground mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
               Quick Facts
             </h3>
             <div className="space-y-4">
               <div>
-                <span className="font-medium text-foreground">🎓 Education:</span>
-                <span className="text-muted-foreground ml-2">Data Engineering Student</span>
+                <span className="font-medium text-gray-900">🎓 Education:</span>
+                <span className="text-gray-700 ml-2">Data Engineering Student</span>
               </div>
               <div>
-                <span className="font-medium text-foreground">💼 Experience:</span>
-                <span className="text-muted-foreground ml-2">0 Years Freelancing</span>
+                <span className="font-medium text-gray-900">💼 Experience:</span>
+                <span className="text-gray-700 ml-2">0 Years Freelancing</span>
               </div>
               <div>
-                <span className="font-medium text-foreground">🌍 Location:</span>
-                <span className="text-muted-foreground ml-2">Viet Nam</span>
+                <span className="font-medium text-gray-900">🌍 Location:</span>
+                <span className="text-gray-700 ml-2">Viet Nam</span>
               </div>
               <div>
-                <span className="font-medium text-foreground">🎯 Focus:</span>
-                <span className="text-muted-foreground ml-2">Data Engineering & Education</span>
+                <span className="font-medium text-gray-900">🎯 Focus:</span>
+                <span className="text-gray-700 ml-2">Data Engineering & Education</span>
               </div>
             </div>
           </motion.div>

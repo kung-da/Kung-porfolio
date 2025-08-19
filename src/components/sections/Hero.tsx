@@ -38,7 +38,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-4xl md:text-6xl font-bold text-foreground mb-6"
+            className="text-5xl font-bold text-gray-900"
           >
             Hi, i'm Kung
           </motion.h1>
@@ -71,9 +71,9 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="mt-4 text-lg text-gray-700"
           >
-            I am currently a third-year student at Ho Chi Minh City University of Technology and Education (UTE).
+            My full name is Hà Sinh Cung and I am currently a third-year student at Ho Chi Minh City University of Technology and Education (UTE).
              After more than two years of studying and training, I have built a solid foundation of specialized knowledge, combined with essential soft skills for both academic and professional environments.
           </motion.p>
 
