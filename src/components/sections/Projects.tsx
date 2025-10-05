@@ -11,7 +11,11 @@ export const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    setProjects(projectStorage.getProjects());
+    const loadProjects = async () => {
+      const data = await projectStorage.getProjects();
+      setProjects(data);
+    };
+    loadProjects();
   }, []);
 
   return (

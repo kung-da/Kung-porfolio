@@ -41,13 +41,15 @@ const Admin = () => {
     }
   }, [isAuthenticated]);
 
-  const loadProjects = () => {
-    setProjects(projectStorage.getProjects());
+  const loadProjects = async () => {
+    const data = await projectStorage.getProjects();
+    setProjects(data);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (projectStorage.verifyPassword(password)) {
+    const isValid = await projectStorage.verifyPassword(password);
+    if (isValid) {
       setIsAuthenticated(true);
       toast.success("Đăng nhập thành công!");
     } else {
@@ -61,27 +63,27 @@ const Admin = () => {
     toast.info("Đã đăng xuất");
   };
 
-  const handleCreateProject = (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => {
-    projectStorage.addProject(data);
-    loadProjects();
+  const handleCreateProject = async (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => {
+    await projectStorage.addProject(data);
+    await loadProjects();
     setIsFormOpen(false);
     toast.success("Đã tạo dự án mới!");
   };
 
-  const handleUpdateProject = (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => {
+  const handleUpdateProject = async (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => {
     if (editingProject) {
-      projectStorage.updateProject(editingProject.id, data);
-      loadProjects();
+      await projectStorage.updateProject(editingProject.id, data);
+      await loadProjects();
       setIsFormOpen(false);
       setEditingProject(undefined);
       toast.success("Đã cập nhật dự án!");
     }
   };
 
-  const handleDeleteProject = () => {
+  const handleDeleteProject = async () => {
     if (deleteProjectId) {
-      projectStorage.deleteProject(deleteProjectId);
-      loadProjects();
+      await projectStorage.deleteProject(deleteProjectId);
+      await loadProjects();
       setDeleteProjectId(null);
       toast.success("Đã xóa dự án!");
     }
@@ -104,9 +106,17 @@ const Admin = () => {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">Admin Panel</h1>
             <p className="text-muted-foreground">Nhập mật khẩu để tiếp tục</p>
-            {!projectStorage.hasPassword() && (
-              <p className="text-sm text-amber-600 mt-2">
-                Mật khẩu mặc định: <strong>admin123</strong>
+            <p className="text-sm text-amber-600 mt-2">
+              Mật khẩu mặc định: <strong>admin123</strong>
+            </p>
+            {projectStorage.isUsingSupabase() && (
+              <p className="text-xs text-green-600 mt-1">
+                ✓ Đang kết nối với Supabase
+              </p>
+            )}
+            {!projectStorage.isUsingSupabase() && (
+              <p className="text-xs text-orange-600 mt-1">
+                ⚠ Đang dùng LocalStorage (chưa cấu hình Supabase)
               </p>
             )}
           </div>
@@ -145,6 +155,12 @@ const Admin = () => {
             <h1 className="text-3xl font-bold">Quản lý Dự án</h1>
             <p className="text-muted-foreground mt-1">
               Tổng số: {projects.length} dự án
+              {projectStorage.isUsingSupabase() && (
+                <span className="text-green-600 ml-2">• Supabase</span>
+              )}
+              {!projectStorage.isUsingSupabase() && (
+                <span className="text-orange-600 ml-2">• LocalStorage</span>
+              )}
             </p>
           </div>
           <div className="flex gap-3">

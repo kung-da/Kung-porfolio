@@ -1,9 +1,10 @@
 import { Project } from "@/types/project";
+import { supabase, isSupabaseConfigured } from "./supabase";
 
 const STORAGE_KEY = "portfolio_projects";
 const PASSWORD_KEY = "portfolio_admin_password";
 
-// Default projects
+// Default projects for fallback
 const DEFAULT_PROJECTS: Project[] = [
   {
     id: "1",
@@ -73,14 +74,54 @@ const DEFAULT_PROJECTS: Project[] = [
   },
 ];
 
+// Helper to convert Supabase data to Project
+const fromSupabase = (data: any): Project => ({
+  id: data.id,
+  title: data.title,
+  description: data.description,
+  tags: data.tags,
+  githubUrl: data.github_url || "",
+  demoUrl: data.demo_url || "",
+  gradient: data.gradient,
+  createdAt: data.created_at,
+  updatedAt: data.updated_at,
+});
+
+// Helper to convert Project to Supabase format
+const toSupabase = (project: Partial<Project>) => ({
+  title: project.title,
+  description: project.description,
+  tags: project.tags,
+  github_url: project.githubUrl,
+  demo_url: project.demoUrl,
+  gradient: project.gradient,
+});
+
 export const projectStorage = {
   // Get all projects
-  getProjects(): Project[] {
+  async getProjects(): Promise<Project[]> {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          return data.map(fromSupabase);
+        }
+      } catch (error) {
+        console.error("Error loading from Supabase:", error);
+      }
+    }
+
+    // Fallback to localStorage
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
-        // Initialize with default projects
-        this.setProjects(DEFAULT_PROJECTS);
+        this.setProjectsLocal(DEFAULT_PROJECTS);
         return DEFAULT_PROJECTS;
       }
       return JSON.parse(stored);
@@ -90,8 +131,8 @@ export const projectStorage = {
     }
   },
 
-  // Set all projects
-  setProjects(projects: Project[]): void {
+  // Set projects to localStorage (fallback)
+  setProjectsLocal(projects: Project[]): void {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
     } catch (error) {
@@ -100,8 +141,25 @@ export const projectStorage = {
   },
 
   // Add a new project
-  addProject(project: Omit<Project, "id" | "createdAt" | "updatedAt">): Project {
-    const projects = this.getProjects();
+  async addProject(project: Omit<Project, "id" | "createdAt" | "updatedAt">): Promise<Project> {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .insert([toSupabase(project)])
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) return fromSupabase(data);
+      } catch (error) {
+        console.error("Error adding to Supabase:", error);
+      }
+    }
+
+    // Fallback to localStorage
+    const projects = await this.getProjects();
     const newProject: Project = {
       ...project,
       id: Date.now().toString(),
@@ -109,13 +167,37 @@ export const projectStorage = {
       updatedAt: new Date().toISOString(),
     };
     projects.unshift(newProject);
-    this.setProjects(projects);
+    this.setProjectsLocal(projects);
     return newProject;
   },
 
   // Update a project
-  updateProject(id: string, updates: Partial<Omit<Project, "id" | "createdAt">>): Project | null {
-    const projects = this.getProjects();
+  async updateProject(
+    id: string,
+    updates: Partial<Omit<Project, "id" | "createdAt">>
+  ): Promise<Project | null> {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .update({
+            ...toSupabase(updates),
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) return fromSupabase(data);
+      } catch (error) {
+        console.error("Error updating in Supabase:", error);
+      }
+    }
+
+    // Fallback to localStorage
+    const projects = await this.getProjects();
     const index = projects.findIndex((p) => p.id === id);
     if (index === -1) return null;
 
@@ -125,34 +207,57 @@ export const projectStorage = {
       updatedAt: new Date().toISOString(),
     };
     projects[index] = updatedProject;
-    this.setProjects(projects);
+    this.setProjectsLocal(projects);
     return updatedProject;
   },
 
   // Delete a project
-  deleteProject(id: string): boolean {
-    const projects = this.getProjects();
+  async deleteProject(id: string): Promise<boolean> {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const { error } = await supabase.from("projects").delete().eq("id", id);
+
+        if (error) throw error;
+        return true;
+      } catch (error) {
+        console.error("Error deleting from Supabase:", error);
+      }
+    }
+
+    // Fallback to localStorage
+    const projects = await this.getProjects();
     const filtered = projects.filter((p) => p.id !== id);
     if (filtered.length === projects.length) return false;
-    this.setProjects(filtered);
+    this.setProjectsLocal(filtered);
     return true;
   },
 
   // Password management
-  setPassword(password: string): void {
-    try {
-      localStorage.setItem(PASSWORD_KEY, btoa(password)); // Simple encoding
-    } catch (error) {
-      console.error("Error saving password:", error);
-    }
-  },
+  async verifyPassword(password: string): Promise<boolean> {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const { data, error } = await supabase
+          .from("admin_config")
+          .select("password_hash")
+          .limit(1)
+          .single();
 
-  verifyPassword(password: string): boolean {
+        if (error) throw error;
+        if (data) {
+          return btoa(password) === data.password_hash;
+        }
+      } catch (error) {
+        console.error("Error verifying password from Supabase:", error);
+      }
+    }
+
+    // Fallback to localStorage
     try {
       const stored = localStorage.getItem(PASSWORD_KEY);
       if (!stored) {
-        // No password set, set default
-        this.setPassword("admin123");
+        localStorage.setItem(PASSWORD_KEY, btoa("admin123"));
         return password === "admin123";
       }
       return btoa(password) === stored;
@@ -162,7 +267,8 @@ export const projectStorage = {
     }
   },
 
-  hasPassword(): boolean {
-    return !!localStorage.getItem(PASSWORD_KEY);
+  // Check if using Supabase or localStorage
+  isUsingSupabase(): boolean {
+    return isSupabaseConfigured();
   },
 };

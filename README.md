@@ -1,8 +1,116 @@
 # Welcome to your Lovable project
 
-## Project info
+## ✨ Portfolio with Admin Panel
 
-**URL**: https://lovable.dev/projects/c879c093-59b9-4428-9933-396f3fb8b24d
+This is a modern portfolio website with a built-in admin panel for managing projects. Features include:
+
+- 🎨 Beautiful portfolio showcase
+- 🔐 Password-protected admin panel
+- 📝 Create, Edit, Delete projects
+- 💾 Dual storage support: Supabase (cloud) or LocalStorage (offline)
+- 🚀 Ready to deploy on Vercel
+
+---
+
+## ⚡ Quick Start
+
+### Option 1: Just Run It (Fastest)
+```sh
+npm install
+npm run dev
+```
+→ Visit http://localhost:8080/admin (password: `admin123`)
+
+### Option 2: Deploy Now (10 minutes)
+```sh
+git push  # Push to GitHub
+# Then import to Vercel → Deploy → Done!
+```
+
+### Option 3: Full Setup with Supabase (30 minutes)
+See **[QUICKSTART.md](./QUICKSTART.md)** for detailed guide
+
+---
+
+## 📚 Documentation
+
+| File | Description |
+|------|-------------|
+| **[QUICKSTART.md](./QUICKSTART.md)** | ⚡ Fast start guide |
+| **[OVERVIEW.md](./OVERVIEW.md)** | 📋 System overview |
+| **[ADMIN_GUIDE.md](./ADMIN_GUIDE.md)** | 🔧 Admin panel usage |
+| **[SUPABASE_SETUP.md](./SUPABASE_SETUP.md)** | 🗄️ Database setup |
+| **[VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)** | 🚀 Deployment guide |
+
+---
+
+## 🗄️ Storage Options
+
+### LocalStorage (Default - No Setup)
+- ✅ Works immediately
+- ✅ No config needed
+- ⚠️ Data per browser only
+
+### Supabase (Recommended - 30 min setup)
+- ✅ Cloud database
+- ✅ Sync all devices
+- ✅ 500MB free forever
+- 📖 See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
+
+---
+
+## � Features
+
+- Portfolio sections: Hero, About, Projects, Contact
+- Admin panel at `/admin` (password: `admin123`)
+- CRUD operations for projects
+- Automatic fallback: Supabase → LocalStorage
+- Responsive design
+- Toast notifications
+- Form validation
+- Smooth animations
+
+---
+
+## 🚀 Deploy to Vercel
+
+### Without Supabase (Simplest)
+```sh
+npm run build
+# Deploy to Vercel → Works instantly!
+```
+
+### With Supabase (Best)
+1. Follow [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
+2. Add env vars in Vercel:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. Deploy!
+
+Full guide: [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)
+
+---
+
+## 🛠️ Tech Stack
+
+- React 18 + TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui components
+- Framer Motion
+- Supabase (optional)
+- React Router
+
+---
+
+## 🆘 Need Help?
+
+**Can't login?** → Password is `admin123`
+**Data lost?** → You're using LocalStorage, setup Supabase
+**Deploy error?** → Run `npm run build` locally first
+**More help?** → Check [QUICKSTART.md](./QUICKSTART.md)
+
+---
 
 ## How can I edit this code?
 
