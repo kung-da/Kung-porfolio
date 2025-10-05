@@ -101,7 +101,7 @@ export const projectStorage = {
   // Get all projects
   async getProjects(): Promise<Project[]> {
     // Try Supabase first
-    if (isSupabaseConfigured()) {
+    if (isSupabaseConfigured() && supabase) {
       try {
         const { data, error } = await supabase
           .from("projects")
@@ -143,7 +143,7 @@ export const projectStorage = {
   // Add a new project
   async addProject(project: Omit<Project, "id" | "createdAt" | "updatedAt">): Promise<Project> {
     // Try Supabase first
-    if (isSupabaseConfigured()) {
+    if (isSupabaseConfigured() && supabase) {
       try {
         const { data, error } = await supabase
           .from("projects")
@@ -177,7 +177,7 @@ export const projectStorage = {
     updates: Partial<Omit<Project, "id" | "createdAt">>
   ): Promise<Project | null> {
     // Try Supabase first
-    if (isSupabaseConfigured()) {
+    if (isSupabaseConfigured() && supabase) {
       try {
         const { data, error } = await supabase
           .from("projects")
@@ -214,7 +214,7 @@ export const projectStorage = {
   // Delete a project
   async deleteProject(id: string): Promise<boolean> {
     // Try Supabase first
-    if (isSupabaseConfigured()) {
+    if (isSupabaseConfigured() && supabase) {
       try {
         const { error } = await supabase.from("projects").delete().eq("id", id);
 
@@ -236,7 +236,7 @@ export const projectStorage = {
   // Password management
   async verifyPassword(password: string): Promise<boolean> {
     // Try Supabase first
-    if (isSupabaseConfigured()) {
+    if (isSupabaseConfigured() && supabase) {
       try {
         const { data, error } = await supabase
           .from("admin_config")

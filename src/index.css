@@ -119,5 +119,11 @@
 
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+  }
+  
+  /* Debug: ensure visibility */
+  #root {
+    min-height: 100vh;
   }
 }
