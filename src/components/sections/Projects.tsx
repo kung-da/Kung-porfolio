@@ -1,62 +1,18 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { ExternalLink, Github } from "lucide-react";
+import { projectStorage } from "@/lib/projectStorage";
+import { Project } from "@/types/project";
 
 export const Projects = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  const projects = [
-    {
-      title: "Real-Time Data Pipeline",
-      description: "Built a scalable ETL pipeline using Apache Spark and Kafka to process streaming data from multiple sources, resulting in 40% faster data processing.",
-      tags: ["Python", "Apache Spark", "Kafka", "PostgreSQL"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-blue-500 to-purple-600"
-    },
-    {
-      title: "Student Performance Analytics",
-      description: "Developed a comprehensive dashboard to analyze student performance patterns and predict academic outcomes using machine learning algorithms.",
-      tags: ["Python", "React", "Machine Learning", "MongoDB"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-green-500 to-blue-500"
-    },
-    {
-      title: "IoT Sensor Data Platform",
-      description: "Created an IoT platform for collecting and analyzing sensor data from smart devices, featuring real-time monitoring and alerting systems.",
-      tags: ["IoT", "Python", "InfluxDB", "Grafana"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-purple-500 to-pink-500"
-    },
-    {
-      title: "Math Tutoring App",
-      description: "Designed and built a progressive web app to help students practice mathematics with personalized exercises and progress tracking.",
-      tags: ["React", "TypeScript", "Node.js", "AI"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-orange-500 to-red-500"
-    },
-    {
-      title: "E-commerce Analytics Suite",
-      description: "Developed a comprehensive analytics platform for e-commerce businesses to track KPIs, customer behavior, and sales performance.",
-      tags: ["Python", "React", "PostgreSQL", "Docker"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-cyan-500 to-blue-500"
-    },
-    {
-      title: "Automated Trading Bot",
-      description: "Built an intelligent trading bot using reinforcement learning algorithms to analyze market trends and execute trades automatically.",
-      tags: ["Python", "AI", "TensorFlow", "API"],
-      githubUrl: "https://github.com",
-      demoUrl: "https://demo.com",
-      gradient: "from-indigo-500 to-purple-500"
-    }
-  ];
+  useEffect(() => {
+    setProjects(projectStorage.getProjects());
+  }, []);
 
   return (
     <section id="projects" className="py-20 bg-secondary">

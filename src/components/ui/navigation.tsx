@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Settings } from "lucide-react";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +50,7 @@ export const Navigation = () => {
             Portfolio
           </motion.div>
 
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <motion.button
                 key={item.id}
@@ -59,6 +62,15 @@ export const Navigation = () => {
                 {item.name}
               </motion.button>
             ))}
+            <motion.button
+              whileHover={{ rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => navigate("/admin")}
+              className="text-muted-foreground hover:text-primary transition-colors duration-300"
+              title="Admin Panel"
+            >
+              <Settings size={18} />
+            </motion.button>
           </div>
 
           {/* Mobile menu would go here */}
