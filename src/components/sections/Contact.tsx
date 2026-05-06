@@ -1,183 +1,177 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { Mail, Phone, Linkedin, Github, MapPin } from "lucide-react";
+import { useMemo, useState } from "react";
+import { SectionHeader } from "@/components/SectionHeader";
+import { MapPin, Mail, Briefcase, Github, Linkedin } from "lucide-react";
+import { toast } from "sonner";
+
+const Sakura = () => {
+  const petals = useMemo(
+    () =>
+      Array.from({ length: 4 }).map((_, i) => ({
+        left: Math.random() * 100,
+        delay: i * 3 + Math.random() * 2,
+        duration: 12 + Math.random() * 8,
+      })),
+    []
+  );
+  return (
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+      {petals.map((p, i) => (
+        <div
+          key={i}
+          className="absolute animate-fall"
+          style={{
+            left: `${p.left}%`,
+            top: -20,
+            width: 12,
+            height: 20,
+            background: "#f2a7c3",
+            opacity: 0.4,
+            borderRadius: "60% 40%",
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export const Contact = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const contactInfo = [
-    {
-      icon: <Mail size={24} />,
-      label: "Email",
-      value: "cungpro2@gmail.com",
-      href: "mailto:john.doe@email.com"
-    },
-    {
-      icon: <Phone size={24} />,
-      label: "Phone",
-      value: "+84 379073956 ",
-      href: "tel:+15551234567"
-    },
-    {
-      icon: <MapPin size={24} />,
-      label: "Location",
-      value: "Ho Chi Minh city, Viet Nam",
-      href: null
-    }
-  ];
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Message sent! I'll get back to you soon.");
+    setForm({ name: "", email: "", subject: "", message: "" });
+  };
 
-  const socialLinks = [
-    {
-      icon: <Linkedin size={24} />,
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/h%C3%A0-sinh-cung-22480637b/",
-      color: "hover:text-blue-600"
-    },
-    {
-      icon: <Github size={24} />,
-      label: "GitHub",
-      href: "https://github.com/kung-da",
-      color: "hover:text-gray-800"
-    }
-  ];
+  const inputStyle: React.CSSProperties = {
+    background: "#1a2540",
+    border: "1px solid rgba(0,212,170,0.3)",
+    color: "#e8f0ff",
+    borderRadius: 8,
+    padding: 12,
+    width: "100%",
+    outline: "none",
+  };
 
   return (
-    <section id="contact" className="py-20 bg-background">
-      <div className="container mx-auto px-6" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Let's Work Together
-          </h2>
-          <div className="w-20 h-1 bg-gradient-primary mx-auto rounded-full"></div>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            I'm always open to discussing new opportunities, collaborative projects, 
-            or tutoring opportunities. Feel free to reach out!
-          </p>
-        </motion.div>
+    <section id="contact" className="relative py-[100px] px-6 overflow-hidden" style={{ zIndex: 5 }}>
+      <Sakura />
+      <div className="container mx-auto max-w-6xl relative">
+        <SectionHeader eyebrow="07 / CONTACT" title="Let's Connect" />
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-          {/* Contact Information */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h3 className="text-2xl font-semibold text-foreground mb-8">
-              Get In Touch
-            </h3>
-            <div className="space-y-6">
-              {contactInfo.map((info, index) => (
-                <motion.div
-                  key={info.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                  className="flex items-center space-x-4"
-                >
-                  <div className="w-12 h-12 bg-primary-soft rounded-full flex items-center justify-center text-primary">
-                    {info.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground">{info.label}</h4>
-                    {info.href ? (
-                      <a
-                        href={info.href}
-                        className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                      >
-                        {info.value}
-                      </a>
-                    ) : (
-                      <span className="text-muted-foreground">{info.value}</span>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Social Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-8"
+        <div className="grid md:grid-cols-2 gap-[60px]">
+          <div className="relative">
+            <div
+              className="font-jp absolute pointer-events-none select-none"
+              style={{
+                fontSize: 200,
+                color: "rgba(255,255,255,0.04)",
+                top: -40,
+                left: -20,
+                lineHeight: 1,
+              }}
             >
-              <h4 className="font-medium text-foreground mb-4">Follow Me</h4>
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ y: -3, scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-muted-foreground ${social.color} transition-all duration-200 shadow-card hover:shadow-card-hover`}
-                  >
-                    {social.icon}
-                  </motion.a>
+              繋
+            </div>
+            <div className="relative">
+              <h3 className="text-3xl font-bold text-foreground mb-4">Got a data project?</h3>
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Whether it's a pipeline to build, a dataset to explore, or just want to talk about
+                anime and travel — I'm always open to a good conversation.
+              </p>
+              <div className="space-y-4">
+                {[
+                  { Icon: MapPin, label: "Location", value: "Ho Chi Minh City, Vietnam" },
+                  { Icon: Mail, label: "Email", value: "hello@datawanderer.dev" },
+                  { Icon: Briefcase, label: "Available for", value: "Freelance · Full-time" },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center gap-4">
+                    <div
+                      className="rounded-md p-2"
+                      style={{ background: "rgba(0,212,170,0.1)", border: "1px solid rgba(0,212,170,0.3)" }}
+                    >
+                      <row.Icon size={18} style={{ color: "#00d4aa" }} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{row.label}</p>
+                      <p className="text-foreground">{row.value}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-surface-elevated rounded-2xl p-8 shadow-card"
-          >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">
-              Send a Message
-            </h3>
-            <form className="space-y-6">
-              <div>
-                <label className="font-medium text-gray-900">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200"
-                  placeholder="Your name"
-                />
-              </div>
-              <div>
-                <label className="font-medium text-gray-900">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200"
-                  placeholder="your.email@example.com"
-                />
-              </div>
-              <div>
-                <label className="font-medium text-gray-900">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 resize-none"
-                  placeholder="Tell me about your project or tutoring needs..."
-                />
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+          <div>
+            <form onSubmit={submit} className="space-y-4">
+              <input
+                placeholder="Name"
+                required
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+              />
+              <input
+                placeholder="Subject"
+                required
+                value={form.subject}
+                onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+              />
+              <textarea
+                placeholder="Message"
+                required
+                rows={5}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                style={{ ...inputStyle, resize: "vertical" }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+              />
+              <button
                 type="submit"
-                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold shadow-card hover:shadow-card-hover transition-all duration-200"
+                className="w-full font-bold rounded-lg py-3 transition-transform hover:scale-[1.01]"
+                style={{ background: "#00d4aa", color: "#0a0f1e" }}
               >
                 Send Message
-              </motion.button>
+              </button>
             </form>
-          </motion.div>
+
+            <div className="flex justify-center gap-8 mt-8">
+              {[
+                { Icon: Github, href: "https://github.com" },
+                { Icon: Linkedin, href: "https://linkedin.com" },
+                { Icon: Mail, href: "mailto:hello@datawanderer.dev" },
+              ].map(({ Icon, href }, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition-transform hover:scale-125"
+                  style={{ color: "#00d4aa" }}
+                >
+                  <Icon size={24} />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

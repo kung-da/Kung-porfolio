@@ -1,149 +1,94 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { Code, Database, Calculator, Users } from "lucide-react";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Database, Sparkles, GitBranch, BarChart3 } from "lucide-react";
+
+const STAGES = [
+  { label: "Raw Data", Icon: Database },
+  { label: "Clean", Icon: Sparkles },
+  { label: "Transform", Icon: GitBranch },
+  { label: "Insight", Icon: BarChart3 },
+];
 
 export const About = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  const skills = [
-    {
-      category: "Programming",
-      icon: <Code size={24} />,
-      items: ["Python", "JavaScript", "TypeScript", "SQL", "R"]
-    },
-    {
-      category: "Data Engineering",
-      icon: <Database size={24} />,
-      items: ["Apache Spark", "Pandas", "NumPy", "ETL Pipelines", "Data Warehousing"]
-    },
-    {
-      category: "Mathematics",
-      icon: <Calculator size={24} />,
-      items: ["Calculus", "Statistics", "Linear Algebra", "Discrete Mathematics"]
-    },
-    {
-      category: "Soft Skills",
-      icon: <Users size={24} />,
-      items: ["Teaching", "Communication", "Problem Solving", "Team Collaboration"]
-    }
-  ];
-
   return (
-    <section id="about" className="py-20 bg-background">
-      <div className="container mx-auto px-6" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            About Me
-          </h2>
-          <div className="w-20 h-1 bg-gradient-primary mx-auto rounded-full"></div>
-        </motion.div>
+    <section id="about" className="relative py-[100px] px-6" style={{ zIndex: 5 }}>
+      <div className="container mx-auto max-w-6xl">
+        <SectionHeader eyebrow="02 / ABOUT" title="The Wanderer" />
 
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h3 className="text-2xl font-semibold text-foreground mb-6">
-              My Journey
-            </h3>
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                As a dedicated Data Engineering student, I'm passionate about the intersection 
-                of mathematics, technology, and real-world problem solving. My journey began 
-                with a love for numbers and has evolved into building scalable data solutions.
-              </p>
-              <p>
-                When I'm not coding or studying, I enjoy sharing my knowledge as a math tutor, 
-                helping students overcome challenges and discover the beauty of mathematics. 
-                This teaching experience has enhanced my communication skills and ability to 
-                break down complex concepts.
-              </p>
-              <p>
-                As a freelancer, I work on diverse projects ranging from data analysis to 
-                web development, constantly learning new technologies and methodologies to 
-                deliver innovative solutions for my clients.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-surface-elevated rounded-2xl p-8 shadow-card"
-          >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">
-              Quick Facts
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <span className="font-medium text-gray-900">🎓 Education:</span>
-                <span className="text-gray-700 ml-2">Data Engineering Student</span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900">💼 Experience:</span>
-                <span className="text-gray-700 ml-2">0 Years Freelancing</span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900">🌍 Location:</span>
-                <span className="text-gray-700 ml-2">Viet Nam</span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900">🎯 Focus:</span>
-                <span className="text-gray-700 ml-2">Data Engineering & Education</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Skills Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <h3 className="text-2xl font-semibold text-foreground text-center mb-12">
-            Skills & Expertise
-          </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skills.map((skillCategory, index) => (
-              <motion.div
-                key={skillCategory.category}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                className="bg-card rounded-xl p-6 shadow-card hover:shadow-card-hover transition-shadow duration-300"
+        <div className="grid md:grid-cols-2 gap-[60px] items-center">
+          {/* LEFT */}
+          <div className="text-center md:text-left">
+            <div
+              className="mx-auto md:mx-0 mb-5 rounded-full p-[3px]"
+              style={{
+                width: 160,
+                height: 160,
+                background: "linear-gradient(135deg, #00d4aa, #f2a7c3)",
+              }}
+            >
+              <div
+                className="w-full h-full rounded-full flex items-center justify-center text-4xl font-bold"
+                style={{ background: "#0a0f1e", color: "#00d4aa" }}
               >
-                <div className="flex items-center mb-4">
-                  <div className="text-primary mr-3">
-                    {skillCategory.icon}
-                  </div>
-                  <h4 className="font-semibold text-foreground">
-                    {skillCategory.category}
-                  </h4>
+                DW
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-foreground">Data Wanderer</h3>
+            <p className="text-teal mb-4 text-sm tracking-wider uppercase">Data Engineer · Explorer</p>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              I build resilient data pipelines that move millions of rows quietly in the background.
+              Off the clock, I'm chasing trains through the Japanese countryside, sketching
+              mountains, and arguing about the best Studio Ghibli film. Data is my craft —
+              wandering is my fuel.
+            </p>
+
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { n: "3+", l: "Years Exp" },
+                { n: "12", l: "Projects" },
+                { n: "8", l: "Countries" },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-lg p-4 text-center"
+                  style={{
+                    background: "#111827",
+                    border: "0.5px solid rgba(0,212,170,0.3)",
+                  }}
+                >
+                  <div className="text-2xl font-bold" style={{ color: "#00d4aa" }}>{s.n}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{s.l}</div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {skillCategory.items.map((skill) => (
-                    <span
-                      key={skill}
-                      className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-md"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
-        </motion.div>
+
+          {/* RIGHT — pipeline */}
+          <div>
+            <p className="text-sm text-muted-foreground tracking-widest uppercase mb-5">My Data Process</p>
+            <div className="flex items-center justify-between flex-wrap gap-y-4">
+              {STAGES.map((s, i) => (
+                <div key={s.label} className="flex items-center">
+                  <div
+                    className="rounded-lg px-5 py-3 text-center transition-all hover:-translate-y-1 group"
+                    style={{
+                      background: "#1a2540",
+                      border: "1px solid rgba(0,212,170,0.4)",
+                      boxShadow: "0 0 0 transparent",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 24px rgba(0,212,170,0.4)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 0 transparent")}
+                  >
+                    <s.Icon size={20} className="mx-auto mb-2" style={{ color: "#00d4aa" }} />
+                    <div className="text-xs text-foreground font-medium">{s.label}</div>
+                  </div>
+                  {i < STAGES.length - 1 && (
+                    <div className="marching-ants mx-2" style={{ width: 32, height: 2 }} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
