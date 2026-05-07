@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/Navigation";
+import { SakuraPetals } from "@/components/SakuraPetals";
 import { AmbientDots } from "@/components/AmbientDots";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";

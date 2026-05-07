@@ -24,7 +24,7 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="relative py-[100px] px-6 overflow-hidden" style={{ zIndex: 5 }}>
-      <Sakura />
+      
       <div className="container mx-auto max-w-6xl relative">
         <SectionHeader eyebrow="07 / CONTACT" title="Let's Connect" />
 
