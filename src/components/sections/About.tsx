@@ -10,9 +10,13 @@ const STAGES = [
 
 export const About = () => {
   return (
-    <section id="about" className="relative py-[100px] px-6" style={{ zIndex: 5 }}>
+    <section id="about" className="relative py-[120px] px-6" style={{ zIndex: 5 }}>
       <div className="container mx-auto max-w-6xl">
-        <SectionHeader eyebrow="02 / ABOUT" title="The Wanderer" />
+        <SectionHeader
+          eyebrow="02 / DOSSIER"
+          title="The Wanderer"
+          subtitle={<span className="font-jp">風来人</span>}
+        />
 
         <div className="grid md:grid-cols-2 gap-[60px] items-center">
           {/* LEFT */}
