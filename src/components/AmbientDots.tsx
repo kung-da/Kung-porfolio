@@ -1,14 +1,16 @@
 import { useMemo } from "react";
 
 export const AmbientDots = () => {
-  const dots = useMemo(
+  const stars = useMemo(
     () =>
-      Array.from({ length: 30 }).map(() => ({
+      Array.from({ length: 80 }).map(() => ({
         left: Math.random() * 100,
         top: Math.random() * 100,
-        opacity: 0.15 + Math.random() * 0.1,
-        delay: Math.random() * 20,
-        duration: 18 + Math.random() * 22,
+        size: Math.random() * 2 + 0.5,
+        opacity: 0.3 + Math.random() * 0.7,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 4,
+        color: Math.random() > 0.85 ? "#FF1493" : Math.random() > 0.5 ? "#00BFFF" : "#ffffff",
       })),
     []
   );
@@ -19,20 +21,21 @@ export const AmbientDots = () => {
       className="fixed inset-0 pointer-events-none overflow-hidden"
       style={{ zIndex: 0 }}
     >
-      {dots.map((d, i) => (
+      <div className="absolute inset-0 starfield opacity-60" />
+      {stars.map((s, i) => (
         <div
           key={i}
-          className="absolute rounded-full animate-float-up"
+          className="absolute rounded-full animate-twinkle"
           style={{
-            width: 4,
-            height: 4,
-            left: `${d.left}%`,
-            top: `${d.top}%`,
-            background: "#00BFFF",
-            opacity: d.opacity,
-            ["--dot-opacity" as any]: d.opacity,
-            animationDelay: `${d.delay}s`,
-            animationDuration: `${d.duration}s`,
+            width: s.size,
+            height: s.size,
+            left: `${s.left}%`,
+            top: `${s.top}%`,
+            background: s.color,
+            opacity: s.opacity,
+            boxShadow: `0 0 ${s.size * 2}px ${s.color}`,
+            animationDelay: `${s.delay}s`,
+            animationDuration: `${s.duration}s`,
           }}
         />
       ))}

@@ -5,13 +5,12 @@ import { About } from "@/components/sections/About";
 import { Skills } from "@/components/sections/Skills";
 import { Projects } from "@/components/sections/Projects";
 import { Gallery } from "@/components/sections/Gallery";
-import { DataLab } from "@/components/sections/DataLab";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="relative min-h-screen" style={{ background: "#0a0f1e" }}>
+    <div className="relative min-h-screen">
       <AmbientDots />
       <div className="relative" style={{ zIndex: 10 }}>
         <Navigation />
@@ -20,7 +19,6 @@ const Index = () => {
         <Skills />
         <Projects />
         <Gallery />
-        <DataLab />
         <Contact />
         <Footer />
       </div>
