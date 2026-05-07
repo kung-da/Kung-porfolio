@@ -1,5 +1,5 @@
 import { Navigation } from "@/components/Navigation";
-import { SakuraPetals } from "@/components/SakuraPetals";
+import { SakuraBackground } from "@/components/SakuraBackground";
 import { AmbientDots } from "@/components/AmbientDots";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
@@ -13,7 +13,7 @@ const Index = () => {
   return (
     <div className="relative min-h-screen">
       <AmbientDots />
-      <SakuraPetals />
+      <SakuraBackground />
       <div className="relative" style={{ zIndex: 10 }}>
         <Navigation />
         <Hero />

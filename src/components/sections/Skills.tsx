@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SectionHeader } from "@/components/SectionHeader";
-import { Cpu, Database, Cloud, GitBranch, Zap, Layers, Box, Activity } from "lucide-react";
+import { motion } from "framer-motion";
+import { Cpu, Database, Cloud, GitBranch, Zap, Layers, Box, Activity, Hexagon, Terminal } from "lucide-react";
 
 interface Ability {
   name: string;
@@ -10,10 +11,11 @@ interface Ability {
   desc: string;
 }
 
-const TREES: { branch: string; jp: string; abilities: Ability[] }[] = [
+const TREES: { branch: string; jp: string; subtitle: string; abilities: Ability[] }[] = [
   {
-    branch: "Core Forge",
+    branch: "Combat Arts",
     jp: "鍛冶",
+    subtitle: "Core Languages & Frameworks",
     abilities: [
       { name: "Python", tier: "S", level: 90, Icon: Cpu, desc: "Primary weapon" },
       { name: "SQL", tier: "S", level: 88, Icon: Database, desc: "Query mastery" },
@@ -21,8 +23,9 @@ const TREES: { branch: string; jp: string; abilities: Ability[] }[] = [
     ],
   },
   {
-    branch: "Pipeline Arts",
-    jp: "流派",
+    branch: "Forbidden Spells",
+    jp: "禁術",
+    subtitle: "Big Data · Hadoop · ML Pipeline",
     abilities: [
       { name: "Apache Spark", tier: "A", level: 82, Icon: Zap, desc: "Distributed strike" },
       { name: "Airflow", tier: "A", level: 85, Icon: GitBranch, desc: "Orchestration" },
@@ -33,6 +36,7 @@ const TREES: { branch: string; jp: string; abilities: Ability[] }[] = [
   {
     branch: "Cloud Sigil",
     jp: "天空",
+    subtitle: "Cloud Architecture & Infra",
     abilities: [
       { name: "AWS", tier: "B", level: 75, Icon: Cloud, desc: "Sky domain" },
       { name: "GCP", tier: "A", level: 80, Icon: Cloud, desc: "Sky domain" },
@@ -42,59 +46,63 @@ const TREES: { branch: string; jp: string; abilities: Ability[] }[] = [
 ];
 
 const TIER_COLOR: Record<Ability["tier"], string> = {
-  S: "hsl(var(--accent))",   // sakura — legendary
-  A: "hsl(var(--primary))",  // cyan — rare
-  B: "hsl(0 0% 70%)",        // silver — common
+  S: "hsl(var(--accent))",
+  A: "hsl(var(--primary))",
+  B: "hsl(0 0% 70%)",
+};
+
+const TIER_GLOW: Record<Ability["tier"], string> = {
+  S: "0 0 12px hsl(var(--accent) / 0.5)",
+  A: "0 0 12px hsl(var(--primary) / 0.4)",
+  B: "none",
 };
 
 const AbilityCard = ({ a, visible, idx }: { a: Ability; visible: boolean; idx: number }) => {
   const color = TIER_COLOR[a.tier];
   return (
-    <div
-      className="hud-panel p-4 group transition-all duration-500 hover:-translate-y-1 sweep-border"
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(20px)",
-        transitionDelay: `${idx * 60}ms`,
-      }}
+    <motion.div
+      className="hud-panel p-4 group transition-all duration-300 hover:-translate-y-1 crt-overlay"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: idx * 0.08, duration: 0.5 }}
+      style={{ borderColor: visible ? `${color.replace(")", " / 0.3)")}` : undefined }}
+      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = TIER_GLOW[a.tier]; e.currentTarget.style.borderColor = color.replace(")", " / 0.6)"); }}
+      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = ""; }}
     >
       <div className="flex items-start gap-3">
-        <div
-          className="shrink-0 w-10 h-10 flex items-center justify-center"
-          style={{
-            background: `${color.replace(")", " / 0.08)")}`,
-            border: `1px solid ${color.replace(")", " / 0.4)")}`,
-          }}
-        >
-          <a.Icon size={18} style={{ color }} />
+        {/* Hex icon container */}
+        <div className="shrink-0 w-11 h-11 flex items-center justify-center relative">
+          <Hexagon size={44} className="absolute inset-0" style={{ color: `${color.replace(")", " / 0.2)")}` }} strokeWidth={1} />
+          <a.Icon size={16} style={{ color }} className="relative z-10" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <h4 className="text-sm font-display tracking-wider text-foreground truncate">{a.name}</h4>
             <span
-              className="text-[10px] font-mono-ui font-bold px-1.5 py-0.5"
+              className="text-[10px] font-mono-ui font-bold px-2 py-0.5"
               style={{
                 color,
                 border: `1px solid ${color.replace(")", " / 0.5)")}`,
-                background: `${color.replace(")", " / 0.05)")}`,
+                background: `${color.replace(")", " / 0.08)")}`,
+                clipPath: "polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))",
               }}
             >
-              {a.tier}
+              {a.tier}-RANK
             </span>
           </div>
-          <p className="text-[11px] text-muted-foreground tracking-wider mt-0.5">{a.desc}</p>
+          <p className="text-[10px] text-muted-foreground tracking-wider mt-0.5 font-mono-ui">{a.desc}</p>
 
-          {/* Level bar */}
+          {/* Energy bar */}
           <div className="mt-3 flex items-center gap-2">
-            <div className="flex-1 h-[3px] bg-white/5 overflow-hidden">
+            <div className="flex-1 h-[4px] overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.05)" }}>
               <div
-                className="h-full"
+                className="h-full transition-all duration-[1.4s] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                 style={{
                   width: visible ? `${a.level}%` : "0%",
-                  background: `linear-gradient(90deg, ${color}, ${color.replace(")", " / 0.3)")})`,
-                  boxShadow: `0 0 8px ${color.replace(")", " / 0.6)")}`,
-                  transition: "width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
-                  transitionDelay: `${idx * 60 + 200}ms`,
+                  background: `linear-gradient(90deg, ${color}, ${color.replace(")", " / 0.4)")})`,
+                  boxShadow: `0 0 10px ${color.replace(")", " / 0.6)")}`,
+                  transitionDelay: `${idx * 80 + 300}ms`,
                 }}
               />
             </div>
@@ -102,7 +110,7 @@ const AbilityCard = ({ a, visible, idx }: { a: Ability; visible: boolean; idx: n
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -112,10 +120,7 @@ export const Skills = () => {
 
   useEffect(() => {
     if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([e]) => e.isIntersecting && setVisible(true),
-      { threshold: 0.15 }
-    );
+    const obs = new IntersectionObserver(([e]) => e.isIntersecting && setVisible(true), { threshold: 0.1 });
     obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
@@ -129,12 +134,39 @@ export const Skills = () => {
           subtitle={<span className="font-jp">能力</span>}
         />
 
+        {/* Terminal header */}
+        <motion.div
+          className="mb-8 p-3 font-mono-ui text-[11px]"
+          style={{ background: "hsl(0 0% 0% / 0.4)", border: "1px solid hsl(0 0% 100% / 0.06)" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <Terminal size={12} className="text-cyan-accent" />
+            <span className="text-cyan-accent">cung-master@nexus</span>:<span className="text-sakura">~</span>$ skill --list --verbose
+          </div>
+          <div className="text-muted-foreground/60">
+            [INFO] Loading ability tree for entity hadoopcung...
+            <span className="text-green-400 ml-2">✓ 10 skills loaded</span>
+          </div>
+        </motion.div>
+
         <div className="space-y-12">
           {TREES.map((tree, treeIdx) => (
-            <div key={tree.branch}>
+            <motion.div
+              key={tree.branch}
+              initial={{ opacity: 0, x: treeIdx % 2 === 0 ? -40 : 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: treeIdx * 0.15 }}
+            >
               <div className="flex items-center gap-4 mb-5">
                 <span className="font-jp text-sakura/70 text-2xl">{tree.jp}</span>
-                <h3 className="text-sm font-display tracking-[0.4em] text-silver uppercase">{tree.branch}</h3>
+                <div>
+                  <h3 className="text-sm font-display tracking-[0.4em] text-silver uppercase">{tree.branch}</h3>
+                  <p className="text-[10px] font-mono-ui text-muted-foreground tracking-wider">{tree.subtitle}</p>
+                </div>
                 <div className="flex-1 h-px bg-gradient-to-r from-white/15 to-transparent" />
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -142,7 +174,7 @@ export const Skills = () => {
                   <AbilityCard key={a.name} a={a} visible={visible} idx={treeIdx * 4 + i} />
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -72,10 +72,10 @@ export const Navigation = () => {
           </div>
           <div className="hidden sm:block">
             <p className="text-[9px] font-mono-ui tracking-[0.3em] text-cyan-accent leading-none">
-              0xKUNG
+              cung-master
             </p>
             <p className="text-[9px] font-mono-ui tracking-[0.2em] text-muted-foreground leading-none mt-0.5">
-              · TERMINAL ·
+              · TOMBGUARD ·
             </p>
           </div>
         </button>
