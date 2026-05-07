@@ -1,40 +1,7 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { MapPin, Mail, Briefcase, Github, Linkedin } from "lucide-react";
 import { toast } from "sonner";
-
-const Sakura = () => {
-  const petals = useMemo(
-    () =>
-      Array.from({ length: 4 }).map((_, i) => ({
-        left: Math.random() * 100,
-        delay: i * 3 + Math.random() * 2,
-        duration: 12 + Math.random() * 8,
-      })),
-    []
-  );
-  return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-      {petals.map((p, i) => (
-        <div
-          key={i}
-          className="absolute animate-fall"
-          style={{
-            left: `${p.left}%`,
-            top: -20,
-            width: 12,
-            height: 20,
-            background: "#FF1493",
-            opacity: 0.4,
-            borderRadius: "60% 40%",
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
 
 export const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
