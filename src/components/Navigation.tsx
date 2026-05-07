@@ -49,7 +49,7 @@ export const Navigation = () => {
         <button
           onClick={() => scrollTo("home")}
           className="flex items-center justify-center font-bold text-base"
-          style={{ width: 36, height: 36, background: "#00d4aa", color: "#0a0f1e", borderRadius: 6 }}
+          style={{ width: 36, height: 36, background: "#00BFFF", color: "#0a0f1e", borderRadius: 6 }}
           aria-label="Home"
         >
           DW
@@ -61,14 +61,14 @@ export const Navigation = () => {
               key={l.id}
               onClick={() => scrollTo(l.id)}
               className="relative text-sm font-medium tracking-wider uppercase transition-colors group"
-              style={{ color: active === l.id ? "#00d4aa" : "#e8f0ff" }}
+              style={{ color: active === l.id ? "#00BFFF" : "#e8f0ff" }}
             >
               {l.label}
               <span
                 className="absolute left-0 -bottom-1 h-px transition-all duration-300"
                 style={{
                   width: active === l.id ? "100%" : 0,
-                  background: "#00d4aa",
+                  background: "#00BFFF",
                 }}
               />
             </button>
@@ -92,7 +92,7 @@ export const Navigation = () => {
                 key={l.id}
                 onClick={() => scrollTo(l.id)}
                 className="text-left text-sm font-medium tracking-wider uppercase"
-                style={{ color: active === l.id ? "#00d4aa" : "#e8f0ff" }}
+                style={{ color: active === l.id ? "#00BFFF" : "#e8f0ff" }}
               >
                 {l.label}
               </button>

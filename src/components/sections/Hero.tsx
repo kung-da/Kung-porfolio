@@ -28,9 +28,9 @@ const Typewriter = () => {
   }, [text, deleting, wordIdx]);
 
   return (
-    <span className="font-mono" style={{ color: "#00d4aa" }}>
+    <span className="font-mono" style={{ color: "#00BFFF" }}>
       {text}
-      <span className="animate-blink" style={{ color: "#00d4aa" }}>|</span>
+      <span className="animate-blink" style={{ color: "#00BFFF" }}>|</span>
     </span>
   );
 };
@@ -70,7 +70,7 @@ export const Hero = () => {
             height: p.size,
             left: `${p.left}%`,
             top: `${p.top}%`,
-            background: "#00d4aa",
+            background: "#00BFFF",
             opacity: p.opacity,
             animationDelay: `${p.delay}s`,
             animationDuration: `${p.duration}s`,
@@ -126,14 +126,14 @@ export const Hero = () => {
           <a
             href="#projects"
             className="px-6 py-3 rounded-md font-semibold border-2 transition-all hover:bg-teal hover:text-background"
-            style={{ borderColor: "#00d4aa", color: "#00d4aa" }}
+            style={{ borderColor: "#00BFFF", color: "#00BFFF" }}
           >
             View Projects
           </a>
           <a
             href="#contact"
             className="px-6 py-3 rounded-md font-semibold transition-all hover:opacity-85"
-            style={{ background: "#00d4aa", color: "#0a0f1e" }}
+            style={{ background: "#00BFFF", color: "#0a0f1e" }}
           >
             Download CV
           </a>
@@ -143,7 +143,7 @@ export const Hero = () => {
       <button
         onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow"
-        style={{ zIndex: 10, color: "#00d4aa" }}
+        style={{ zIndex: 10, color: "#00BFFF" }}
         aria-label="Scroll down"
       >
         <ChevronDown size={32} />

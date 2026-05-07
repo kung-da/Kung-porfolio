@@ -28,7 +28,7 @@ export const AmbientDots = () => {
             height: 4,
             left: `${d.left}%`,
             top: `${d.top}%`,
-            background: "#00d4aa",
+            background: "#00BFFF",
             opacity: d.opacity,
             ["--dot-opacity" as any]: d.opacity,
             animationDelay: `${d.delay}s`,

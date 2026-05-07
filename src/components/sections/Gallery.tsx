@@ -20,7 +20,7 @@ const ITEMS: { id: number; category: Cat; location: string; seed: string; h: num
 ];
 
 const CAT_COLOR: Record<Cat, string> = {
-  Mountains: "#00d4aa",
+  Mountains: "#00BFFF",
   Ocean: "#8aa4ff",
   City: "#f5a623",
   Anime: "#f2a7c3",
@@ -52,9 +52,9 @@ export const Gallery = () => {
                 onClick={() => setFilter(f)}
                 className="px-4 py-2 rounded-full text-sm transition-all"
                 style={{
-                  background: active ? "#00d4aa" : "transparent",
+                  background: active ? "#00BFFF" : "transparent",
                   color: active ? "#0a0f1e" : "rgba(232,240,255,0.7)",
-                  border: active ? "1px solid #00d4aa" : "1px solid rgba(0,212,170,0.3)",
+                  border: active ? "1px solid #00BFFF" : "1px solid rgba(0,191,255,0.3)",
                 }}
               >
                 {f}

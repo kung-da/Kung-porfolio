@@ -14,7 +14,7 @@
     --popover: 225 45% 8%;
     --popover-foreground: 218 100% 95%;
 
-    --primary: 169 100% 42%;            /* #00d4aa data teal */
+    --primary: 169 100% 42%;            /* #00BFFF data teal */
     --primary-foreground: 225 45% 8%;
 
     --secondary: 222 40% 16%;           /* #1a2540 */
@@ -23,7 +23,7 @@
     --muted: 222 30% 18%;
     --muted-foreground: 218 25% 70%;
 
-    --accent: 335 75% 80%;              /* #f2a7c3 sakura */
+    --accent: 335 75% 80%;              /* #FF1493 sakura */
     --accent-foreground: 225 45% 8%;
 
     --gold: 35 90% 55%;                 /* #f5a623 */
@@ -52,11 +52,11 @@
 }
 
 @layer utilities {
-  .text-teal { color: #00d4aa; }
-  .bg-teal { background-color: #00d4aa; }
-  .text-sakura { color: #f2a7c3; }
+  .text-teal { color: #00BFFF; }
+  .bg-teal { background-color: #00BFFF; }
+  .text-sakura { color: #FF1493; }
   .text-gold { color: #f5a623; }
-  .border-teal { border-color: #00d4aa; }
+  .border-teal { border-color: #00BFFF; }
   .font-jp { font-family: 'Noto Sans JP', sans-serif; }
 }
 
@@ -95,7 +95,7 @@
 .animate-fall { animation: fall linear infinite; }
 
 .marching-ants {
-  background-image: linear-gradient(to right, #00d4aa 50%, transparent 50%);
+  background-image: linear-gradient(to right, #00BFFF 50%, transparent 50%);
   background-size: 16px 2px;
   background-repeat: repeat-x;
   animation: marching 1s linear infinite;
