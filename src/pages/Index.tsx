@@ -13,6 +13,7 @@ const Index = () => {
   return (
     <div className="relative min-h-screen">
       <AmbientDots />
+      <SakuraPetals />
       <div className="relative" style={{ zIndex: 10 }}>
         <Navigation />
         <Hero />
