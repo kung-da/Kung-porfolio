@@ -1,40 +1,7 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { MapPin, Mail, Briefcase, Github, Linkedin } from "lucide-react";
 import { toast } from "sonner";
-
-const Sakura = () => {
-  const petals = useMemo(
-    () =>
-      Array.from({ length: 4 }).map((_, i) => ({
-        left: Math.random() * 100,
-        delay: i * 3 + Math.random() * 2,
-        duration: 12 + Math.random() * 8,
-      })),
-    []
-  );
-  return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-      {petals.map((p, i) => (
-        <div
-          key={i}
-          className="absolute animate-fall"
-          style={{
-            left: `${p.left}%`,
-            top: -20,
-            width: 12,
-            height: 20,
-            background: "#f2a7c3",
-            opacity: 0.4,
-            borderRadius: "60% 40%",
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
 
 export const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -47,7 +14,7 @@ export const Contact = () => {
 
   const inputStyle: React.CSSProperties = {
     background: "#1a2540",
-    border: "1px solid rgba(0,212,170,0.3)",
+    border: "1px solid rgba(0,191,255,0.3)",
     color: "#e8f0ff",
     borderRadius: 8,
     padding: 12,
@@ -57,7 +24,7 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="relative py-[100px] px-6 overflow-hidden" style={{ zIndex: 5 }}>
-      <Sakura />
+      
       <div className="container mx-auto max-w-6xl relative">
         <SectionHeader eyebrow="07 / CONTACT" title="Let's Connect" />
 
@@ -90,9 +57,9 @@ export const Contact = () => {
                   <div key={row.label} className="flex items-center gap-4">
                     <div
                       className="rounded-md p-2"
-                      style={{ background: "rgba(0,212,170,0.1)", border: "1px solid rgba(0,212,170,0.3)" }}
+                      style={{ background: "rgba(0,191,255,0.1)", border: "1px solid rgba(0,191,255,0.3)" }}
                     >
-                      <row.Icon size={18} style={{ color: "#00d4aa" }} />
+                      <row.Icon size={18} style={{ color: "#00BFFF" }} />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground uppercase tracking-wider">{row.label}</p>
@@ -112,8 +79,8 @@ export const Contact = () => {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00BFFF")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,191,255,0.3)")}
               />
               <input
                 type="email"
@@ -122,8 +89,8 @@ export const Contact = () => {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00BFFF")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,191,255,0.3)")}
               />
               <input
                 placeholder="Subject"
@@ -131,8 +98,8 @@ export const Contact = () => {
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00BFFF")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,191,255,0.3)")}
               />
               <textarea
                 placeholder="Message"
@@ -141,13 +108,13 @@ export const Contact = () => {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 style={{ ...inputStyle, resize: "vertical" }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "#00d4aa")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,212,170,0.3)")}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#00BFFF")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(0,191,255,0.3)")}
               />
               <button
                 type="submit"
                 className="w-full font-bold rounded-lg py-3 transition-transform hover:scale-[1.01]"
-                style={{ background: "#00d4aa", color: "#0a0f1e" }}
+                style={{ background: "#00BFFF", color: "#0a0f1e" }}
               >
                 Send Message
               </button>
@@ -165,7 +132,7 @@ export const Contact = () => {
                   target="_blank"
                   rel="noreferrer"
                   className="transition-transform hover:scale-125"
-                  style={{ color: "#00d4aa" }}
+                  style={{ color: "#00BFFF" }}
                 >
                   <Icon size={24} />
                 </a>

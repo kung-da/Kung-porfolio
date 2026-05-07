@@ -22,12 +22,12 @@ export const About = () => {
               style={{
                 width: 160,
                 height: 160,
-                background: "linear-gradient(135deg, #00d4aa, #f2a7c3)",
+                background: "linear-gradient(135deg, #00BFFF, #f2a7c3)",
               }}
             >
               <div
                 className="w-full h-full rounded-full flex items-center justify-center text-4xl font-bold"
-                style={{ background: "#0a0f1e", color: "#00d4aa" }}
+                style={{ background: "#0a0f1e", color: "#00BFFF" }}
               >
                 DW
               </div>
@@ -52,10 +52,10 @@ export const About = () => {
                   className="rounded-lg p-4 text-center"
                   style={{
                     background: "#111827",
-                    border: "0.5px solid rgba(0,212,170,0.3)",
+                    border: "0.5px solid rgba(0,191,255,0.3)",
                   }}
                 >
-                  <div className="text-2xl font-bold" style={{ color: "#00d4aa" }}>{s.n}</div>
+                  <div className="text-2xl font-bold" style={{ color: "#00BFFF" }}>{s.n}</div>
                   <div className="text-xs text-muted-foreground mt-1">{s.l}</div>
                 </div>
               ))}
@@ -72,13 +72,13 @@ export const About = () => {
                     className="rounded-lg px-5 py-3 text-center transition-all hover:-translate-y-1 group"
                     style={{
                       background: "#1a2540",
-                      border: "1px solid rgba(0,212,170,0.4)",
+                      border: "1px solid rgba(0,191,255,0.4)",
                       boxShadow: "0 0 0 transparent",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 24px rgba(0,212,170,0.4)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 24px rgba(0,191,255,0.4)")}
                     onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 0 transparent")}
                   >
-                    <s.Icon size={20} className="mx-auto mb-2" style={{ color: "#00d4aa" }} />
+                    <s.Icon size={20} className="mx-auto mb-2" style={{ color: "#00BFFF" }} />
                     <div className="text-xs text-foreground font-medium">{s.label}</div>
                   </div>
                   {i < STAGES.length - 1 && (

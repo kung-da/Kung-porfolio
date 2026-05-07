@@ -6,7 +6,7 @@ import { Github, ExternalLink, Star } from "lucide-react";
 const FILTERS = ["All", "Pipeline", "Dashboard", "Analytics", "Other"] as const;
 
 const CATEGORY_COLOR: Record<string, string> = {
-  Pipeline: "#00d4aa",
+  Pipeline: "#00BFFF",
   Dashboard: "#f2a7c3",
   Analytics: "#f5a623",
   Other: "#8aa4ff",
@@ -35,9 +35,9 @@ export const Projects = () => {
                 onClick={() => setFilter(f)}
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all"
                 style={{
-                  background: active ? "#00d4aa" : "transparent",
+                  background: active ? "#00BFFF" : "transparent",
                   color: active ? "#0a0f1e" : "rgba(232,240,255,0.7)",
-                  border: active ? "1px solid #00d4aa" : "1px solid rgba(0,212,170,0.3)",
+                  border: active ? "1px solid #00BFFF" : "1px solid rgba(0,191,255,0.3)",
                 }}
               >
                 {f}
@@ -75,8 +75,8 @@ export const Projects = () => {
                   borderLeft: "3px solid transparent",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderLeft = "3px solid #00d4aa";
-                  e.currentTarget.style.boxShadow = "0 10px 30px -10px rgba(0,212,170,0.3)";
+                  e.currentTarget.style.borderLeft = "3px solid #00BFFF";
+                  e.currentTarget.style.boxShadow = "0 10px 30px -10px rgba(0,191,255,0.3)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderLeft = "3px solid transparent";
@@ -132,9 +132,9 @@ export const Projects = () => {
                         key={t}
                         className="text-[10px] px-2 py-0.5 rounded-full"
                         style={{
-                          background: "rgba(0,212,170,0.1)",
-                          color: "#00d4aa",
-                          border: "1px solid rgba(0,212,170,0.3)",
+                          background: "rgba(0,191,255,0.1)",
+                          color: "#00BFFF",
+                          border: "1px solid rgba(0,191,255,0.3)",
                         }}
                       >
                         {t}

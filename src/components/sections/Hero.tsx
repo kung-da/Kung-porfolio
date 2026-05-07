@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import profilePic from "@/assets/profile-picture.jpg";
 
 const WORDS = ["Data Engineer", "Pipeline Builder", "World Explorer"];
 
@@ -28,9 +29,9 @@ const Typewriter = () => {
   }, [text, deleting, wordIdx]);
 
   return (
-    <span className="font-mono" style={{ color: "#00d4aa" }}>
+    <span className="font-mono" style={{ color: "#00BFFF" }}>
       {text}
-      <span className="animate-blink" style={{ color: "#00d4aa" }}>|</span>
+      <span className="animate-blink" style={{ color: "#00BFFF" }}>|</span>
     </span>
   );
 };
@@ -70,7 +71,7 @@ export const Hero = () => {
             height: p.size,
             left: `${p.left}%`,
             top: `${p.top}%`,
-            background: "#00d4aa",
+            background: "#00BFFF",
             opacity: p.opacity,
             animationDelay: `${p.delay}s`,
             animationDuration: `${p.duration}s`,
@@ -106,34 +107,49 @@ export const Hero = () => {
       </svg>
 
       {/* Content */}
-      <div className="relative text-center px-6" style={{ zIndex: 10 }}>
-        <p className="font-jp text-sakura mb-3" style={{ fontSize: 18 }}>
+      <div className="relative text-center px-6 flex flex-col items-center" style={{ zIndex: 10 }}>
+        <div
+          className="relative mb-6 rounded-full p-1"
+          style={{
+            background: "linear-gradient(135deg, #00BFFF, #FF1493)",
+            boxShadow: "0 0 30px rgba(0,191,255,0.7), 0 0 60px rgba(255,20,147,0.4)",
+          }}
+        >
+          <img
+            src={profilePic}
+            alt="Avatar"
+            className="rounded-full object-cover"
+            style={{ width: 128, height: 128, border: "2px solid #03040d" }}
+          />
+        </div>
+
+        <p className="font-jp neon-pink mb-3" style={{ fontSize: 18 }}>
           こんにちは, I'm
         </p>
         <h1
-          className="font-bold text-foreground mb-5"
-          style={{ fontSize: "clamp(36px, 7vw, 56px)" }}
+          className="font-bold mb-5 gradient-text uppercase"
+          style={{ fontSize: "clamp(40px, 8vw, 68px)", letterSpacing: "0.15em" }}
         >
           Data Wanderer
         </h1>
         <div className="text-2xl md:text-3xl mb-4 h-10">
           <Typewriter />
         </div>
-        <p className="text-muted-foreground mb-8" style={{ fontSize: 16 }}>
+        <p className="text-muted-foreground mb-8" style={{ fontSize: 16, letterSpacing: "0.05em" }}>
           Building data pipelines by day · Chasing sunsets by night
         </p>
         <div className="flex flex-wrap justify-center" style={{ gap: 16 }}>
           <a
             href="#projects"
-            className="px-6 py-3 rounded-md font-semibold border-2 transition-all hover:bg-teal hover:text-background"
-            style={{ borderColor: "#00d4aa", color: "#00d4aa" }}
+            className="px-6 py-3 rounded-md font-semibold border-2 transition-all hover:bg-teal hover:text-background uppercase tracking-widest neon-glow"
+            style={{ borderColor: "#00BFFF", color: "#00BFFF" }}
           >
             View Projects
           </a>
           <a
             href="#contact"
-            className="px-6 py-3 rounded-md font-semibold transition-all hover:opacity-85"
-            style={{ background: "#00d4aa", color: "#0a0f1e" }}
+            className="px-6 py-3 rounded-md font-semibold transition-all hover:opacity-85 uppercase tracking-widest neon-glow-pink"
+            style={{ background: "#FF1493", color: "#fff" }}
           >
             Download CV
           </a>
@@ -143,7 +159,7 @@ export const Hero = () => {
       <button
         onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow"
-        style={{ zIndex: 10, color: "#00d4aa" }}
+        style={{ zIndex: 10, color: "#00BFFF" }}
         aria-label="Scroll down"
       >
         <ChevronDown size={32} />

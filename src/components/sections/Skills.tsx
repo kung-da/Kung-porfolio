@@ -49,8 +49,8 @@ const SkillBar = ({ name, value, visible }: { name: string; value: number; visib
         className="h-full rounded-full"
         style={{
           width: visible ? `${value}%` : "0%",
-          background: "linear-gradient(to right, #00d4aa, #f2a7c3)",
-          boxShadow: "0 0 8px #00d4aa",
+          background: "linear-gradient(to right, #00BFFF, #f2a7c3)",
+          boxShadow: "0 0 8px #00BFFF",
           transition: "width 1.2s ease",
         }}
       />
@@ -84,7 +84,7 @@ export const Skills = () => {
         <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
           {CATEGORIES.map((cat) => (
             <div key={cat.name}>
-              <p className="text-xs uppercase tracking-widest mb-4" style={{ color: "#00d4aa" }}>
+              <p className="text-xs uppercase tracking-widest mb-4" style={{ color: "#00BFFF" }}>
                 {cat.name}
               </p>
               {cat.skills.map((s) => (
