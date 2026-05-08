@@ -957,9 +957,21 @@ const SakuraBackground: React.FC = () => {
         
         let animationFrameId: number;
         let animating = true;
+        let isVisible = true;
+
+        const observer = new IntersectionObserver((entries) => {
+            isVisible = entries[0].isIntersecting;
+        }, { threshold: 0 });
+        
+        if (canvas) observer.observe(canvas);
 
         function animate() {
             if (!animating) return;
+            animationFrameId = requestAnimationFrame(animate);
+            
+            // SKIP HEAVY CALCULATIONS IF NOT VISIBLE
+            if (!isVisible) return;
+
             const curdate = Date.now();
             timeInfo.elapsed = (curdate - timeInfo.start) / 1000.0;
             timeInfo.delta = (curdate - timeInfo.prev) / 1000.0;
@@ -968,7 +980,6 @@ const SakuraBackground: React.FC = () => {
             scrollVelocity *= 0.92;
             
             renderScene();
-            animationFrameId = requestAnimationFrame(animate);
         }
 
         animate();
@@ -976,6 +987,7 @@ const SakuraBackground: React.FC = () => {
         return () => {
             animating = false;
             cancelAnimationFrame(animationFrameId);
+            observer.disconnect();
             window.removeEventListener('resize', onResize);
             window.removeEventListener('scroll', handleScroll);
         };

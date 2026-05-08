@@ -6,51 +6,40 @@
 
 @layer base {
   :root {
-    --bg-dark: #050505;
-    --washi-white: #0A0A0A;
-    /* Inverted for dark theme */
-    --deep-ink: #FAFAF8;
-    /* Inverted for dark theme */
-    --stone-gray: #888888;
-    --wez-cyan: #8FEFFF;
-    --sakura-light: #F6D7E3;
-    --sakura-deep: #E8A5C0;
-    --crimson: #6A1B1B;
-    --samurai-red: #8B0000;
-    --blood-red: #C8102E;
-    --silver-purple: #C0C0C0;
-    --gold-accent: #D4AF37;
-    --enrage-red: #C0392B;
-    --glow-color: rgba(139, 0, 0, 0.4);
-    /* Red glow */
+    --bg-abyss: #050505;
+    --bg-panel: #0A0A0A;
+    --crimson: #FF003C;
+    --blood: #C8102E;
+    --dark-red: #8B0000;
+    --neon-cyan: #00F5FF;
+    --warn-yellow: #FCEE0A;
+    --text-main: #E0E0E0;
+    --text-dim: #888888;
+    --text-muted: #444455;
+    --panel-border: #1a1a2e;
+    --gold: #D4AF37;
 
-    /* shadcn token mapping → manga light theme */
-    --background: 60 11% 98%;
-    --foreground: 0 0% 4%;
-    --card: 60 11% 98%;
-    --card-foreground: 0 0% 4%;
-    --popover: 60 11% 98%;
-    --popover-foreground: 0 0% 4%;
-    --primary: 0 0% 4%;
-    --primary-foreground: 60 11% 98%;
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 4%;
-    --muted: 0 0% 92%;
+    /* shadcn tokens */
+    --background: 0 0% 2%;
+    --foreground: 0 0% 88%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 88%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 348 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 6%;
+    --secondary-foreground: 0 0% 88%;
+    --muted: 0 0% 8%;
     --muted-foreground: 0 0% 45%;
-    --accent: 188 100% 78%;
+    --accent: 186 100% 50%;
     --accent-foreground: 0 0% 4%;
-    --destructive: 7 60% 25%;
-    --destructive-foreground: 60 11% 98%;
-    --border: 0 0% 4%;
-    --input: 0 0% 4%;
-    --ring: 188 100% 78%;
+    --destructive: 348 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 10%;
+    --input: 240 10% 10%;
+    --ring: 186 100% 50%;
     --radius: 0px;
-  }
-
-  html.enraged {
-    --wez-cyan: #C0392B;
-    --glow-color: rgba(192, 57, 43, 0.4);
-    --accent: 7 67% 46%;
   }
 
   * {
@@ -59,53 +48,44 @@
 
   html {
     scroll-behavior: smooth;
-    background: var(--washi-white);
+    background: var(--bg-abyss);
   }
 
   body {
     font-family: 'Share Tech Mono', monospace;
-    color: var(--deep-ink);
-    background: var(--washi-white);
+    color: var(--text-main);
+    background: var(--bg-abyss);
     overflow-x: hidden;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: 'Orbitron', sans-serif;
-    color: var(--deep-ink);
-    letter-spacing: 0.04em;
+    color: var(--text-main);
+    letter-spacing: 0.06em;
   }
 
   ::selection {
-    background: var(--wez-cyan);
-    color: var(--deep-ink);
+    background: var(--crimson);
+    color: #fff;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--washi-white);
-    border-left: 1px solid var(--deep-ink);
+    background: var(--bg-abyss);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--deep-ink);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--wez-cyan);
+    background: var(--crimson);
   }
 }
 
 @layer utilities {
+  /* ── Typography ── */
   .font-display {
     font-family: 'Orbitron', sans-serif;
   }
@@ -118,133 +98,127 @@
     font-family: 'Noto Serif JP', serif;
   }
 
-  .text-washi {
-    color: var(--washi-white);
-  }
+  /* ── Color Utilities ── */
+  .text-crimson { color: var(--crimson); }
+  .text-blood { color: var(--blood); }
+  .text-cyan-accent { color: var(--neon-cyan); }
+  .text-warn { color: var(--warn-yellow); }
+  .text-dim { color: var(--text-dim); }
+  .text-muted-ui { color: var(--text-muted); }
+  .bg-abyss { background-color: var(--bg-abyss); }
+  .bg-panel { background-color: var(--bg-panel); }
+  .border-crimson { border-color: var(--crimson); }
+  .border-cyan { border-color: var(--neon-cyan); }
+  .border-panel { border-color: var(--panel-border); }
 
-  .text-ink {
-    color: var(--deep-ink);
+  /* ── Glow Effects ── */
+  .glow-crimson {
+    box-shadow: 0 0 15px rgba(255, 0, 60, 0.4), inset 0 0 15px rgba(255, 0, 60, 0.1);
   }
-
-  .text-stone {
-    color: var(--stone-gray);
+  .glow-cyan {
+    box-shadow: 0 0 15px rgba(0, 245, 255, 0.3), inset 0 0 15px rgba(0, 245, 255, 0.05);
   }
-
-  .text-cyan-accent {
-    color: var(--wez-cyan);
+  .text-glow-crimson {
+    text-shadow: 0 0 8px rgba(255, 0, 60, 0.6), 0 0 20px rgba(255, 0, 60, 0.3);
   }
-
-  .bg-washi {
-    background-color: var(--washi-white);
-  }
-
-  .bg-ink {
-    background-color: var(--deep-ink);
-  }
-
-  .bg-cyan-accent {
-    background-color: var(--wez-cyan);
-  }
-
-  .border-ink {
-    border-color: var(--deep-ink);
-  }
-
-  .border-cyan-accent {
-    border-color: var(--wez-cyan);
-  }
-
   .text-glow-cyan {
-    text-shadow: 0 0 8px var(--glow-color), 0 0 16px var(--glow-color);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6), 0 0 20px rgba(0, 245, 255, 0.3);
   }
 
-  .manga-panel {
-    border: 2px solid var(--deep-ink);
-    box-shadow: 6px 6px 0 var(--deep-ink);
-    background: var(--washi-white);
+  /* ── CRT Scanlines ── */
+  .crt-scanlines {
+    background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
+    background-size: 100% 4px;
   }
 
-  .manga-panel-sm {
-    border: 1px solid var(--deep-ink);
-    box-shadow: 3px 3px 0 var(--deep-ink);
-    background: var(--washi-white);
+  /* ── Noise Grain ── */
+  .noise-grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
   }
 
-  .manga-rule {
-    width: 100%;
-    height: 2px;
-    background: var(--deep-ink);
+  /* ── HUD Grid ── */
+  .hud-grid {
+    background-image:
+      linear-gradient(var(--neon-cyan) 1px, transparent 1px),
+      linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.03;
   }
 
-  .halftone-bg {
-    background-image: radial-gradient(circle, var(--stone-gray) 1px, transparent 1px);
-    background-size: 12px 12px;
+  /* ── Chamfered Clip Shapes ── */
+  .clip-chamfer-sm {
+    clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  }
+  .clip-chamfer {
+    clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+  }
+  .clip-chamfer-lg {
+    clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
+  }
+  .clip-slant-left {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .clip-slant-right {
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
   }
 
-  .speed-lines {
-    background: repeating-linear-gradient(-45deg,
-        transparent,
-        transparent 3px,
-        rgba(10, 10, 10, 0.06) 3px,
-        rgba(10, 10, 10, 0.06) 4px);
+  /* ── Hazard Stripe Border ── */
+  .hazard-border {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--warn-yellow),
+      var(--warn-yellow) 10px,
+      var(--bg-abyss) 10px,
+      var(--bg-abyss) 20px
+    );
   }
 
-  .chapter-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--stone-gray);
-  }
-
-  .skill-bar-track {
-    height: 6px;
-    background: rgba(10, 10, 10, 0.1);
-    border: 1px solid var(--deep-ink);
-  }
-
-  .skill-bar-fill {
-    height: 100%;
-    background: var(--wez-cyan);
-    transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
+  /* ── Terminal Cursor ── */
   .terminal-cursor::after {
     content: '█';
     margin-left: 2px;
     animation: blink 1s step-end infinite;
-    color: var(--wez-cyan);
+    color: var(--neon-cyan);
   }
 
-  .hollow-text {
-    -webkit-text-stroke: 2px var(--deep-ink);
-    color: transparent;
-  }
-
-  /* Katana Slash Effect */
-  .katana-container {
+  /* ── Katana Slash Hover ── */
+  .katana-slash {
     position: relative;
     overflow: hidden;
   }
 
-  .katana-container::after {
+  .katana-slash::after {
     content: '';
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      110deg,
+      transparent 30%,
+      rgba(255, 0, 60, 0.15) 45%,
+      rgba(255, 0, 60, 0.4) 50%,
+      rgba(255, 0, 60, 0.15) 55%,
+      transparent 70%
+    );
+    transition: left 0.15s ease-out;
     pointer-events: none;
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.25s ease-out;
-    background: linear-gradient(135deg, transparent 49%, var(--wez-cyan) 49.5%, var(--wez-cyan) 50.5%, transparent 51%);
-    mix-blend-mode: multiply;
     z-index: 10;
   }
 
-  .katana-container:hover::after {
-    transform: scaleX(1);
+  .katana-slash:hover::after {
+    left: 100%;
   }
 
-  /* Text Glitch Effect */
+  /* ── Glitch Hover ── */
   .glitch-hover {
     position: relative;
     display: inline-block;
@@ -264,65 +238,59 @@
 
   .glitch-hover:hover::before {
     left: 2px;
-    text-shadow: -2px 0 var(--wez-cyan);
-    animation: glitch-anim-1 0.15s infinite linear alternate-reverse;
+    text-shadow: -2px 0 var(--crimson);
+    animation: glitch-1 0.08s infinite linear alternate-reverse;
   }
 
   .glitch-hover:hover::after {
     left: -2px;
-    text-shadow: 2px 0 var(--sakura-deep);
-    animation: glitch-anim-2 0.2s infinite linear alternate-reverse;
+    text-shadow: 2px 0 var(--neon-cyan);
+    animation: glitch-2 0.1s infinite linear alternate-reverse;
   }
+}
 
-  @keyframes glitch-anim-1 {
-    0% {
-      clip-path: inset(20% 0 80% 0);
-    }
+/* ── Keyframes ── */
+@keyframes blink {
+  50% { opacity: 0; }
+}
 
-    20% {
-      clip-path: inset(60% 0 10% 0);
-    }
+@keyframes scanV {
+  0% { top: -5%; }
+  100% { top: 105%; }
+}
 
-    40% {
-      clip-path: inset(40% 0 50% 0);
-    }
+@keyframes glitch-1 {
+  0%   { clip-path: inset(20% 0 80% 0); }
+  20%  { clip-path: inset(60% 0 10% 0); }
+  40%  { clip-path: inset(40% 0 50% 0); }
+  60%  { clip-path: inset(80% 0 5% 0); }
+  80%  { clip-path: inset(10% 0 60% 0); }
+  100% { clip-path: inset(30% 0 20% 0); }
+}
 
-    60% {
-      clip-path: inset(80% 0 5% 0);
-    }
+@keyframes glitch-2 {
+  0%   { clip-path: inset(10% 0 60% 0); }
+  20%  { clip-path: inset(30% 0 20% 0); }
+  40%  { clip-path: inset(70% 0 10% 0); }
+  60%  { clip-path: inset(20% 0 50% 0); }
+  80%  { clip-path: inset(50% 0 30% 0); }
+  100% { clip-path: inset(5% 0 80% 0); }
+}
 
-    80% {
-      clip-path: inset(10% 0 60% 0);
-    }
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
 
-    100% {
-      clip-path: inset(30% 0 20% 0);
-    }
-  }
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
 
-  @keyframes glitch-anim-2 {
-    0% {
-      clip-path: inset(10% 0 60% 0);
-    }
-
-    20% {
-      clip-path: inset(30% 0 20% 0);
-    }
-
-    40% {
-      clip-path: inset(70% 0 10% 0);
-    }
-
-    60% {
-      clip-path: inset(20% 0 50% 0);
-    }
-
-    80% {
-      clip-path: inset(50% 0 30% 0);
-    }
-
-    100% {
-      clip-path: inset(5% 0 80% 0);
-    }
-  }
+@keyframes data-scramble {
+  0% { opacity: 1; }
+  10% { opacity: 0.7; transform: translateX(1px); }
+  20% { opacity: 1; transform: translateX(-1px); }
+  30% { opacity: 0.8; }
+  100% { opacity: 1; transform: translateX(0); }
 }

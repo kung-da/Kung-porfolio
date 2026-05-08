@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export const Footer = () => {
   const [text, setText] = useState("");
@@ -11,60 +11,75 @@ export const Footer = () => {
       setText(fullText.slice(0, i));
       i++;
       if (i > fullText.length) clearInterval(timer);
-    }, 35);
+    }, 30);
     return () => clearInterval(timer);
   }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative pt-16 pb-8 bg-[#030308] overflow-hidden flex flex-col items-center">
-      {/* Top Border with Glow */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#00D4FF22]" />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#00D4FF] opacity-50 shadow-[0_0_6px_#00D4FF44]" />
+    <footer className="relative pt-16 pb-8 bg-[#030305] overflow-hidden flex flex-col items-center">
+      {/* Top Border */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#FF003C33]" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#FF003C] opacity-40 shadow-[0_0_8px_#FF003C44]" />
 
-      {/* Top Row - Logo */}
+      {/* Logo */}
       <div className="text-center mb-10 mt-4">
-        <h2 className="text-[#00D4FF] text-[28px] md:text-[32px] m-0 leading-none" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+        <h2
+          className="font-display text-[24px] md:text-[28px] tracking-[0.3em] leading-none glitch-hover"
+          data-text="WEZAEMON"
+          style={{ color: "#FF003C" }}
+        >
           WEZAEMON
         </h2>
-        <div className="text-[#CC000088] font-mono text-[11px] tracking-[0.4em] mt-2">
-          THE TOMBGUARD
+        <div className="font-mono-ui text-[10px] tracking-[0.5em] mt-2 text-dim uppercase">
+          WARDEN OF THE DIGITAL GRAVE
         </div>
       </div>
 
-      {/* Middle Row - Command Chips */}
+      {/* Link Chips */}
       <div className="flex gap-4 mb-10">
-        <a href="https://github.com/kung-da" target="_blank" rel="noreferrer" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
-          [ GITHUB ]
-        </a>
-        <a href="https://linkedin.com/in/cung" target="_blank" rel="noreferrer" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
-          [ LINKEDIN ]
-        </a>
-        <a href="mailto:hello@cung-master.dev" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
-          [ EMAIL ]
-        </a>
+        {[
+          { label: "GITHUB", href: "https://github.com/kung-da" },
+          { label: "LINKEDIN", href: "https://linkedin.com/in/cung" },
+          { label: "EMAIL", href: "mailto:hello@cung-master.dev" },
+        ].map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            target="_blank"
+            rel="noreferrer"
+            className="border border-[#1a1a2e] text-muted-ui font-mono-ui text-[10px] px-3 py-1.5 transition-all duration-100 hover:border-[#FF003C] hover:text-crimson hover:shadow-[0_0_10px_rgba(255,0,60,0.2)]"
+            style={{ clipPath: "polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px)" }}
+          >
+            [ {l.label} ]
+          </a>
+        ))}
       </div>
 
       {/* Divider */}
       <div className="w-full flex items-center justify-center mb-8 px-12">
-        <div className="flex-1 h-[1px] bg-[#0D0D20]" />
-        <div className="text-[#1a1a2e] text-[10px] mx-4">◆</div>
-        <div className="flex-1 h-[1px] bg-[#0D0D20]" />
+        <div className="flex-1 h-[1px] bg-[#1a1a2e]" />
+        <div className="text-[#1a1a2e] text-[8px] mx-4 rotate-45">◆</div>
+        <div className="flex-1 h-[1px] bg-[#1a1a2e]" />
       </div>
 
-      {/* Bottom Row - Credits */}
-      <div className="font-mono text-[11px] text-[#222] mb-12 text-center h-[20px]">
+      {/* Typewriter Credits */}
+      <div className="font-mono-ui text-[10px] text-[#333] mb-12 text-center h-5">
         {text}
+        <span className="animate-pulse ml-1">█</span>
       </div>
 
       {/* Scroll to Top */}
-      <button 
+      <motion.button
         onClick={scrollToTop}
-        className="font-mono text-[10px] text-[#CC000066] border border-[#CC000033] px-4 py-2 hover:text-[#CC0000] hover:border-[#CC0000] transition-colors"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="font-mono-ui text-[10px] text-crimson border border-[#FF003C33] px-5 py-2 transition-all duration-100 hover:border-[#FF003C] hover:shadow-[0_0_15px_rgba(255,0,60,0.3)]"
+        style={{ clipPath: "polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)" }}
       >
         [ ↑ REINITIALIZE ]
-      </button>
+      </motion.button>
     </footer>
   );
 };

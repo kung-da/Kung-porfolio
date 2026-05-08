@@ -10,50 +10,65 @@ export const BossHPBar = () => {
       className="fixed top-0 left-0 right-0"
       style={{
         zIndex: 90,
-        height: 40,
-        background: "#0A0A0A",
-        borderBottom: "2px solid #0A0A0A",
-        boxShadow: "0 2px 0 #8FEFFF",
+        height: 36,
+        background: "#050505",
+        borderBottom: `2px solid ${critical ? "#FF003C" : "#1a1a2e"}`,
         display: "flex",
         alignItems: "center",
-        gap: 16,
+        gap: 12,
         padding: "0 16px",
-        color: "#FAFAF8",
+        clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)",
       }}
     >
-      <span className="font-display text-[10px] tracking-[0.25em] text-cyan-accent shrink-0">
-        ⚔ WEZAEMON · TOMBGUARD
+      {/* Boss Name */}
+      <span className="font-display text-[9px] tracking-[0.3em] text-crimson shrink-0 hidden sm:inline">
+        ⚔ WEZAEMON
       </span>
+
+      {/* Threat Level Flash */}
       {critical && (
-        <span className="font-mono-ui text-[10px] animate-blink" style={{ color: "#C0392B" }}>
-          CRITICAL
+        <span
+          className="font-mono-ui text-[9px] tracking-widest"
+          style={{ color: "#FF003C", animation: "blink 0.4s step-end infinite" }}
+        >
+          !! CRITICAL
         </span>
       )}
-      <div className="flex-1 flex items-center gap-2 min-w-0">
-        <span className="font-mono-ui text-[10px] hidden sm:inline" style={{ opacity: 0.7 }}>
-          HP
-        </span>
+
+      {/* HP Label */}
+      <span className="font-mono-ui text-[9px] text-dim hidden sm:inline">HP</span>
+
+      {/* HP Bar */}
+      <div
+        className="flex-1 h-[6px] relative overflow-hidden"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: `1px solid ${critical ? "rgba(255,0,60,0.5)" : "rgba(0,245,255,0.2)"}`,
+          clipPath: "polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))",
+        }}
+      >
         <div
-          className="flex-1 h-2 relative overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(143,239,255,0.3)" }}
-        >
-          <div
-            className={critical ? "animate-blink" : ""}
-            style={{
-              width: `${hp}%`,
-              height: "100%",
-              background: critical ? "#C0392B" : "var(--wez-cyan)",
-              boxShadow: critical
-                ? "0 0 10px #C0392B"
-                : "0 0 10px rgba(143,239,255,0.6)",
-              transition: "width 0.15s linear",
-            }}
-          />
-        </div>
-        <span className="font-mono-ui text-[10px] tabular-nums shrink-0" style={{ color: "#8FEFFF" }}>
-          {Math.round(hp)}%
-        </span>
+          style={{
+            width: `${hp}%`,
+            height: "100%",
+            background: critical
+              ? "linear-gradient(90deg, #FF003C, #8B0000)"
+              : "linear-gradient(90deg, #00F5FF, #0088aa)",
+            boxShadow: critical
+              ? "0 0 12px #FF003C"
+              : "0 0 8px rgba(0,245,255,0.5)",
+            transition: "width 0.15s linear",
+          }}
+        />
       </div>
+
+      {/* HP Percentage */}
+      <span
+        className="font-mono-ui text-[10px] tabular-nums shrink-0"
+        style={{ color: critical ? "#FF003C" : "#00F5FF" }}
+      >
+        {Math.round(hp)}%
+      </span>
     </div>
   );
 };

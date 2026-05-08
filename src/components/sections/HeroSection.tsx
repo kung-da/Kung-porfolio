@@ -18,10 +18,10 @@ export const HeroSection = () => {
           backgroundRepeat: "no-repeat",
         }}
       />
-      
+
       {/* Sakura Particle System - rendered at z-index 10 via wrapper if needed, but since it's fixed with z:-1 in its own file, we force a stacking context here */}
       <div className="absolute inset-0 z-10 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
-         <SakuraBackground />
+        <SakuraBackground />
       </div>
 
       {/* Mystical Overlays: Darker at bottom for blending, slight shadow in center for text readability */}
@@ -52,7 +52,7 @@ export const HeroSection = () => {
           <span className="relative inline-block hover:animate-pulse transition-all">
             KUNG
             {/* Katana slash line through text */}
-            <motion.div 
+            <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.8, duration: 0.5, ease: "circOut" }}
@@ -86,7 +86,7 @@ export const HeroSection = () => {
           </span>
         </motion.p>
 
-        
+
       </div>
 
       {/* Scroll Indicator */}

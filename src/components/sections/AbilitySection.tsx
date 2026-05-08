@@ -1,97 +1,152 @@
 import { motion } from "framer-motion";
 
-const SKILL_CATEGORIES = [
+const MODULES = [
   {
     name: "DATA PIPELINE",
-    color: "#00D4FF",
+    code: "MOD_01",
+    color: "#00F5FF",
     skills: ["Python", "Spark", "Airflow", "dbt", "Kafka", "PostgreSQL"],
     pwr: 92,
-    colSpan: "md:col-span-2 lg:col-span-2",
+    desc: "Real-time ingestion and transformation at scale. Sub-second latency across distributed systems.",
+    clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 16px)",
   },
   {
     name: "AI SYSTEMS",
-    color: "#CC0000",
+    code: "MOD_02",
+    color: "#FF003C",
     skills: ["LangChain", "OpenAI", "Hugging Face", "RAG", "Pinecone"],
     pwr: 85,
-    colSpan: "md:col-span-1 lg:col-span-1",
+    desc: "Neural weapon systems. RAG architectures and LLM integration for autonomous intelligence.",
+    clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 24px 100%, 0 calc(100% - 24px))",
   },
   {
     name: "INFRASTRUCTURE",
-    color: "#B8860B",
+    code: "MOD_03",
+    color: "#FCEE0A",
     skills: ["Docker", "K8s", "Terraform", "AWS", "CI/CD"],
     pwr: 88,
-    colSpan: "md:col-span-1 lg:col-span-1",
+    desc: "Hardened deployment architecture. Zero-downtime containers and infrastructure-as-code mastery.",
+    clipPath: "polygon(24px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 24px)",
   },
   {
     name: "FRONTEND MODULES",
+    code: "MOD_04",
     color: "#00FF88",
-    skills: ["React", "TypeScript", "Tailwind", "Next.js"],
+    skills: ["React", "TypeScript", "Tailwind", "Next.js", "Framer Motion"],
     pwr: 95,
-    colSpan: "md:col-span-2 lg:col-span-2",
+    desc: "Precision interface weaponry. High-performance UIs with aggressive motion systems.",
+    clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 16px 100%, 0 calc(100% - 16px))",
   },
 ];
 
+/* Hard impact spring */
+const slamIn = {
+  hidden: { opacity: 0, y: -25, scale: 1.08 },
+  visible: {
+    opacity: 1, y: 0, scale: 1,
+    transition: { type: "spring", stiffness: 500, damping: 12 },
+  },
+};
+
 export const AbilitySection = () => {
   return (
-    <section id="skills" className="relative py-24 px-6 md:px-12 bg-[#050510] overflow-hidden text-[#E0E0E0]">
-      {/* Hexagonal Background */}
-      <div 
-        className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"49\" viewBox=\"0 0 28 49\"><path d=\"M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM14 1.75l13 7.5v15l-13 7.5L1 24.25v-15l13-7.5z\" fill=\"%2300D4FF\" fill-rule=\"evenodd\"/></svg>')",
-          backgroundSize: "40px"
-        }}
-      />
+    <section id="skills" className="relative py-24 px-6 md:px-12 bg-[#050505] overflow-hidden">
+      {/* BG Effects */}
+      <div className="absolute inset-0 crt-scanlines opacity-[0.03] pointer-events-none" />
+      <div className="absolute inset-0 hud-grid pointer-events-none" />
 
       <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="mb-16">
-          <p className="font-mono text-[11px] text-[#00D4FF] mb-2 tracking-wider">
+        {/* Header */}
+        <motion.div
+          variants={slamIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+          className="mb-16"
+        >
+          <p className="font-mono-ui text-[11px] text-crimson mb-2 tracking-widest">
             // COMBAT_SYSTEMS.LOG
           </p>
-          <div className="w-full h-[1px] bg-[#00D4FF] mb-4" />
-          <h2 className="font-bold text-3xl md:text-5xl tracking-widest text-[#E0E0E0]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            ACTIVE ARMOR MODULES
+          <div className="w-full h-[1px] bg-[#FF003C] mb-4 opacity-60" />
+          <h2 className="font-display font-bold text-2xl md:text-4xl tracking-widest uppercase">
+            ACTIVE <span className="text-cyan-accent">ARMOR</span> MODULES
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SKILL_CATEGORIES.map((cat, i) => (
+        {/* Asymmetric Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {MODULES.map((mod, i) => (
             <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={mod.code}
+              initial={{ opacity: 0, y: 40, rotateX: -5 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true, margin: "-10%" }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className={`relative bg-[#070710] border border-[#00D4FF22] p-6 group transition-all duration-300 hover:-translate-y-1 hover:border-[#00D4FF88] hover:shadow-[0_0_16px_#00D4FF22] ${cat.colSpan}`}
+              transition={{ delay: i * 0.12, type: "spring", stiffness: 300, damping: 15 }}
+              whileHover={{
+                scale: 1.02,
+                x: i % 2 === 0 ? 4 : -4,
+                transition: { duration: 0.1 },
+              }}
+              className="relative bg-[#0A0A0A] border border-[#1a1a2e] p-6 group cursor-default overflow-hidden katana-slash"
+              style={{
+                clipPath: mod.clipPath,
+                borderColor: `${mod.color}22`,
+              }}
             >
-              {/* Top Bar */}
-              <div 
+              {/* Top accent bar */}
+              <div
                 className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden"
-                style={{ backgroundColor: `${cat.color}44` }}
+                style={{ backgroundColor: `${mod.color}33` }}
               >
-                <div 
-                  className="h-full w-1/3 bg-current -translate-x-full group-hover:animate-[sweep_1s_ease-in-out_infinite]"
-                  style={{ color: cat.color }}
+                <div
+                  className="h-full w-1/4 -translate-x-full group-hover:animate-[sweep_0.6s_ease-in-out]"
+                  style={{ backgroundColor: mod.color }}
                 />
               </div>
 
+              {/* Hover border glow */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none"
+                style={{ boxShadow: `inset 0 0 30px ${mod.color}15, 0 0 20px ${mod.color}10` }}
+              />
+
               {/* Header */}
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="text-xl md:text-2xl font-bold tracking-widest" style={{ fontFamily: "'Orbitron', sans-serif", color: cat.color }}>
-                  {cat.name}
-                </h3>
-                <span className="font-mono text-[10px] bg-[#00FF8822] text-[#00FF88] border border-[#00FF88] px-2 py-0.5 rounded-sm">
+              <div className="flex justify-between items-start mb-5 relative z-10">
+                <div>
+                  <span className="font-mono-ui text-[9px] text-dim tracking-widest block mb-1">
+                    [{mod.code}]
+                  </span>
+                  <h3
+                    className="font-display text-lg md:text-xl font-bold tracking-widest uppercase"
+                    style={{ color: mod.color }}
+                  >
+                    {mod.name}
+                  </h3>
+                </div>
+                <span
+                  className="font-mono-ui text-[9px] px-2 py-0.5 border tracking-widest"
+                  style={{ borderColor: `${mod.color}66`, color: mod.color }}
+                >
                   ONLINE
                 </span>
               </div>
 
-              {/* Skills */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {cat.skills.map(skill => (
-                  <span 
-                    key={skill} 
-                    className="font-mono text-[11px] px-2 py-1 rounded-[2px]"
-                    style={{ border: `1px solid ${cat.color}66`, color: cat.color }}
+              {/* Description */}
+              <p className="font-mono-ui text-[11px] text-dim leading-relaxed mb-5 relative z-10">
+                {mod.desc}
+              </p>
+
+              {/* Skill chips */}
+              <div className="flex flex-wrap gap-2 mb-6 relative z-10">
+                {mod.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="font-mono-ui text-[10px] px-2 py-1"
+                    style={{
+                      border: `1px solid ${mod.color}44`,
+                      color: `${mod.color}cc`,
+                      clipPath: "polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%)",
+                    }}
                   >
                     {skill}
                   </span>
@@ -99,34 +154,30 @@ export const AbilitySection = () => {
               </div>
 
               {/* Power Bar */}
-              <div className="mt-auto flex items-center gap-3">
-                <div className="flex-1 h-[3px] bg-[#1a1a2e]">
-                  <motion.div 
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="flex-1 h-[3px] bg-[#1a1a2e] overflow-hidden">
+                  <motion.div
                     className="h-full"
-                    style={{ backgroundColor: cat.color }}
+                    style={{ backgroundColor: mod.color }}
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${cat.pwr}%` }}
+                    whileInView={{ width: `${mod.pwr}%` }}
                     viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.3 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: "circOut" }}
                   />
                 </div>
-                <span className="font-mono text-[10px] text-[#7899aa]">PWR: {cat.pwr}%</span>
+                <span className="font-mono-ui text-[9px] text-dim tabular-nums">
+                  PWR: {mod.pwr}%
+                </span>
               </div>
 
-              {/* Corner Decoration */}
-              <div className="absolute bottom-4 right-4 font-mono text-[10px] text-[#00D4FF33]">
+              {/* Corner decoration */}
+              <div className="absolute bottom-3 right-4 font-mono-ui text-[9px] text-[#1a1a2e] tracking-widest">
                 &gt;&gt;
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-      <style>{`
-        @keyframes sweep {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-      `}</style>
     </section>
   );
 };

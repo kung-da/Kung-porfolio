@@ -35,7 +35,7 @@ const Index = () => {
 
       {/* Bao bọc main bằng motion.main để tạo hiệu ứng xuất hiện */}
       {!isLoading && (
-        <motion.main 
+        <motion.main
           initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
