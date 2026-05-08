@@ -1,22 +1,26 @@
+import { motion } from "framer-motion";
+import type { ReactNode } from "react";
+
 interface Props {
-  eyebrow: string;
-  title: React.ReactNode;
-  subtitle?: React.ReactNode;
+  chapter: string;
+  title: string;
+  jp?: ReactNode;
 }
 
-export const SectionHeader = ({ eyebrow, title, subtitle }: Props) => (
-  <div className="mb-14">
-    <p className="text-[10px] font-mono-ui font-semibold tracking-[0.4em] mb-4 text-cyan-accent flex items-center gap-3">
-      <span className="inline-block w-6 h-px bg-cyan-accent" />
-      {eyebrow}
+export const SectionHeader = ({ chapter, title, jp }: Props) => (
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-10%" }}
+    transition={{ duration: 0.5 }}
+    className="mb-10"
+  >
+    <p className="chapter-label mb-2">
+      CHAPTER {chapter} {jp && <span className="font-jp ml-2 text-ink">{jp}</span>}
     </p>
-    <h2 className="text-3xl md:text-5xl font-display title-cinematic uppercase inline-flex items-baseline gap-4 flex-wrap">
-      {title}
-      {subtitle && <span className="text-lg md:text-xl text-sakura/80 font-normal normal-case tracking-wider">{subtitle}</span>}
+    <h2 className="font-display font-black text-3xl md:text-5xl tracking-tight text-ink uppercase">
+      [{title}]
     </h2>
-    <div className="mt-5 flex items-center gap-2">
-      <div className="h-px w-[80px]" style={{ background: "linear-gradient(90deg, hsl(var(--primary)), transparent)" }} />
-      <div className="w-1 h-1 rotate-45 bg-cyan-accent" />
-    </div>
-  </div>
+    <div className="manga-rule mt-4" />
+  </motion.div>
 );

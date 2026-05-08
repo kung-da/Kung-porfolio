@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
-  { label: "About", id: "about", code: "01" },
-  { label: "Skills", id: "skills", code: "02" },
-  { label: "Projects", id: "projects", code: "03" },
-  { label: "Journey", id: "journey", code: "04" },
-  { label: "Contact", id: "contact", code: "05" },
+  { label: "ENCOUNTER", id: "home" },
+  { label: "ABILITIES", id: "abilities" },
+  { label: "RAIDS", id: "raids" },
+  { label: "PROFILE", id: "profile" },
+  { label: "TERMINAL", id: "terminal" },
 ];
 
 export const Navigation = () => {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -23,18 +23,11 @@ export const Navigation = () => {
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    ["home", ...LINKS.map((l) => l.id)].forEach((id) => {
-      const el = document.getElementById(id);
+    LINKS.forEach((l) => {
+      const el = document.getElementById(l.id);
       if (el) obs.observe(el);
     });
-
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      obs.disconnect();
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => obs.disconnect();
   }, []);
 
   const scrollTo = (id: string) => {
@@ -43,95 +36,114 @@ export const Navigation = () => {
   };
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 transition-all duration-500"
-      style={{
-        zIndex: 100,
-        background: scrolled ? "hsl(0 0% 2% / 0.85)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? "1px solid hsl(0 0% 100% / 0.05)" : "1px solid transparent",
-      }}
-    >
-      <div className="container mx-auto px-6 py-5 flex items-center justify-between">
-        {/* Logo / sigil */}
-        <button
-          onClick={() => scrollTo("home")}
-          className="flex items-center gap-2 group"
-          aria-label="Home"
-        >
-          <div
-            className="relative w-9 h-9 flex items-center justify-center font-display font-bold text-sm transition-all"
-            style={{
-              border: "1px solid hsl(var(--primary) / 0.6)",
-              color: "hsl(var(--primary))",
-              background: "hsl(var(--primary) / 0.06)",
-              clipPath: "polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)",
-            }}
-          >
-            K
-          </div>
-          <div className="hidden sm:block">
-            <p className="text-[9px] font-mono-ui tracking-[0.3em] text-cyan-accent leading-none">
-              cung-master
-            </p>
-            <p className="text-[9px] font-mono-ui tracking-[0.2em] text-muted-foreground leading-none mt-0.5">
-              · TOMBGUARD ·
-            </p>
-          </div>
-        </button>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-7">
-          {LINKS.map((l) => {
-            const isActive = active === l.id;
-            return (
-              <button
-                key={l.id}
-                onClick={() => scrollTo(l.id)}
-                className="group relative flex items-baseline gap-1.5 text-xs font-mono-ui tracking-[0.25em] uppercase transition-colors"
-                style={{ color: isActive ? "hsl(var(--primary))" : "hsl(0 0% 75%)" }}
-              >
-                <span className="text-[9px] opacity-60">{l.code}</span>
-                <span>{l.label}</span>
+    <>
+      <nav
+        className="fixed left-0 right-0 hidden md:flex items-center justify-center gap-8"
+        style={{
+          top: 40,
+          height: 44,
+          zIndex: 80,
+          background: "rgba(250,250,248,0.92)",
+          borderBottom: "1px solid #0A0A0A",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        {LINKS.map((l) => {
+          const isActive = active === l.id;
+          return (
+            <button
+              key={l.id}
+              onClick={() => scrollTo(l.id)}
+              className="font-display text-[10px] tracking-[0.25em] relative px-2 py-1 transition-all"
+              style={{
+                color: "#0A0A0A",
+                fontWeight: isActive ? 700 : 500,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "2px 2px 0 #0A0A0A";
+                e.currentTarget.style.background = "#FAFAF8";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {l.label}
+              {isActive && (
                 <span
-                  className="absolute -bottom-1.5 left-0 h-px transition-all duration-300"
                   style={{
-                    width: isActive ? "100%" : 0,
-                    background: "hsl(var(--primary))",
-                    boxShadow: isActive ? "0 0 8px hsl(var(--primary))" : "none",
+                    position: "absolute",
+                    bottom: -2,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: "#8FEFFF",
+                    boxShadow: "0 0 8px #8FEFFF",
                   }}
                 />
-              </button>
-            );
-          })}
-        </div>
+              )}
+            </button>
+          );
+        })}
+      </nav>
 
-        <button
-          className="md:hidden text-foreground"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
+      {/* Mobile button */}
+      <button
+        className="md:hidden fixed right-3 flex items-center justify-center"
+        style={{
+          top: 44,
+          zIndex: 95,
+          width: 40,
+          height: 40,
+          background: "#FAFAF8",
+          border: "2px solid #0A0A0A",
+          boxShadow: "2px 2px 0 #0A0A0A",
+          color: "#0A0A0A",
+        }}
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Menu"
+      >
+        {open ? <X size={18} /> : <Menu size={18} />}
+      </button>
 
-      {open && (
-        <div className="md:hidden border-t border-white/5 backdrop-blur-xl" style={{ background: "hsl(0 0% 2% / 0.95)" }}>
-          <div className="flex flex-col px-6 py-4 gap-3">
-            {LINKS.map((l) => (
-              <button
-                key={l.id}
-                onClick={() => scrollTo(l.id)}
-                className="text-left text-xs font-mono-ui tracking-[0.25em] uppercase flex items-baseline gap-2"
-                style={{ color: active === l.id ? "hsl(var(--primary))" : "hsl(0 0% 80%)" }}
-              >
-                <span className="text-[9px] opacity-60">{l.code}</span>
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 22, stiffness: 200 }}
+            className="md:hidden fixed top-0 right-0 bottom-0"
+            style={{
+              zIndex: 92,
+              width: "78%",
+              maxWidth: 320,
+              background: "#FAFAF8",
+              borderLeft: "2px solid #0A0A0A",
+              padding: "80px 24px 24px",
+            }}
+          >
+            <p className="chapter-label mb-6">// NAVIGATION</p>
+            <div className="flex flex-col gap-1">
+              {LINKS.map((l) => (
+                <button
+                  key={l.id}
+                  onClick={() => scrollTo(l.id)}
+                  className="font-display text-sm tracking-[0.2em] text-left p-3"
+                  style={{
+                    color: active === l.id ? "#0A0A0A" : "#888",
+                    background: active === l.id ? "#FAFAF8" : "transparent",
+                    border: "1px solid #0A0A0A",
+                    boxShadow: active === l.id ? "3px 3px 0 #0A0A0A" : "none",
+                  }}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
