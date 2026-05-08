@@ -25,7 +25,6 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-washi">
-      <SakuraBackground />
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />

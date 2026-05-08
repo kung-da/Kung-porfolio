@@ -1,156 +1,103 @@
 import { motion } from "framer-motion";
 import wazaemonImg from "@/assets/wazaemon.png";
+import SakuraBackground from "@/components/SakuraBackground";
 
 export const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative w-full min-h-screen flex items-center px-6 md:px-12 lg:px-20"
-      style={{ paddingTop: 120, paddingBottom: 80 }}
+      className="relative w-full h-screen flex items-center justify-center px-6 md:px-12 overflow-hidden bg-[#050505]"
     >
-      {/* Wezaemon fixed background */}
+      {/* Colored Background Image with Dark Overlay */}
       <div
-        aria-hidden
+        className="absolute inset-0 z-0"
         style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: -1,
           backgroundImage: `url(${wazaemonImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          opacity: 0.85,
-          filter: "sepia(15%) contrast(110%)",
-          willChange: "transform",
         }}
       />
-      <div
-        aria-hidden
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 0,
-          background:
-            "linear-gradient(to right, rgba(250,250,248,0.94) 0%, rgba(250,250,248,0.55) 35%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div className="container mx-auto max-w-6xl relative" style={{ zIndex: 1 }}>
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          {/* LEFT — boss encounter card */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            className="manga-panel p-6 md:p-8 relative speed-lines"
-          >
-            <p className="text-sm md:text-base font-mono uppercase tracking-widest text-[#888888] mb-2">[ BOSS ENCOUNTER ]</p>
-            <div className="manga-rule mb-5" />
-
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-[#0A0A0A] leading-none mb-2">
-              <motion.span
-                whileHover={{}}
-                className="inline-block glitch-hover hollow-text"
-                data-text="CUNG"
-              >
-                CUNG
-              </motion.span>
-              <br />
-              <span className="text-[#0A0A0A]">
-                MASTER
-              </span>
-            </h1>
-
-            <div className="manga-rule my-5" />
-
-            <p className="font-jp italic text-stone text-base md:text-lg mb-6">
-              「 Forging systems beyond mortal limits 」
-            </p>
-
-            <div
-              className="font-mono-ui text-xs space-y-1 p-4"
-              style={{ background: "#0A0A0A", color: "#8FEFFF" }}
-            >
-              <div>
-                <span style={{ opacity: 0.6 }}>STATUS </span>:{" "}
-                <span className="animate-blink">●</span> ACTIVE
-              </div>
-              <div>
-                <span style={{ opacity: 0.6 }}>CLASS  </span>: Data Engineer
-              </div>
-              <div>
-                <span style={{ opacity: 0.6 }}>SPEC   </span>: AI Developer
-              </div>
-              <div>
-                <span style={{ opacity: 0.6 }}>RANK   </span>: System Builder
-              </div>
-            </div>
-          </motion.div>
-
-          {/* RIGHT — boss stat panel */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="manga-panel p-6 md:p-7"
-            style={{ background: "rgba(250,250,248,0.95)" }}
-          >
-            <div className="font-display text-xs tracking-[0.25em] mb-3 text-ink">
-              ▓ WEZAEMON · TOMBGUARD
-            </div>
-            <div className="manga-rule mb-4" />
-
-            <div className="font-mono-ui text-sm leading-relaxed space-y-1.5 mb-6">
-              <Row k="TYPE" v="Cyber-Undead / Boss" />
-              <Row k="WEAKNESS" v="None detected" />
-              <Row k="ELEMENT" v="Void + Technology" />
-              <div className="flex justify-between">
-                <span className="text-stone">THREAT</span>
-                <span className="text-ink">
-                  ██████████ <strong>S-TIER</strong>
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() =>
-                  document.getElementById("raids")?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="bg-[#0A0A0A] text-[#FAFAF8] px-8 py-4 uppercase font-mono tracking-[0.2em] text-sm border border-[#0A0A0A] relative overflow-hidden transition-all duration-300 rounded-none hover:shadow-[0_0_20px_rgba(143,239,255,0.4)] hover:border-[#8FEFFF] hover:text-[#8FEFFF]"
-              >
-                [ BEGIN RAID ]
-              </button>
-              <button
-                onClick={() =>
-                  document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="bg-transparent text-[#0A0A0A] border border-[#0A0A0A]/30 px-4 py-2 uppercase font-mono text-xs tracking-wider rounded-none hover:bg-[#0A0A0A] hover:text-[#FAFAF8] transition-colors duration-200 flex items-center justify-center"
-              >
-                [ VIEW PROFILE ]
-              </button>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll hint */}
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity }}
-          className="text-center mt-16 font-mono-ui text-xs tracking-[0.4em]"
-          style={{ color: "#0A0A0A" }}
-        >
-          ▾ SCROLL TO PROCEED ▾
-        </motion.div>
+      
+      {/* Sakura Particle System - rendered at z-index 10 via wrapper if needed, but since it's fixed with z:-1 in its own file, we force a stacking context here */}
+      <div className="absolute inset-0 z-10 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
+         <SakuraBackground />
       </div>
+
+      {/* Mystical Overlays: Darker at bottom for blending, slight shadow in center for text readability */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#050505]/20 via-transparent to-[#050505] pointer-events-none" />
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(5,5,5,0.6)_0%,transparent_60%)] pointer-events-none" />
+
+      <div className="container mx-auto max-w-5xl relative z-20 flex flex-col items-center text-center mt-10">
+        {/* WEZAEMON • TOMBGUARD */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-4"
+        >
+          <h3 className="font-display text-xs md:text-sm tracking-[0.4em] text-[#8FEFFF] uppercase drop-shadow-[0_0_8px_rgba(143,239,255,0.6)]">
+            WEZAEMON • TOMBGUARD
+          </h3>
+        </motion.div>
+
+        {/* Hero Title */}
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-black uppercase tracking-tighter leading-none mb-4 text-[#E0E0E0] relative"
+          style={{ fontSize: "clamp(5rem, 15vw, 12rem)", textShadow: "0 0 50px rgba(139, 0, 0, 0.5)" }}
+        >
+          <span className="relative inline-block hover:animate-pulse transition-all">
+            KUNG
+            {/* Katana slash line through text */}
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.8, duration: 0.5, ease: "circOut" }}
+              className="absolute top-1/2 left-[-15%] right-[-15%] h-[5px] bg-[#8B0000] origin-left z-20"
+              style={{ transform: "translateY(-50%) rotate(-4deg)", boxShadow: "0 0 20px #8B0000" }}
+            />
+          </span>
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="font-mono text-sm md:text-lg tracking-[0.3em] text-[#D4AF37] mb-8 px-6 py-2 border-b border-t border-[#D4AF37]/30 bg-[#0a0a0a]/40 backdrop-blur-sm uppercase"
+        >
+          Warden of the Digital Grave
+        </motion.h2>
+
+        {/* Subtitle / Description */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="font-mono text-sm md:text-base text-[#C0C0C0] max-w-2xl mx-auto mb-12 leading-relaxed tracking-wide"
+        >
+          Full-stack Developer <span className="text-[#8B0000] mx-2">|</span> Data Engineer <span className="text-[#8B0000] mx-2">|</span> Anime Soul
+          <br />
+          <span className="block mt-4 italic text-[#888888] font-serif text-base">
+            "Forging systems beyond mortal limits, where code meets the blade."
+          </span>
+        </motion.p>
+
+        
+      </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        animate={{ y: [0, 15, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+      >
+        <span className="font-mono text-[9px] tracking-[0.4em] text-[#888888] uppercase">Scroll</span>
+        <div className="w-[1px] h-16 bg-gradient-to-b from-[#8B0000] to-transparent" />
+      </motion.div>
     </section>
   );
 };
-
-const Row = ({ k, v }: { k: string; v: string }) => (
-  <div className="flex justify-between gap-4">
-    <span className="text-stone">{k}</span>
-    <span className="text-ink">{v}</span>
-  </div>
-);
