@@ -149,7 +149,7 @@ void main(void) {
     
     if(r > rstop) discard;
     
-    vec3 col = mix(vec3(1.0, 0.8, 0.75), vec3(1.0, 0.9, 0.87), r);
+    vec3 col = mix(vec3(0.95, 0.74, 0.82), vec3(1.0, 0.85, 0.9), r);
     float grady = mix(0.0, 1.0, pow(coord.y * 0.5 + 0.5, 0.35));
     col *= vec3(1.0, grady, grady);
     col *= mix(0.8, 1.0, pow(abs(coord.x), 0.3));
@@ -164,93 +164,6 @@ void main(void) {
 }
 `;
 
-const fx_common_vsh = `
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-`;
-
-const fx_brightbuf_fsh = `
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    gl_FragColor = vec4(col.rgb * 2.0 - vec3(0.5), col.a);
-}
-`;
-
-const fx_dirblur_r4_fsh = `
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-uniform vec4 uBlurDir; //dir(x, y), stride(z, w)
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    col = col + texture2D(uSrc, texCoord + uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord - uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord + (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    col = col + texture2D(uSrc, texCoord - (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    gl_FragColor = col / 5.0;
-}
-`;
-
-const pp_final_vsh = `
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-`;
-
-const pp_final_fsh = `
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform sampler2D uBloom;
-uniform vec2 uDelta;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    vec4 srccol = texture2D(uSrc, texCoord) * 2.0;
-    vec4 bloomcol = texture2D(uBloom, texCoord);
-    vec4 col;
-    col = srccol + bloomcol * (vec4(1.0) + srccol);
-    col *= smoothstep(1.0, 0.0, pow(length((texCoord - vec2(0.5)) * 2.0), 1.2) * 0.5);
-    col = pow(col, vec4(0.45454545454545)); //(1.0 / 2.2)
-    
-    float alpha = max(texture2D(uSrc, texCoord).a, texture2D(uBloom, texCoord).a);
-    gl_FragColor = vec4(col.rgb, alpha);
-}
-`;
 
 const SakuraBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -385,10 +298,7 @@ const SakuraBackground: React.FC = () => {
             'width': 0,
             'height': 0,
             'aspect': 1,
-            'array': new Float32Array(3),
-            'halfWidth': 0,
-            'halfHeight': 0,
-            'halfArray': new Float32Array(3)
+            'array': new Float32Array(3)
         };
 
         renderSpec.setSize = function(w: number, h: number) {
@@ -398,51 +308,8 @@ const SakuraBackground: React.FC = () => {
             renderSpec.array[0] = renderSpec.width;
             renderSpec.array[1] = renderSpec.height;
             renderSpec.array[2] = renderSpec.aspect;
-            
-            renderSpec.halfWidth = Math.floor(w / 2);
-            renderSpec.halfHeight = Math.floor(h / 2);
-            renderSpec.halfArray[0] = renderSpec.halfWidth;
-            renderSpec.halfArray[1] = renderSpec.halfHeight;
-            renderSpec.halfArray[2] = renderSpec.halfWidth / renderSpec.halfHeight;
         };
 
-        function deleteRenderTarget(rt: any) {
-            gl!.deleteFramebuffer(rt.frameBuffer);
-            gl!.deleteRenderbuffer(rt.renderBuffer);
-            gl!.deleteTexture(rt.texture);
-        }
-
-        function createRenderTarget(w: number, h: number) {
-            const ret: any = {
-                'width': w,
-                'height': h,
-                'sizeArray': new Float32Array([w, h, w / h]),
-                'dtxArray': new Float32Array([1.0 / w, 1.0 / h])
-            };
-            ret.frameBuffer = gl!.createFramebuffer();
-            ret.renderBuffer = gl!.createRenderbuffer();
-            ret.texture = gl!.createTexture();
-            
-            gl!.bindTexture(gl!.TEXTURE_2D, ret.texture);
-            gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, w, h, 0, gl!.RGBA, gl!.UNSIGNED_BYTE, null);
-            gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE);
-            gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
-            gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
-            gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
-            
-            gl!.bindFramebuffer(gl!.FRAMEBUFFER, ret.frameBuffer);
-            gl!.framebufferTexture2D(gl!.FRAMEBUFFER, gl!.COLOR_ATTACHMENT0, gl!.TEXTURE_2D, ret.texture, 0);
-            
-            gl!.bindRenderbuffer(gl!.RENDERBUFFER, ret.renderBuffer);
-            gl!.renderbufferStorage(gl!.RENDERBUFFER, gl!.DEPTH_COMPONENT16, w, h);
-            gl!.framebufferRenderbuffer(gl!.FRAMEBUFFER, gl!.DEPTH_ATTACHMENT, gl!.RENDERBUFFER, ret.renderBuffer);
-            
-            gl!.bindTexture(gl!.TEXTURE_2D, null);
-            gl!.bindRenderbuffer(gl!.RENDERBUFFER, null);
-            gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
-            
-            return ret;
-        }
 
         function compileShader(shtype: number, shsrc: string) {
             const retsh = gl!.createShader(shtype);
@@ -603,7 +470,7 @@ const SakuraBackground: React.FC = () => {
             pointFlower.offset = new Float32Array([0.0, 0.0, 0.0]);
             pointFlower.fader = Vector3.create(0.0, 10.0, 0.0);
             
-            pointFlower.numFlowers = 1600;
+            pointFlower.numFlowers = 8000;
             pointFlower.particles = new Array(pointFlower.numFlowers);
             pointFlower.dataArray = new Float32Array(pointFlower.numFlowers * (3 + 3 + 2));
             pointFlower.positionArrayOffset = 0;
@@ -782,114 +649,8 @@ const SakuraBackground: React.FC = () => {
             gl!.disable(gl!.BLEND);
         }
 
-        function createEffectProgram(vtxsrc: string, frgsrc: string, exunifs: string[] | null, exattrs: string[] | null) {
-            const ret: any = {};
-            let unifs = ['uResolution', 'uSrc', 'uDelta'];
-            if(exunifs) {
-                unifs = unifs.concat(exunifs);
-            }
-            let attrs = ['aPosition'];
-            if(exattrs) {
-                attrs = attrs.concat(exattrs);
-            }
-            
-            ret.program = createShader(vtxsrc, frgsrc, unifs, attrs);
-            useShader(ret.program);
-            
-            ret.dataArray = new Float32Array([
-                -1.0, -1.0,
-                 1.0, -1.0,
-                -1.0,  1.0,
-                 1.0,  1.0
-            ]);
-            ret.buffer = gl!.createBuffer();
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, ret.buffer);
-            gl!.bufferData(gl!.ARRAY_BUFFER, ret.dataArray, gl!.STATIC_DRAW);
-            
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, null);
-            unuseShader(ret.program);
-            
-            return ret;
-        }
-
-        function useWebGLShader(fxobj: any, srctex: any) {
-            const prog = fxobj.program;
-            useShader(prog);
-            gl!.uniform3fv(prog.uniforms.uResolution, renderSpec.array);
-            
-            if(srctex != null) {
-                gl!.uniform2fv(prog.uniforms.uDelta, srctex.dtxArray);
-                gl!.uniform1i(prog.uniforms.uSrc, 0);
-                
-                gl!.activeTexture(gl!.TEXTURE0);
-                gl!.bindTexture(gl!.TEXTURE_2D, srctex.texture);
-            }
-        }
-        function drawEffect(fxobj: any) {
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, fxobj.buffer);
-            gl!.vertexAttribPointer(fxobj.program.attributes.aPosition, 2, gl!.FLOAT, false, 0, 0);
-            gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
-        }
-        function unuseWebGLShader(fxobj: any) {
-            unuseShader(fxobj.program);
-        }
-
-        const effectLib: any = {};
-        function createEffectLib() {
-            effectLib.mkBrightBuf = createEffectProgram(fx_common_vsh, fx_brightbuf_fsh, null, null);
-            effectLib.dirBlur = createEffectProgram(fx_common_vsh, fx_dirblur_r4_fsh, ['uBlurDir'], null);
-            effectLib.finalComp = createEffectProgram(pp_final_vsh, pp_final_fsh, ['uBloom'], null);
-        }
-
-        function renderPostProcess() {
-            gl!.enable(gl!.TEXTURE_2D);
-            gl!.disable(gl!.DEPTH_TEST);
-            const bindRT = function (rt: any, isclear: boolean) {
-                gl!.bindFramebuffer(gl!.FRAMEBUFFER, rt.frameBuffer);
-                gl!.viewport(0, 0, rt.width, rt.height);
-                if(isclear) {
-                    gl!.clearColor(0, 0, 0, 0);
-                    gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
-                }
-            };
-            
-            bindRT(renderSpec.wHalfRT0, true);
-            useWebGLShader(effectLib.mkBrightBuf, renderSpec.mainRT);
-            drawEffect(effectLib.mkBrightBuf);
-            unuseWebGLShader(effectLib.mkBrightBuf);
-            
-            for(let i = 0; i < 2; i++) {
-                const p = 1.5 + 1 * i;
-                const s = 2.0 + 1 * i;
-                bindRT(renderSpec.wHalfRT1, true);
-                useWebGLShader(effectLib.dirBlur, renderSpec.wHalfRT0);
-                gl!.uniform4f(effectLib.dirBlur.program.uniforms.uBlurDir, p, 0.0, s, 0.0);
-                drawEffect(effectLib.dirBlur);
-                unuseWebGLShader(effectLib.dirBlur);
-                
-                bindRT(renderSpec.wHalfRT0, true);
-                useWebGLShader(effectLib.dirBlur, renderSpec.wHalfRT1);
-                gl!.uniform4f(effectLib.dirBlur.program.uniforms.uBlurDir, 0.0, p, 0.0, s);
-                drawEffect(effectLib.dirBlur);
-                unuseWebGLShader(effectLib.dirBlur);
-            }
-            
-            gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
-            gl!.viewport(0, 0, renderSpec.width, renderSpec.height);
-            gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
-            
-            useWebGLShader(effectLib.finalComp, renderSpec.mainRT);
-            gl!.uniform1i(effectLib.finalComp.program.uniforms.uBloom, 1);
-            gl!.activeTexture(gl!.TEXTURE1);
-            gl!.bindTexture(gl!.TEXTURE_2D, renderSpec.wHalfRT0.texture);
-            drawEffect(effectLib.finalComp);
-            unuseWebGLShader(effectLib.finalComp);
-            
-            gl!.enable(gl!.DEPTH_TEST);
-        }
 
         function createScene() {
-            createEffectLib();
             createPointFlowers();
             sceneStandBy = true;
         }
@@ -906,13 +667,12 @@ const SakuraBackground: React.FC = () => {
             
             gl!.enable(gl!.DEPTH_TEST);
             
-            gl!.bindFramebuffer(gl!.FRAMEBUFFER, renderSpec.mainRT.frameBuffer);
-            gl!.viewport(0, 0, renderSpec.mainRT.width, renderSpec.mainRT.height);
+            gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
+            gl!.viewport(0, 0, renderSpec.width, renderSpec.height);
             gl!.clearColor(0.0, 0.0, 0.0, 0.0);
             gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
             
             renderPointFlowers();
-            renderPostProcess();
         }
 
         function makeCanvasFullScreen(canvasElem: HTMLCanvasElement) {
@@ -926,17 +686,6 @@ const SakuraBackground: React.FC = () => {
             
             gl!.clearColor(0.0, 0.0, 0.0, 0.0);
             gl!.viewport(0, 0, renderSpec.width, renderSpec.height);
-            
-            const rtfunc = function (rtname: string, rtw: number, rth: number) {
-                const rt = renderSpec[rtname];
-                if(rt) deleteRenderTarget(rt);
-                renderSpec[rtname] = createRenderTarget(rtw, rth);
-            };
-            rtfunc('mainRT', renderSpec.width, renderSpec.height);
-            rtfunc('wFullRT0', renderSpec.width, renderSpec.height);
-            rtfunc('wFullRT1', renderSpec.width, renderSpec.height);
-            rtfunc('wHalfRT0', renderSpec.halfWidth, renderSpec.halfHeight);
-            rtfunc('wHalfRT1', renderSpec.halfWidth, renderSpec.halfHeight);
         }
 
         function onResize() {
