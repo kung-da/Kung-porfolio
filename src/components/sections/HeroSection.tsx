@@ -47,7 +47,7 @@ export const HeroSection = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="font-black uppercase tracking-tighter leading-none mb-4 text-[#E0E0E0] relative"
-          style={{ fontSize: "clamp(4rem, 12vw, 10rem)", textShadow: "0 0 50px rgba(139, 0, 0, 0.5)" }}
+          style={{ fontSize: "clamp(4rem, 10vw, 12rem)", textShadow: "0 0 50px rgba(139, 0, 0, 0.5)" }}
         >
           <span className="relative inline-block hover:animate-pulse transition-all">
             KUNG

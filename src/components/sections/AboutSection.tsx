@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import wazaemonImg from "@/assets/wazaemon.png";
+import profile from "@/assets/profile-picture.jpg";
 
 /* ── Number scramble hook ── */
 const useScramble = (target: string, active: boolean, duration = 800) => {
@@ -137,7 +137,7 @@ export const AboutSection = () => {
             >
               {/* Image */}
               <img
-                src={wazaemonImg}
+                src={profile}
                 alt="Target: Wezaemon"
                 className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500"
                 style={{ filter: "contrast(1.1) brightness(0.9)" }}
@@ -145,16 +145,6 @@ export const AboutSection = () => {
 
               {/* Scan line */}
               <div className="absolute left-0 right-0 h-[2px] bg-[#FF003C] opacity-30 shadow-[0_0_10px_#FF003C] animate-[scanV_3s_linear_infinite] pointer-events-none" />
-
-              {/* Crosshair overlay */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-16 h-16 md:w-24 md:h-24 border border-[#FF003C44] relative">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-3 bg-[#FF003C66]" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-3 bg-[#FF003C66]" />
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-[1px] bg-[#FF003C66]" />
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-[1px] bg-[#FF003C66]" />
-                </div>
-              </div>
 
               {/* Corner brackets */}
               <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-[#00F5FF]" />

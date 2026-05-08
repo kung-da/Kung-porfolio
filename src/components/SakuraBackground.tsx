@@ -172,6 +172,11 @@ const SakuraBackground: React.FC = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
+        const perf = {
+            sortEvery: 2,
+            maxDelta: 0.05
+        };
+
         let gl: WebGLRenderingContext | null;
         try {
             gl = (canvas.getContext('experimental-webgl', { alpha: true }) ||
@@ -396,6 +401,7 @@ const SakuraBackground: React.FC = () => {
 
         const pointFlower: any = {};
         let sceneStandBy = false;
+        let frameCount = 0;
 
         class BlossomParticle {
             velocity: number[];
@@ -570,7 +576,9 @@ const SakuraBackground: React.FC = () => {
                             + camera.matrix[14]);
             }
             
-            pointFlower.particles.sort(function(p0: any, p1: any){return p0.zkey - p1.zkey;});
+            if (frameCount % perf.sortEvery === 0) {
+                pointFlower.particles.sort(function(p0: any, p1: any){return p0.zkey - p1.zkey;});
+            }
             
             let ipos = pointFlower.positionArrayOffset;
             let ieuler = pointFlower.eulerArrayOffset;
@@ -701,7 +709,7 @@ const SakuraBackground: React.FC = () => {
         createScene();
         initScene();
         
-        timeInfo.start = Date.now();
+        timeInfo.start = performance.now();
         timeInfo.prev = timeInfo.start;
         
         let animationFrameId: number;
@@ -719,12 +727,13 @@ const SakuraBackground: React.FC = () => {
             animationFrameId = requestAnimationFrame(animate);
             
             // SKIP HEAVY CALCULATIONS IF NOT VISIBLE
-            if (!isVisible) return;
+            if (!isVisible || document.hidden) return;
 
-            const curdate = Date.now();
-            timeInfo.elapsed = (curdate - timeInfo.start) / 1000.0;
-            timeInfo.delta = (curdate - timeInfo.prev) / 1000.0;
-            timeInfo.prev = curdate;
+            const now = performance.now();
+            timeInfo.elapsed = (now - timeInfo.start) / 1000.0;
+            timeInfo.delta = Math.min((now - timeInfo.prev) / 1000.0, perf.maxDelta);
+            timeInfo.prev = now;
+            frameCount += 1;
             
             scrollVelocity *= 0.92;
             
