@@ -4,12 +4,12 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
-import SakuraBackground from "@/components/SakuraBackground";
 import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
 import { AbilitySection } from "@/components/sections/AbilitySection";
 import { RaidArchives } from "@/components/sections/RaidArchives";
-import { HunterProfile } from "@/components/sections/HunterProfile";
+import { LegacySection } from "@/components/sections/LegacySection";
 import { ContactTerminal } from "@/components/sections/ContactTerminal";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
 
@@ -24,7 +24,7 @@ const Index = () => {
   }, [isLoading]);
 
   return (
-    <div className="relative min-h-screen bg-washi">
+    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0]">
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />
@@ -35,9 +35,10 @@ const Index = () => {
 
       <main style={{ paddingTop: 0 }}>
         <HeroSection />
+        <AboutSection />
         <AbilitySection />
         <RaidArchives />
-        <HunterProfile />
+        <LegacySection />
         <ContactTerminal />
         <Footer />
       </main>
