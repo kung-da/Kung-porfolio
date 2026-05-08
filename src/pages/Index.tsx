@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
@@ -24,24 +24,32 @@ const Index = () => {
   }, [isLoading]);
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0]">
+    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <main style={{ paddingTop: 0 }}>
-        <HeroSection />
-        <AboutSection />
-        <AbilitySection />
-        <RaidArchives />
-        <LegacySection />
-        <ContactTerminal />
-        <Footer />
-      </main>
+      {/* Bao bọc main bằng motion.main để tạo hiệu ứng xuất hiện */}
+      {!isLoading && (
+        <motion.main 
+          initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          style={{ paddingTop: 0 }}
+        >
+          <HeroSection />
+          <AboutSection />
+          <AbilitySection />
+          <RaidArchives />
+          <LegacySection />
+          <ContactTerminal />
+          <Footer />
+        </motion.main>
+      )}
     </div>
   );
 };

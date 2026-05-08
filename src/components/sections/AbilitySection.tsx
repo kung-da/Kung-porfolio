@@ -1,148 +1,132 @@
 import { motion } from "framer-motion";
 
-interface Cat {
-  glyph: string;
-  name: string;
-  skills: string[];
-  level: number;
-  status: "MASTERED" | "PROFICIENT" | "TRAINING";
-  color: string;
-}
-
-const CATEGORIES: Cat[] = [
+const SKILL_CATEGORIES = [
   {
-    glyph: "⚔",
-    name: "DATA ENGINEERING",
-    skills: ["Python", "Spark", "Airflow", "dbt", "Kafka", "PostgreSQL", "BigQuery"],
-    level: 92,
-    status: "MASTERED",
-    color: "#C8102E"
+    name: "DATA PIPELINE",
+    color: "#00D4FF",
+    skills: ["Python", "Spark", "Airflow", "dbt", "Kafka", "PostgreSQL"],
+    pwr: 92,
+    colSpan: "md:col-span-2 lg:col-span-2",
   },
   {
-    glyph: "◈",
-    name: "AI / ML",
-    skills: ["LangChain", "OpenAI API", "Hugging Face", "RAG", "Vector DBs", "Prompts"],
-    level: 84,
-    status: "PROFICIENT",
-    color: "#00f5ff"
+    name: "AI SYSTEMS",
+    color: "#CC0000",
+    skills: ["LangChain", "OpenAI", "Hugging Face", "RAG", "Pinecone"],
+    pwr: 85,
+    colSpan: "md:col-span-1 lg:col-span-1",
   },
   {
-    glyph: "▣",
     name: "INFRASTRUCTURE",
-    skills: ["Docker", "K8s", "Terraform", "AWS", "GCP", "CI/CD", "Supabase"],
-    level: 78,
-    status: "PROFICIENT",
-    color: "#888888"
+    color: "#B8860B",
+    skills: ["Docker", "K8s", "Terraform", "AWS", "CI/CD"],
+    pwr: 88,
+    colSpan: "md:col-span-1 lg:col-span-1",
   },
   {
-    glyph: "⌬",
-    name: "FRONTEND",
-    skills: ["React", "TypeScript", "Tailwind", "Vite", "Next.js", "Framer Motion"],
-    level: 80,
-    status: "PROFICIENT",
-    color: "#00f5ff"
-  },
-  {
-    glyph: "⟁",
-    name: "DATABASES",
-    skills: ["PostgreSQL", "Redis", "ClickHouse", "Pinecone", "Weaviate"],
-    level: 75,
-    status: "PROFICIENT",
-    color: "#C8102E"
-  },
-  {
-    glyph: "✦",
-    name: "TOOLS",
-    skills: ["Git", "Notion", "Linear", "Postman", "Grafana", "Metabase"],
-    level: 88,
-    status: "MASTERED",
-    color: "#D4AF37"
+    name: "FRONTEND MODULES",
+    color: "#00FF88",
+    skills: ["React", "TypeScript", "Tailwind", "Next.js"],
+    pwr: 95,
+    colSpan: "md:col-span-2 lg:col-span-2",
   },
 ];
 
 export const AbilitySection = () => {
   return (
-    <section id="abilities" className="relative py-24 px-6 bg-[#0A0A0A] overflow-hidden" style={{ zIndex: 4 }}>
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8102E] rounded-full mix-blend-screen filter blur-[100px] opacity-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00f5ff] rounded-full mix-blend-screen filter blur-[100px] opacity-10 pointer-events-none" />
+    <section id="skills" className="relative py-24 px-6 md:px-12 bg-[#050510] overflow-hidden text-[#E0E0E0]">
+      {/* Hexagonal Background */}
+      <div 
+        className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"49\" viewBox=\"0 0 28 49\"><path d=\"M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM14 1.75l13 7.5v15l-13 7.5L1 24.25v-15l13-7.5z\" fill=\"%2300D4FF\" fill-rule=\"evenodd\"/></svg>')",
+          backgroundSize: "40px"
+        }}
+      />
 
       <div className="container mx-auto max-w-6xl relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
-          <p className="font-mono text-[10px] tracking-[0.3em] text-[#C8102E] uppercase mb-2">
-            // COMBAT CAPABILITIES
+        <div className="mb-16">
+          <p className="font-mono text-[11px] text-[#00D4FF] mb-2 tracking-wider">
+            // COMBAT_SYSTEMS.LOG
           </p>
-          <h2 className="font-black text-3xl md:text-5xl uppercase tracking-widest text-[#E0E0E0] drop-shadow-[0_0_8px_rgba(200,16,46,0.3)]">
-            Arsenal of the <span className="text-[#C8102E]">Tombguard</span>
+          <div className="w-full h-[1px] bg-[#00D4FF] mb-4" />
+          <h2 className="font-bold text-3xl md:text-5xl tracking-widest text-[#E0E0E0]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            ACTIVE ARMOR MODULES
           </h2>
-        </motion.div>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {CATEGORIES.map((c, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {SKILL_CATEGORIES.map((cat, i) => (
             <motion.div
-              key={c.name}
+              key={cat.name}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="bg-[#050505] border border-[#333333] p-6 relative group transition-all duration-300"
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = c.color;
-                e.currentTarget.style.boxShadow = `0 10px 30px -10px ${c.color}60`;
-                e.currentTarget.style.transform = "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#333333";
-                e.currentTarget.style.boxShadow = "none";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className={`relative bg-[#070710] border border-[#00D4FF22] p-6 group transition-all duration-300 hover:-translate-y-1 hover:border-[#00D4FF88] hover:shadow-[0_0_16px_#00D4FF22] ${cat.colSpan}`}
             >
-              {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#888888] group-hover:border-white transition-colors" />
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#888888] group-hover:border-white transition-colors" />
-
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-display text-2xl" style={{ color: c.color, textShadow: `0 0 10px ${c.color}80` }}>{c.glyph}</span>
-                <h3 className="font-display text-sm tracking-[0.2em] text-[#E0E0E0]">{c.name}</h3>
+              {/* Top Bar */}
+              <div 
+                className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden"
+                style={{ backgroundColor: `${cat.color}44` }}
+              >
+                <div 
+                  className="h-full w-1/3 bg-current -translate-x-full group-hover:animate-[sweep_1s_ease-in-out_infinite]"
+                  style={{ color: cat.color }}
+                />
               </div>
-              <div className="w-full h-[1px] bg-gradient-to-r from-[#333333] to-transparent mb-4" />
-              
-              <p className="font-mono text-[11px] text-[#888888] leading-relaxed mb-6 uppercase tracking-wider h-16">
-                {c.skills.join(" · ")}
-              </p>
 
-              <div className="flex items-center gap-3 mt-auto">
-                <div className="flex-1 h-[2px] bg-[#1A1A1A] relative overflow-hidden">
-                  <motion.div
-                    className="absolute top-0 left-0 h-full"
-                    style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }}
+              {/* Header */}
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-xl md:text-2xl font-bold tracking-widest" style={{ fontFamily: "'Orbitron', sans-serif", color: cat.color }}>
+                  {cat.name}
+                </h3>
+                <span className="font-mono text-[10px] bg-[#00FF8822] text-[#00FF88] border border-[#00FF88] px-2 py-0.5 rounded-sm">
+                  ONLINE
+                </span>
+              </div>
+
+              {/* Skills */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {cat.skills.map(skill => (
+                  <span 
+                    key={skill} 
+                    className="font-mono text-[11px] px-2 py-1 rounded-[2px]"
+                    style={{ border: `1px solid ${cat.color}66`, color: cat.color }}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+
+              {/* Power Bar */}
+              <div className="mt-auto flex items-center gap-3">
+                <div className="flex-1 h-[3px] bg-[#1a1a2e]">
+                  <motion.div 
+                    className="h-full"
+                    style={{ backgroundColor: cat.color }}
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${c.level}%` }}
+                    whileInView={{ width: `${cat.pwr}%` }}
                     viewport={{ once: true }}
-                    transition={{ duration: 1.4, delay: 0.2 + i * 0.05 }}
+                    transition={{ duration: 1, delay: 0.3 }}
                   />
                 </div>
-                <span
-                  className="font-mono text-[9px] tracking-[0.2em] px-2 py-1 uppercase"
-                  style={{
-                    color: c.status === "MASTERED" ? "#050505" : c.color,
-                    background: c.status === "MASTERED" ? c.color : "transparent",
-                    border: `1px solid ${c.color}`,
-                  }}
-                >
-                  {c.status}
-                </span>
+                <span className="font-mono text-[10px] text-[#7899aa]">PWR: {cat.pwr}%</span>
+              </div>
+
+              {/* Corner Decoration */}
+              <div className="absolute bottom-4 right-4 font-mono text-[10px] text-[#00D4FF33]">
+                &gt;&gt;
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+      <style>{`
+        @keyframes sweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(300%); }
+        }
+      `}</style>
     </section>
   );
 };

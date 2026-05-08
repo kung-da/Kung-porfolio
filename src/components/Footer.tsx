@@ -1,36 +1,70 @@
-export const Footer = () => (
-  <footer
-    className="relative pt-16 pb-12 px-6 bg-[#050505] overflow-hidden"
-  >
-    {/* Scanline overlay */}
-    <div className="absolute inset-0 z-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[size:100%_4px] pointer-events-none opacity-20" />
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-    <div className="container mx-auto max-w-4xl text-center relative z-10">
-      <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#C8102E] to-transparent mb-8 opacity-50" />
-      
-      <p className="font-display text-xs md:text-sm tracking-[0.4em] text-[#E0E0E0] mb-4">
-        ─── <span className="text-[#00f5ff]">END OF TRANSMISSION</span> ───
-      </p>
-      
-      <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-6 font-mono text-[10px] tracking-[0.2em] uppercase text-[#888888]">
-        <p className="hover:text-[#00f5ff] transition-colors cursor-default">
-          <span className="text-[#C8102E]">&gt;</span> FORGED BY KUNG · {new Date().getFullYear()}
-        </p>
-        <p className="hidden md:block text-[#333333]">|</p>
-        <p className="hover:text-[#00f5ff] transition-colors cursor-default">
-          <span className="text-[#C8102E]">&gt;</span> CUNG-MASTER © ALL RIGHTS RESERVED
-        </p>
+export const Footer = () => {
+  const [text, setText] = useState("");
+  const fullText = `> SESSION TERMINATED · © ${new Date().getFullYear()} CUNG-MASTER · ALL SYSTEMS OFFLINE`;
+
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      setText(fullText.slice(0, i));
+      i++;
+      if (i > fullText.length) clearInterval(timer);
+    }, 35);
+    return () => clearInterval(timer);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  return (
+    <footer className="relative pt-16 pb-8 bg-[#030308] overflow-hidden flex flex-col items-center">
+      {/* Top Border with Glow */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#00D4FF22]" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#00D4FF] opacity-50 shadow-[0_0_6px_#00D4FF44]" />
+
+      {/* Top Row - Logo */}
+      <div className="text-center mb-10 mt-4">
+        <h2 className="text-[#00D4FF] text-[28px] md:text-[32px] m-0 leading-none" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+          WEZAEMON
+        </h2>
+        <div className="text-[#CC000088] font-mono text-[11px] tracking-[0.4em] mt-2">
+          THE TOMBGUARD
+        </div>
       </div>
 
-      <p className="font-mono text-[9px] tracking-[0.3em] text-[#333333] uppercase">
-        POWERED BY: REACT // VITE // TAILWIND // FRAMER MOTION
-      </p>
-      
-      <div className="w-24 h-[1px] bg-[#C8102E] mx-auto mt-8 mb-4 shadow-[0_0_8px_#C8102E]" />
-      
-      <p className="font-display text-[9px] tracking-[0.5em] text-[#00f5ff] drop-shadow-[0_0_5px_rgba(0,245,255,0.5)]">
-        WEZAEMON CODEX v2.0.0
-      </p>
-    </div>
-  </footer>
-);
+      {/* Middle Row - Command Chips */}
+      <div className="flex gap-4 mb-10">
+        <a href="https://github.com/kung-da" target="_blank" rel="noreferrer" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
+          [ GITHUB ]
+        </a>
+        <a href="https://linkedin.com/in/cung" target="_blank" rel="noreferrer" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
+          [ LINKEDIN ]
+        </a>
+        <a href="mailto:hello@cung-master.dev" className="border border-[#1a1a2e] text-[#444455] font-mono text-[11px] px-3.5 py-1.5 rounded-[2px] hover:border-[#00D4FF44] hover:text-[#00D4FF] transition-all">
+          [ EMAIL ]
+        </a>
+      </div>
+
+      {/* Divider */}
+      <div className="w-full flex items-center justify-center mb-8 px-12">
+        <div className="flex-1 h-[1px] bg-[#0D0D20]" />
+        <div className="text-[#1a1a2e] text-[10px] mx-4">◆</div>
+        <div className="flex-1 h-[1px] bg-[#0D0D20]" />
+      </div>
+
+      {/* Bottom Row - Credits */}
+      <div className="font-mono text-[11px] text-[#222] mb-12 text-center h-[20px]">
+        {text}
+      </div>
+
+      {/* Scroll to Top */}
+      <button 
+        onClick={scrollToTop}
+        className="font-mono text-[10px] text-[#CC000066] border border-[#CC000033] px-4 py-2 hover:text-[#CC0000] hover:border-[#CC0000] transition-colors"
+      >
+        [ ↑ REINITIALIZE ]
+      </button>
+    </footer>
+  );
+};

@@ -22,10 +22,10 @@ export const Navigation = () => {
       setIsScrolled(window.scrollY > window.innerHeight - 100);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     // Initial check
     handleScroll();
-    
+
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {

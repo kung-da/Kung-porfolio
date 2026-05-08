@@ -15,12 +15,24 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
 
   useEffect(() => {
     const timers: number[] = [];
+    
+    // 1. Hiện từng dòng text
     LINES.forEach((_, i) => {
-      timers.push(window.setTimeout(() => setShown((s) => Math.max(s, i + 1)), 200 + i * 350));
+      timers.push(window.setTimeout(() => setShown((s) => Math.max(s, i + 1)), 200 + i * 400));
     });
-    timers.push(window.setTimeout(() => setSlash(true), 200 + LINES.length * 350 + 200));
-    timers.push(window.setTimeout(() => setExit(true), 200 + LINES.length * 350 + 600));
-    timers.push(window.setTimeout(() => onComplete(), 200 + LINES.length * 350 + 1300));
+
+    const textFinishTime = 200 + LINES.length * 400;
+    const tensePause = 2500; // TRỌNG TÂM: Kéo dài thời gian chờ ở đây (2.5 giây)
+
+    // 2. Hiện nhát chém sau thời gian chờ
+    timers.push(window.setTimeout(() => setSlash(true), textFinishTime + tensePause));
+    
+    // 3. Tách đôi màn hình
+    timers.push(window.setTimeout(() => setExit(true), textFinishTime + tensePause + 400));
+    
+    // 4. Hoàn thành và unmount
+    timers.push(window.setTimeout(() => onComplete(), textFinishTime + tensePause + 1200));
+
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);
 
@@ -37,70 +49,49 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={exit ? { y: "-100%" } : { y: 0 }}
-        transition={{ duration: 0.7, ease: [0.7, 0, 0.3, 1] }}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "50%",
-          background: "#0A0A0A",
-          borderBottom: "2px solid #8FEFFF",
-        }}
+        transition={{ duration: 0.8, ease: [0.7, 0, 0.3, 1] }}
+        className="absolute top-0 left-0 right-0 h-1/2 bg-[#0A0A0A] border-b-2 border-[#8B0000]"
+        style={{ boxShadow: exit ? "none" : "0 5px 20px rgba(139,0,0,0.5)" }}
       />
       {/* Bottom panel */}
       <motion.div
         initial={{ y: 0 }}
         animate={exit ? { y: "100%" } : { y: 0 }}
-        transition={{ duration: 0.7, ease: [0.7, 0, 0.3, 1] }}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "50%",
-          background: "#0A0A0A",
-          borderTop: "2px solid #8FEFFF",
-        }}
+        transition={{ duration: 0.8, ease: [0.7, 0, 0.3, 1] }}
+        className="absolute bottom-0 left-0 right-0 h-1/2 bg-[#0A0A0A] border-t-2 border-[#8B0000]"
+        style={{ boxShadow: exit ? "none" : "0 -5px 20px rgba(139,0,0,0.5)" }}
       />
 
       {/* Text */}
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          opacity: exit ? 0 : 1,
-          transition: "opacity 0.3s",
-        }}
+        className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+        style={{ opacity: exit ? 0 : 1 }}
       >
-        <div className="font-mono-ui text-xs md:text-sm leading-relaxed" style={{ color: "#C0392B" }}>
+        <div className="font-mono text-sm md:text-base leading-relaxed flex flex-col items-start">
           {LINES.slice(0, shown).map((l, i) => (
-            <div key={i} style={{ opacity: i === shown - 1 ? 1 : 0.7 }}>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              // Làm nổi bật dòng WARNING
+              className={`${l.includes("WARNING") ? "text-[#8B0000] font-bold text-lg animate-pulse" : "text-[#8FEFFF]"}`}
+            >
               {l}
-              {i === shown - 1 && <span className="animate-blink" style={{ color: "#8FEFFF" }}>█</span>}
-            </div>
+              {i === shown - 1 && !slash && <span className="animate-blink ml-2">█</span>}
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Slash */}
+      {/* Slash Effect - Đổi sang màu đỏ máu cho hợp Wezaemon */}
       <motion.div
-        initial={{ scaleX: 0 }}
-        animate={slash ? { scaleX: 1 } : { scaleX: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        initial={{ scaleX: 0, opacity: 1 }}
+        animate={slash ? (exit ? { opacity: 0 } : { scaleX: 1 }) : { scaleX: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="absolute top-1/2 left-[-20%] right-[-20%] h-[3px] bg-[#ff3333] z-50 origin-left"
         style={{
-          position: "absolute",
-          top: "50%",
-          left: "-50%",
-          right: "-50%",
-          height: 4,
-          background: "#FAFAF8",
-          boxShadow: "0 0 20px #8FEFFF",
-          transform: "rotate(-12deg)",
-          transformOrigin: "left center",
+          boxShadow: "0 0 30px #ff0000, 0 0 15px #fff",
+          transform: "translateY(-50%) rotate(-8deg)",
         }}
       />
     </div>

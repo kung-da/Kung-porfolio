@@ -1,85 +1,106 @@
 import { motion } from "framer-motion";
+const slideLeft = { hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5 } } };
+const slideRight = { hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5 } } };
 
 export const AboutSection = () => {
   return (
-    <section id="about" className="relative w-full min-h-screen py-24 px-6 md:px-12 bg-[#050505] overflow-hidden">
-      {/* Mystical Background Overlay */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,rgba(200,16,46,0.1)_0%,transparent_50%)] pointer-events-none" />
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_bottom_left,rgba(0,245,255,0.05)_0%,transparent_50%)] pointer-events-none" />
-      
-      <div className="container mx-auto max-w-6xl relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 border-l-4 border-[#C8102E] pl-6"
-        >
-          <p className="font-mono text-[10px] tracking-[0.3em] text-[#C8102E] uppercase mb-2">
-            // IDENTITY OVERRIDE
-          </p>
-          <h2 className="font-black text-4xl md:text-5xl uppercase tracking-widest text-[#E0E0E0] drop-shadow-[0_0_10px_rgba(200,16,46,0.3)]">
-            Warden of the Digital Grave
-          </h2>
-        </motion.div>
+    <section id="about" className="relative w-full min-h-screen py-24 px-6 md:px-12 bg-[#050510] overflow-hidden text-[#7899aa]">
+      {/* Circuit Board Background */}
+      <div 
+        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(circle at 100% 50%, transparent 20%, #050510 21%, #050510 34%, transparent 35%, transparent), radial-gradient(circle at 0% 50%, transparent 20%, #050510 21%, #050510 34%, transparent 35%, transparent)",
+          backgroundSize: "40px 40px"
+        }}
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#050510_100%)] pointer-events-none z-0" />
 
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* Text Content */}
+      <div className="container mx-auto max-w-5xl relative z-10">
+        <div className="mb-16">
+          <p className="font-mono text-[11px] text-[#00D4FF] mb-2 tracking-wider">
+            // DOSSIER.EXE
+          </p>
+          <div className="w-full h-[1px] bg-[#00D4FF] mb-4" />
+          <h2 className="font-bold text-3xl md:text-5xl tracking-widest text-[#E0E0E0]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            SUBJECT: WEZAEMON THE TOMBGUARD
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-[4fr_6fr] gap-12 md:gap-16 items-start">
+          {/* Left Column - Portrait */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-7 space-y-6 font-mono text-[#C0C0C0] leading-relaxed text-sm md:text-base"
+            variants={slideLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-10%" }}
+            className="relative"
           >
-            <p>
-              I am a guardian of the hidden field. With a blade forged in modern web technologies and a soul etched in legacy systems, I build digital experiences that are resilient, scalable, and visually absolute.
-            </p>
-            <p>
-              My journey began as a solitary swordsman in the realm of Data Engineering, where I learned to tame massive streams of information. Soon, I ascended to the frontend, mastering React and WebGL to bring raw data into the light.
-            </p>
-            <p className="text-[#888888] italic font-serif text-lg">
-              "A true master does not just write code; he breathes life into the machine, ensuring its spirit remains unbroken."
-            </p>
-            
-            <div className="pt-8 flex gap-6">
-              <div className="flex flex-col gap-2 border-l border-[#333333] pl-4">
-                <span className="text-3xl font-display text-[#00f5ff] font-bold">5+</span>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-[#888888]">Years<br/>Guarding</span>
+            {/* Double Border Frame */}
+            <div className="relative p-1 border border-[#00D4FF44] bg-[#050510]">
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#00D4FF] -translate-x-[1px] -translate-y-[1px]" />
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#00D4FF] translate-x-[1px] -translate-y-[1px]" />
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#00D4FF] -translate-x-[1px] translate-y-[1px]" />
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00D4FF] translate-x-[1px] translate-y-[1px]" />
+              
+              <div className="relative border border-[#CC000022] aspect-[3/4] overflow-hidden bg-[#0a0a14] flex items-center justify-center">
+                {/* Scan line animation */}
+                <motion.div 
+                  className="absolute left-0 right-0 h-[1px] bg-[#00D4FF] shadow-[0_0_8px_#00D4FF] opacity-50 z-20"
+                  animate={{ top: ["0%", "100%", "0%"] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                />
+                <span className="font-black text-[120px] text-[#111122]" style={{ fontFamily: "'Orbitron', sans-serif" }}>?</span>
               </div>
-              <div className="flex flex-col gap-2 border-l border-[#333333] pl-4">
-                <span className="text-3xl font-display text-[#C8102E] font-bold">50+</span>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-[#888888]">Raids<br/>Completed</span>
-              </div>
+            </div>
+
+            {/* Clearance Bar */}
+            <div className="mt-4 bg-[#0a0a14] border border-[#1a1a2e] px-4 py-2 text-center">
+              <span className="font-mono text-[11px] text-[#CC0000] tracking-widest uppercase">
+                CLEARANCE: SENIOR DATA OPS
+              </span>
             </div>
           </motion.div>
 
-          {/* Visual Element (Wezaemon Emblem / Tree placeholder) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="lg:col-span-5 relative"
+          {/* Right Column - Data Fields */}
+          <motion.div 
+            variants={slideRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-10%" }}
+            className="flex flex-col gap-6"
           >
-            <div className="aspect-square relative w-full max-w-md mx-auto border border-[#333333] bg-[#0A0A0A] p-4 group">
-              {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#C8102E]" />
-              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#00f5ff]" />
-              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#00f5ff]" />
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#C8102E]" />
-              
-              <div className="w-full h-full bg-[#050505] flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,16,46,0.2)_0%,transparent_70%)] group-hover:scale-110 transition-transform duration-700" />
-                <span className="font-display text-8xl text-[#C8102E] opacity-20 group-hover:opacity-40 transition-opacity duration-500">
-                  墓
-                </span>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  {/* Subtle glowing lines representing a katana or cross */}
-                  <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#00f5ff]/50 to-transparent absolute top-1/2 -translate-y-1/2" />
-                  <div className="w-[1px] h-full bg-gradient-to-b from-transparent via-[#C8102E]/50 to-transparent absolute left-1/2 -translate-x-1/2" />
-                </div>
+            <div className="font-mono text-[13px] text-[#7899aa] space-y-4">
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1">
+                <span className="text-[#00D4FF] uppercase">DESIGNATION</span>
+                <span className="text-[#E0E0E0]">Cung Master</span>
               </div>
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1">
+                <span className="text-[#00D4FF] uppercase">CLASS</span>
+                <span className="text-[#E0E0E0]">Data Engineer · AI Developer</span>
+              </div>
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1">
+                <span className="text-[#00D4FF] uppercase">FACTION</span>
+                <span className="text-[#E0E0E0]">Pipeline · Intelligence · Systems</span>
+              </div>
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1">
+                <span className="text-[#00D4FF] uppercase">BASE OF OPS</span>
+                <span className="text-[#E0E0E0]">Ho Chi Minh City, VN</span>
+              </div>
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1">
+                <span className="text-[#00D4FF] uppercase">STATUS</span>
+                <span className="text-[#00FF88]">ACTIVE — AVAILABLE</span>
+              </div>
+              <div className="flex justify-between border-b border-dotted border-[#333] pb-1 items-center">
+                <span className="text-[#CC0000] uppercase">THREAT LEVEL</span>
+                <span className="text-[#CC0000] tracking-widest text-[10px]">████████░░ CRITICAL</span>
+              </div>
+            </div>
+
+            {/* Bio Box */}
+            <div className="mt-6 border border-[#1a1a2e] border-l-2 border-l-[#00D4FF] bg-[#070710] p-4 pl-4 shadow-[-4px_0_12px_#00D4FF11]">
+              <p className="font-mono text-[13px] text-[#7899aa] leading-[1.9]">
+                Specialized in forging unyielding data pipelines and embedding intelligence into legacy systems. Known for rapid deployment, zero-downtime architecture, and an unbreakable defensive stance in backend infrastructure. When the digital grave shifts, the Tombguard answers.
+              </p>
             </div>
           </motion.div>
         </div>
