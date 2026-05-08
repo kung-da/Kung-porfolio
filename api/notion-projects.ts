@@ -10,10 +10,24 @@ export default async function handler(req: any, res: any) {
     }
 
     const notion = new Client({ auth: apiKey });
-    const response = await notion.databases.query({
-      database_id: databaseId,
+    const queryPayload = {
       filter: { property: "Published", checkbox: { equals: true } },
-    });
+    } as const;
+
+    let response;
+    if (typeof (notion as any).databases?.query === "function") {
+      response = await (notion as any).databases.query({
+        database_id: databaseId,
+        ...queryPayload,
+      });
+    } else if (typeof (notion as any).dataSources?.query === "function") {
+      response = await (notion as any).dataSources.query({
+        data_source_id: databaseId,
+        ...queryPayload,
+      });
+    } else {
+      throw new Error("Notion client does not support database queries");
+    }
 
     const projects = response.results.map((page: any) => {
       const p = page.properties;
