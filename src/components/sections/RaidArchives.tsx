@@ -32,15 +32,13 @@ export const RaidArchives = () => {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className="font-display text-[11px] tracking-[0.2em] px-4 py-2 transition-all"
-                style={{
-                  background: active ? "#0A0A0A" : "transparent",
-                  color: active ? "#FAFAF8" : "#0A0A0A",
-                  border: "1px solid #0A0A0A",
-                  boxShadow: active ? "3px 3px 0 #0A0A0A" : "none",
-                }}
+                className={`uppercase font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-colors duration-200 border ${
+                  active 
+                    ? "bg-[#0A0A0A] text-[#FAFAF8] border-[#0A0A0A]" 
+                    : "bg-transparent text-[#0A0A0A] border-[#0A0A0A]/30 hover:bg-[#0A0A0A] hover:text-[#FAFAF8]"
+                }`}
               >
-                {f.toUpperCase()}
+                {f}
               </button>
             );
           })}
@@ -63,7 +61,7 @@ export const RaidArchives = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: idx * 0.06, duration: 0.4 }}
-                  className="manga-panel relative overflow-hidden group"
+                  className="relative overflow-hidden group katana-container bg-[#FAFAF8] border border-[#0A0A0A] p-6 shadow-[4px_4px_0_#0A0A0A] transition-transform duration-300 rounded-none hover:-translate-y-2 hover:shadow-[8px_8px_0_#8FEFFF]"
                 >
                   {/* Cover */}
                   <div className="relative h-44 overflow-hidden border-b-2 border-ink">
@@ -141,19 +139,6 @@ export const RaidArchives = () => {
                       )}
                     </div>
                   </div>
-
-                  {/* Katana slash overlay */}
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="absolute inset-0 pointer-events-none origin-left"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, transparent 49%, #8FEFFF 49.5%, #8FEFFF 50.5%, transparent 51%)",
-                      mixBlendMode: "multiply",
-                    }}
-                  />
                 </motion.article>
               ))}
             </div>

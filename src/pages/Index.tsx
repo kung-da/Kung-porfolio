@@ -4,7 +4,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
-import { SakuraCanvas } from "@/components/SakuraCanvas";
+import SakuraBackground from "@/components/SakuraBackground";
 import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { AbilitySection } from "@/components/sections/AbilitySection";
@@ -25,7 +25,7 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-washi">
-      <SakuraCanvas />
+      <SakuraBackground />
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />

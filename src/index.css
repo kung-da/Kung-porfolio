@@ -146,4 +146,73 @@
     animation: blink 1s step-end infinite;
     color: var(--wez-cyan);
   }
+
+  .hollow-text {
+    -webkit-text-stroke: 2px var(--deep-ink);
+    color: transparent;
+  }
+
+  /* Katana Slash Effect */
+  .katana-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .katana-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.25s ease-out;
+    background: linear-gradient(135deg, transparent 49%, var(--wez-cyan) 49.5%, var(--wez-cyan) 50.5%, transparent 51%);
+    mix-blend-mode: multiply;
+    z-index: 10;
+  }
+  .katana-container:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Text Glitch Effect */
+  .glitch-hover {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch-hover:hover::before,
+  .glitch-hover:hover::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: transparent;
+  }
+  .glitch-hover:hover::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--wez-cyan);
+    animation: glitch-anim-1 0.15s infinite linear alternate-reverse;
+  }
+  .glitch-hover:hover::after {
+    left: -2px;
+    text-shadow: 2px 0 var(--sakura-deep);
+    animation: glitch-anim-2 0.2s infinite linear alternate-reverse;
+  }
+  @keyframes glitch-anim-1 {
+    0% { clip-path: inset(20% 0 80% 0); }
+    20% { clip-path: inset(60% 0 10% 0); }
+    40% { clip-path: inset(40% 0 50% 0); }
+    60% { clip-path: inset(80% 0 5% 0); }
+    80% { clip-path: inset(10% 0 60% 0); }
+    100% { clip-path: inset(30% 0 20% 0); }
+  }
+  @keyframes glitch-anim-2 {
+    0% { clip-path: inset(10% 0 60% 0); }
+    20% { clip-path: inset(30% 0 20% 0); }
+    40% { clip-path: inset(70% 0 10% 0); }
+    60% { clip-path: inset(20% 0 50% 0); }
+    80% { clip-path: inset(50% 0 30% 0); }
+    100% { clip-path: inset(5% 0 80% 0); }
+  }
 }

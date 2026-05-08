@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import wezaemonImg from "@/assets/wazaemon.jpg";
+import wazaemonImg from "@/assets/wazaemon.png";
 
 export const HeroSection = () => {
   return (
@@ -15,7 +15,7 @@ export const HeroSection = () => {
           position: "fixed",
           inset: 0,
           zIndex: -1,
-          backgroundImage: `url(${wezaemonImg})`,
+          backgroundImage: `url(${wazaemonImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -45,21 +45,19 @@ export const HeroSection = () => {
             transition={{ duration: 0.7 }}
             className="manga-panel p-6 md:p-8 relative speed-lines"
           >
-            <p className="chapter-label mb-2">[ BOSS ENCOUNTER ]</p>
+            <p className="text-sm md:text-base font-mono uppercase tracking-widest text-[#888888] mb-2">[ BOSS ENCOUNTER ]</p>
             <div className="manga-rule mb-5" />
 
-            <h1
-              className="font-display font-black uppercase leading-none text-ink"
-              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
-            >
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-[#0A0A0A] leading-none mb-2">
               <motion.span
                 whileHover={{}}
-                className="inline-block hover:animate-glitch"
+                className="inline-block glitch-hover hollow-text"
+                data-text="CUNG"
               >
                 CUNG
               </motion.span>
               <br />
-              <span className="text-stone" style={{ fontWeight: 600 }}>
+              <span className="text-[#0A0A0A]">
                 MASTER
               </span>
             </h1>
@@ -120,23 +118,7 @@ export const HeroSection = () => {
                 onClick={() =>
                   document.getElementById("raids")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-display text-xs tracking-[0.2em] px-5 py-2.5 transition-all"
-                style={{
-                  background: "#0A0A0A",
-                  color: "#8FEFFF",
-                  border: "2px solid #0A0A0A",
-                  boxShadow: "4px 4px 0 #8FEFFF",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#8FEFFF";
-                  e.currentTarget.style.color = "#0A0A0A";
-                  e.currentTarget.style.boxShadow = "4px 4px 0 #0A0A0A";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#0A0A0A";
-                  e.currentTarget.style.color = "#8FEFFF";
-                  e.currentTarget.style.boxShadow = "4px 4px 0 #8FEFFF";
-                }}
+                className="bg-[#0A0A0A] text-[#FAFAF8] px-8 py-4 uppercase font-mono tracking-[0.2em] text-sm border border-[#0A0A0A] relative overflow-hidden transition-all duration-300 rounded-none hover:shadow-[0_0_20px_rgba(143,239,255,0.4)] hover:border-[#8FEFFF] hover:text-[#8FEFFF]"
               >
                 [ BEGIN RAID ]
               </button>
@@ -144,18 +126,7 @@ export const HeroSection = () => {
                 onClick={() =>
                   document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-display text-xs tracking-[0.2em] px-5 py-2.5 transition-all"
-                style={{
-                  background: "transparent",
-                  color: "#0A0A0A",
-                  border: "2px solid #0A0A0A",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "4px 4px 0 #0A0A0A";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "none";
-                }}
+                className="bg-transparent text-[#0A0A0A] border border-[#0A0A0A]/30 px-4 py-2 uppercase font-mono text-xs tracking-wider rounded-none hover:bg-[#0A0A0A] hover:text-[#FAFAF8] transition-colors duration-200 flex items-center justify-center"
               >
                 [ VIEW PROFILE ]
               </button>
