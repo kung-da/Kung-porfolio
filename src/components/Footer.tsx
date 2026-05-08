@@ -1,21 +1,26 @@
 export const Footer = () => (
-  <footer className="relative py-16 px-6" style={{ zIndex: 5 }}>
-    <div className="container mx-auto max-w-6xl">
-      <div
-        className="h-px mb-10"
-        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.4), transparent)" }}
-      />
-      <div className="flex flex-col items-center justify-center gap-3">
-        <p className="text-sm md:text-base font-mono-ui tracking-[0.25em] uppercase flex items-center gap-2">
-          <span className="text-muted-foreground">Made by</span>
-          <span className="text-cyan-accent text-glow-cyan font-bold text-lg">KUNG</span>
-          <span className="text-muted-foreground">with</span>
-          <span className="text-sakura text-glow-sakura text-lg">❤</span>
-        </p>
-        <p className="text-[10px] font-mono-ui tracking-[0.3em] text-muted-foreground/50 uppercase">
-          // SESSION · cung-master · {new Date().getFullYear()}
-        </p>
-      </div>
+  <footer
+    className="relative pt-12 pb-8 px-6 mt-12 speed-lines"
+    style={{ borderTop: "2px solid #0A0A0A", background: "#FAFAF8" }}
+  >
+    <div className="container mx-auto max-w-4xl text-center">
+      <div className="manga-rule mb-6" />
+      <p className="font-display text-xs md:text-sm tracking-[0.4em] text-ink mb-3">
+        ─── END OF VOLUME 01 ───
+      </p>
+      <p className="font-jp text-base md:text-lg text-ink mb-2">
+        Made by Kung with <span style={{ color: "#C0392B" }}>❤</span> · {new Date().getFullYear()}
+      </p>
+      <p className="font-mono-ui text-[11px] tracking-[0.2em] text-stone uppercase mb-1">
+        CUNG-MASTER © All Rights Reserved
+      </p>
+      <p className="font-mono-ui text-[11px] tracking-[0.2em] text-stone uppercase">
+        Built with React · Vite · Notion · Supabase
+      </p>
+      <div className="manga-rule mt-6 mb-3" />
+      <p className="font-display text-[9px] tracking-[0.5em] text-stone">
+        WEZAEMON CODEX v2.0.0
+      </p>
     </div>
   </footer>
 );
