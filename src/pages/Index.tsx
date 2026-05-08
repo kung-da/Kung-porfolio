@@ -1,29 +1,47 @@
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
-import { SakuraBackground } from "@/components/SakuraBackground";
-import { AmbientDots } from "@/components/AmbientDots";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Skills } from "@/components/sections/Skills";
-import { Projects } from "@/components/sections/Projects";
-import { Gallery } from "@/components/sections/Gallery";
-import { Contact } from "@/components/sections/Contact";
+import { NoiseOverlay } from "@/components/NoiseOverlay";
+import { SakuraCanvas } from "@/components/SakuraCanvas";
 import { Footer } from "@/components/Footer";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AbilitySection } from "@/components/sections/AbilitySection";
+import { RaidArchives } from "@/components/sections/RaidArchives";
+import { HunterProfile } from "@/components/sections/HunterProfile";
+import { ContactTerminal } from "@/components/sections/ContactTerminal";
+import { useEnragedMode } from "@/hooks/useEnragedMode";
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(
+    typeof window !== "undefined" && !sessionStorage.getItem("booted")
+  );
+  useEnragedMode();
+
+  useEffect(() => {
+    if (!isLoading) sessionStorage.setItem("booted", "true");
+  }, [isLoading]);
+
   return (
-    <div className="relative min-h-screen">
-      <AmbientDots />
-      <SakuraBackground />
-      <div className="relative" style={{ zIndex: 10 }}>
-        <Navigation />
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Gallery />
-        <Contact />
+    <div className="relative min-h-screen bg-washi">
+      <SakuraCanvas />
+      <NoiseOverlay />
+      <BossHPBar />
+      <Navigation />
+
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
+
+      <main style={{ paddingTop: 0 }}>
+        <HeroSection />
+        <AbilitySection />
+        <RaidArchives />
+        <HunterProfile />
+        <ContactTerminal />
         <Footer />
-      </div>
+      </main>
     </div>
   );
 };
