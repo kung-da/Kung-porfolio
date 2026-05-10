@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import wazaemonImg from "@/assets/wazaemon.png";
+import wazaemonImg from "@/assets/cleanest.jpeg";
 import SakuraBackground from "@/components/SakuraBackground";
 
 export const HeroSection = () => {
