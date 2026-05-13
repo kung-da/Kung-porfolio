@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 export const ContactTerminal = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "", type: "Data" });
+  const [form, setForm] = useState({ name: "", email: "", message: "", type: "Data Engineering" });
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [txId, setTxId] = useState("");

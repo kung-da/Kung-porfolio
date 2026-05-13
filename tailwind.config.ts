@@ -83,7 +83,6 @@ export default {
         "warn-yellow": "#FCEE0A",
       },
       boxShadow: {
-        ...require("tailwindcss/defaultConfig").theme.boxShadow,
         "manga-sm": "2px 2px 0 #0A0A0A",
         manga: "4px 4px 0 #0A0A0A",
         "manga-lg": "6px 6px 0 #0A0A0A",
@@ -97,14 +96,6 @@ export default {
         lg: "0px",
         md: "0px",
         sm: "0px",
-      },
-      boxShadow: {
-        "manga-sm": "2px 2px 0 #0A0A0A",
-        manga: "4px 4px 0 #0A0A0A",
-        "manga-lg": "6px 6px 0 #0A0A0A",
-        "manga-xl": "8px 8px 0 #0A0A0A",
-        "cyan-glow": "0 0 20px rgba(143, 239, 255, 0.4)",
-        "cyan-glow-sm": "0 0 10px rgba(143, 239, 255, 0.3)",
       },
       keyframes: {
         "accordion-down": {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CircuitBoard, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -19,6 +19,8 @@ export const Navigation = () => {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [onHero, setOnHero] = useState(true);
+  const observedIdsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     let raf = 0;
@@ -32,32 +34,65 @@ export const Navigation = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
+    const ratios = new Map<string, number>();
     const obs = new IntersectionObserver(
       (entries) => {
-        // Find the most visible entry
-        let mostVisible = null;
-        let maxRatio = 0;
-        
         entries.forEach((e) => {
-          if (e.intersectionRatio > maxRatio) {
-            maxRatio = e.intersectionRatio;
-            mostVisible = e;
+          ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+        });
+
+        // Header visibility: hide while the Hero section is in the center region.
+        setOnHero((ratios.get("home") ?? 0) > 0);
+
+        let bestId: string | null = null;
+        let bestRatio = 0;
+        ratios.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
           }
         });
-        
-        if (mostVisible && mostVisible.isIntersecting) {
-          setActive(mostVisible.target.id);
-        }
+
+        if (bestId && bestRatio > 0) setActive(bestId);
       },
-      { rootMargin: "-30% 0px -70% 0px" }
+      {
+        // Track the section that crosses the viewport center.
+        // Keep the root area non-zero (top+bottom < 100%).
+        rootMargin: "-45% 0px -45% 0px",
+      }
     );
-    LINKS.forEach((l) => {
-      const el = document.getElementById(l.id);
-      if (el) obs.observe(el);
+
+    const observeTargets = () => {
+      LINKS.forEach((l) => {
+        if (observedIdsRef.current.has(l.id)) return;
+        const el = document.getElementById(l.id);
+        if (!el) return;
+        obs.observe(el);
+        observedIdsRef.current.add(l.id);
+        ratios.set(l.id, 0);
+      });
+    };
+
+    observeTargets();
+
+    // Sections are lazy-loaded; observe them once they hit the DOM.
+    let moRaf = 0;
+    const mo = new MutationObserver(() => {
+      window.cancelAnimationFrame(moRaf);
+      moRaf = window.requestAnimationFrame(() => {
+        observeTargets();
+        if (observedIdsRef.current.size === LINKS.length) {
+          mo.disconnect();
+        }
+      });
     });
+    mo.observe(document.body, { childList: true, subtree: true });
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.cancelAnimationFrame(raf);
+      window.cancelAnimationFrame(moRaf);
+      mo.disconnect();
       obs.disconnect();
     };
   }, []);
@@ -65,6 +100,8 @@ export const Navigation = () => {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
+
+    setActive(id);
 
     const headerEl = document.getElementById("site-header");
     const headerOffset = (headerEl?.offsetHeight ?? 64) + 36 + 12;
@@ -89,7 +126,7 @@ export const Navigation = () => {
           "fixed left-0 right-0 top-9 z-[85]",
           "border-b transition-[background-color,border-color,box-shadow,backdrop-filter,opacity,visibility] duration-300 ease-out",
           "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-wez-cyan/50 after:to-transparent after:transition-opacity after:duration-300",
-          active === "home"
+          onHero
             ? "opacity-0 invisible pointer-events-none"
             : isScrolled
               ? [
