@@ -62,19 +62,19 @@ export const AbilitySection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-10%" }}
-          className="mb-16"
+          className="mb-12 md:mb-16"
         >
-          <p className="font-mono-ui text-[11px] text-crimson mb-2 tracking-widest">
-            // COMBAT_SYSTEMS.LOG
+          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+            // ARMOR MODULES
           </p>
-          <div className="w-full h-[1px] bg-[#FF003C] mb-4 opacity-60" />
-          <h2 className="font-display font-bold text-2xl md:text-4xl tracking-widest uppercase">
-            ACTIVE <span className="text-cyan-accent">ARMOR</span> MODULES
+          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
+          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
+            Active <span className="text-wez-cyan">Armor</span> Systems
           </h2>
         </motion.div>
 
         {/* Asymmetric Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {MODULES.map((mod, i) => (
             <motion.div
               key={mod.code}
@@ -84,55 +84,39 @@ export const AbilitySection = () => {
               transition={{ delay: i * 0.12, type: "spring", stiffness: 300, damping: 15 }}
               whileHover={{
                 scale: 1.02,
-                x: i % 2 === 0 ? 4 : -4,
-                transition: { duration: 0.1 },
+                transition: { duration: 0.2 },
               }}
-              className="relative bg-[#0A0A0A] border border-[#1a1a2e] p-6 group cursor-default overflow-hidden katana-slash"
-              style={{
-                clipPath: mod.clipPath,
-                borderColor: `${mod.color}22`,
-              }}
+              className="relative bg-background/40 backdrop-blur-sm border border-border/60 p-6 md:p-7 group overflow-hidden transition-shadow hover:shadow-card-hover"
             >
-              {/* Top accent bar */}
+              {/* Top accent bar with color */}
               <div
-                className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden"
-                style={{ backgroundColor: `${mod.color}33` }}
-              >
-                <div
-                  className="h-full w-1/4 -translate-x-full group-hover:animate-[sweep_0.6s_ease-in-out]"
-                  style={{ backgroundColor: mod.color }}
-                />
-              </div>
-
-              {/* Hover border glow */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none"
-                style={{ boxShadow: `inset 0 0 30px ${mod.color}15, 0 0 20px ${mod.color}10` }}
+                className="absolute top-0 left-0 right-0 h-0.5"
+                style={{ backgroundColor: mod.color }}
               />
 
               {/* Header */}
               <div className="flex justify-between items-start mb-5 relative z-10">
                 <div>
-                  <span className="font-mono-ui text-[9px] text-dim tracking-widest block mb-1">
-                    [{mod.code}]
+                  <span className="font-mono text-xs text-muted-foreground tracking-widest block mb-2 uppercase">
+                    {mod.code}
                   </span>
                   <h3
-                    className="font-display text-lg md:text-xl font-bold tracking-widest uppercase"
+                    className="font-display text-lg md:text-xl font-bold tracking-wide uppercase"
                     style={{ color: mod.color }}
                   >
                     {mod.name}
                   </h3>
                 </div>
                 <span
-                  className="font-mono-ui text-[9px] px-2 py-0.5 border tracking-widest"
-                  style={{ borderColor: `${mod.color}66`, color: mod.color }}
+                  className="font-mono text-xs px-2.5 py-1 border tracking-widest"
+                  style={{ borderColor: `${mod.color}88`, color: mod.color }}
                 >
                   ONLINE
                 </span>
               </div>
 
               {/* Description */}
-              <p className="font-mono-ui text-[11px] text-dim leading-relaxed mb-5 relative z-10">
+              <p className="font-mono text-sm text-foreground/70 leading-relaxed mb-6 relative z-10">
                 {mod.desc}
               </p>
 
@@ -141,11 +125,10 @@ export const AbilitySection = () => {
                 {mod.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="font-mono-ui text-[10px] px-2 py-1"
+                    className="font-mono text-xs px-2.5 py-1 border"
                     style={{
-                      border: `1px solid ${mod.color}44`,
-                      color: `${mod.color}cc`,
-                      clipPath: "polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%)",
+                      borderColor: `${mod.color}66`,
+                      color: mod.color,
                     }}
                   >
                     {skill}
@@ -155,7 +138,7 @@ export const AbilitySection = () => {
 
               {/* Power Bar */}
               <div className="flex items-center gap-3 relative z-10">
-                <div className="flex-1 h-[3px] bg-[#1a1a2e] overflow-hidden">
+                <div className="flex-1 h-1 bg-border/50 overflow-hidden rounded-full">
                   <motion.div
                     className="h-full"
                     style={{ backgroundColor: mod.color }}
@@ -165,14 +148,9 @@ export const AbilitySection = () => {
                     transition={{ duration: 0.8, delay: 0.3, ease: "circOut" }}
                   />
                 </div>
-                <span className="font-mono-ui text-[9px] text-dim tabular-nums">
-                  PWR: {mod.pwr}%
+                <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                  {mod.pwr}%
                 </span>
-              </div>
-
-              {/* Corner decoration */}
-              <div className="absolute bottom-3 right-4 font-mono-ui text-[9px] text-[#1a1a2e] tracking-widest">
-                &gt;&gt;
               </div>
             </motion.div>
           ))}

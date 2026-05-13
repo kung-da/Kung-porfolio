@@ -29,46 +29,36 @@ export const RaidArchives = () => {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 500, damping: 12 }}
-          className="mb-16"
+          className="mb-12 md:mb-16"
         >
-          <p className="font-mono-ui text-[11px] text-crimson mb-2 tracking-widest">
-            // OPS_ARCHIVE.DB
+          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+            // CLASSIFIED OPS
           </p>
-          <div className="w-full h-[1px] bg-[#FF003C] mb-4 opacity-60" />
-          <div className="flex items-center gap-6 flex-wrap">
-            <h2 className="font-display font-bold text-2xl md:text-4xl tracking-widest uppercase">
-              CLASSIFIED <span className="text-cyan-accent">OPERATIONS</span>
+          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
+          <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
+              Featured <span className="text-wez-cyan">Projects</span>
             </h2>
-            <motion.span
-              initial={{ rotate: 0, scale: 0 }}
-              whileInView={{ rotate: -3, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 500, damping: 8 }}
-              className="border border-dashed border-[#FF003C] text-crimson font-mono-ui text-[10px] px-3 py-1 tracking-widest"
-            >
-              [DECLASSIFIED]
-            </motion.span>
           </div>
         </motion.div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap gap-3 mb-12">
+        <div className="flex flex-wrap gap-2 md:gap-3 mb-10 md:mb-12">
           {FILTERS.map((f) => {
             const active = filter === f;
             return (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className="font-mono-ui text-[10px] tracking-[0.15em] px-4 py-2 transition-all duration-100 border uppercase"
+                className="font-mono text-xs tracking-widest px-3.5 md:px-4 py-2 transition-all duration-200 border uppercase"
                 style={{
-                  borderColor: active ? "#FF003C" : "#1a1a2e",
-                  color: active ? "#FF003C" : "#888",
-                  background: active ? "rgba(255,0,60,0.08)" : "transparent",
-                  boxShadow: active ? "0 0 12px rgba(255,0,60,0.2)" : "none",
-                  clipPath: "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)",
+                  borderColor: active ? "rgb(143, 239, 255)" : "rgb(107, 114, 128)",
+                  color: active ? "rgb(143, 239, 255)" : "rgb(107, 114, 128)",
+                  backgroundColor: active ? "rgba(143, 239, 255, 0.08)" : "transparent",
+                  boxShadow: active ? "0 0 12px rgba(143, 239, 255, 0.15)" : "none",
                 }}
               >
-                [ {f === "ALL" ? "ALL OPS" : f.toUpperCase()} ]
+                {f === "ALL" ? "All" : f}
               </button>
             );
           })}
@@ -76,14 +66,14 @@ export const RaidArchives = () => {
 
         {/* Cards Grid */}
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="bg-[#0A0A0A] border border-[#1a1a2e] h-[280px] animate-pulse" />
+              <div key={i} className="bg-background/30 border border-border/60 h-80 md:h-96 animate-pulse rounded" />
             ))}
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {filtered.map((p, idx) => {
                 const isComplete = !p.featured;
                 return (
@@ -94,52 +84,44 @@ export const RaidArchives = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-5%" }}
                     transition={{ delay: idx * 0.08, duration: 0.3 }}
-                    whileHover={{ y: -4, transition: { duration: 0.1 } }}
-                    className="relative bg-[#0A0A0A] border border-[#1a1a2e] p-6 flex flex-col group overflow-hidden katana-slash"
-                    style={{
-                      clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
-                    }}
+                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                    className="relative bg-background/40 backdrop-blur-sm border border-border/60 p-5 md:p-6 flex flex-col group overflow-hidden transition-shadow hover:shadow-card-hover"
                   >
-                    {/* Hover glow */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none"
-                      style={{ boxShadow: "inset 0 0 40px rgba(0,245,255,0.05), 0 0 20px rgba(0,245,255,0.05)" }}
-                    />
-
-                    {/* Operation ID */}
-                    <div className="mb-4 relative z-10">
-                      <h3 className="font-display text-sm md:text-base font-bold uppercase text-cyan-accent truncate tracking-wider">
-                        [OP-{String(idx + 1).padStart(3, "0")}] {p.name}
+                    {/* Operation ID & Title */}
+                    <div className="mb-5 relative z-10">
+                      <h3 className="font-display text-base md:text-lg font-bold uppercase text-wez-cyan truncate tracking-wide">
+                        {p.name}
                       </h3>
+                      <p className="font-mono text-xs text-muted-foreground mt-1 tracking-wider">
+                        OP-{String(idx + 1).padStart(3, "0")}
+                      </p>
                     </div>
 
-                    {/* CLEARED Stamp */}
+                    {/* CLEARED/ONGOING Badge */}
                     {isComplete && (
                       <motion.div
                         initial={{ scale: 2, opacity: 0, rotate: -15 }}
-                        whileInView={{ scale: 1, opacity: 0.7, rotate: 8 }}
+                        whileInView={{ scale: 1, opacity: 0.8, rotate: 8 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 + idx * 0.1, type: "spring", stiffness: 500, damping: 8 }}
-                        className="absolute top-5 right-4 border-2 border-[#FF003C] text-crimson font-display text-[11px] font-bold px-3 py-1 tracking-[0.3em] z-20"
+                        className="absolute top-4 right-4 border-2 border-crimson text-crimson font-display text-xs font-bold px-2 py-1 tracking-widest z-20"
                       >
-                        CLEARED
+                        COMPLETE
                       </motion.div>
                     )}
 
-                    {/* Ongoing badge */}
                     {p.featured && (
-                      <div className="absolute top-5 right-4 font-mono-ui text-[9px] border border-[#FCEE0A66] text-[#FCEE0A] px-2 py-0.5 tracking-widest animate-pulse z-20">
-                        ONGOING
+                      <div className="absolute top-4 right-4 font-mono text-xs border border-warn-yellow/50 text-warn-yellow px-2 py-1 tracking-widest animate-pulse z-20">
+                        ACTIVE
                       </div>
                     )}
 
                     {/* Tech Chips */}
-                    <div className="flex flex-wrap gap-2 mb-4 relative z-10">
-                      {p.techStack.slice(0, 4).map((t) => (
+                    <div className="flex flex-wrap gap-2 mb-5 relative z-10">
+                      {p.techStack.slice(0, 3).map((t) => (
                         <span
                           key={t}
-                          className="font-mono-ui text-[9px] px-2 py-0.5 border border-[#00F5FF33] text-[#00F5FFaa]"
-                          style={{ clipPath: "polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%)" }}
+                          className="font-mono text-xs px-2.5 py-1 border border-wez-cyan/40 text-wez-cyan/80"
                         >
                           {t}
                         </span>
@@ -147,7 +129,7 @@ export const RaidArchives = () => {
                     </div>
 
                     {/* Description */}
-                    <p className="font-mono-ui text-[12px] text-dim leading-[1.8] mb-6 line-clamp-3 relative z-10">
+                    <p className="font-mono text-sm text-foreground/70 leading-relaxed mb-6 line-clamp-3 relative z-10">
                       {p.description}
                     </p>
 
@@ -158,10 +140,9 @@ export const RaidArchives = () => {
                           href={p.githubLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex-1 text-center font-mono-ui text-[10px] uppercase border border-[#00F5FF33] text-[#00F5FF88] py-2 transition-all duration-100 hover:bg-[#00F5FF] hover:text-[#050505] hover:border-[#00F5FF] hover:shadow-[0_0_15px_rgba(0,245,255,0.4)]"
-                          style={{ clipPath: "polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%)" }}
+                          className="flex-1 text-center font-mono text-xs uppercase border border-wez-cyan/50 text-wez-cyan/80 py-2.5 transition-all duration-200 hover:bg-wez-cyan hover:text-background hover:border-wez-cyan hover:shadow-[0_0_12px_rgba(143,239,255,0.3)]"
                         >
-                          [ INVESTIGATE → ]
+                          GitHub
                         </a>
                       )}
                       {p.demoLink && (
@@ -169,10 +150,9 @@ export const RaidArchives = () => {
                           href={p.demoLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex-1 text-center font-mono-ui text-[10px] uppercase border border-[#FF003C33] text-[#FF003C88] py-2 transition-all duration-100 hover:bg-[#FF003C] hover:text-white hover:border-[#FF003C] hover:shadow-[0_0_15px_rgba(255,0,60,0.4)]"
-                          style={{ clipPath: "polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%)" }}
+                          className="flex-1 text-center font-mono text-xs uppercase border border-crimson/50 text-crimson/80 py-2.5 transition-all duration-200 hover:bg-crimson hover:text-white hover:border-crimson hover:shadow-[0_0_12px_rgba(255,0,60,0.3)]"
                         >
-                          [ VIEW INTEL → ]
+                          Demo
                         </a>
                       )}
                     </div>

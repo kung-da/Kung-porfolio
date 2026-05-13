@@ -38,32 +38,32 @@ export const LegacySection = () => {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 500, damping: 12 }}
-          className="mb-24"
+          className="mb-12 md:mb-16"
         >
-          <p className="font-mono-ui text-[11px] text-crimson mb-2 tracking-widest">
-            // COMBAT_HISTORY.LOG
+          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+            // FIELD RECORD
           </p>
-          <div className="w-full h-[1px] bg-[#FF003C] mb-4 opacity-60" />
-          <h2 className="font-display font-bold text-2xl md:text-4xl tracking-widest uppercase">
-            FIELD <span className="text-cyan-accent">RECORD</span>
+          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
+          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
+            Experience <span className="text-wez-cyan">Journey</span>
           </h2>
         </motion.div>
 
         {/* Timeline */}
         <div className="relative max-w-4xl mx-auto">
           {/* Vertical Spine */}
-          <div className="absolute left-[15px] md:left-1/2 top-0 bottom-0 w-[1px] bg-[#FF003C22] md:-translate-x-1/2" />
+          <div className="absolute left-[15px] md:left-1/2 top-0 bottom-0 w-px bg-border/40 md:-translate-x-1/2" />
 
           {TIMELINE.map((item, idx) => {
             const isEven = idx % 2 === 0;
             return (
-              <div key={idx} className={`relative flex items-center mb-16 md:mb-24 ${isEven ? "md:flex-row-reverse" : "md:flex-row"}`}>
+              <div key={idx} className={`relative flex items-center mb-12 md:mb-16 lg:mb-20 ${isEven ? "md:flex-row-reverse" : "md:flex-row"}`}>
                 {/* Node */}
-                <div className="absolute left-[15px] md:left-1/2 w-3 h-3 bg-[#FF003C] rotate-45 -translate-x-1/2 shadow-[0_0_10px_#FF003C]" />
+                <div className="absolute left-[15px] md:left-1/2 w-2.5 h-2.5 bg-wez-cyan rotate-45 -translate-x-1/2 shadow-[0_0_8px_rgba(143,239,255,0.5)]" />
 
                 {/* Connector */}
                 <div
-                  className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-[1px] bg-[#FF003C33] w-12 ${isEven ? "right-1/2" : "left-1/2"}`}
+                  className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-px bg-border/30 w-12 ${isEven ? "right-1/2" : "left-1/2"}`}
                 />
 
                 {/* Content Panel */}
@@ -72,35 +72,25 @@ export const LegacySection = () => {
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   viewport={{ once: true, margin: "-10%" }}
                   transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.1 }}
-                  whileHover={{ x: isEven ? -4 : 4, transition: { duration: 0.1 } }}
-                  className="ml-10 md:ml-0 w-full md:w-[45%] relative bg-[#0A0A0A] border border-[#1a1a2e] p-6 group katana-slash overflow-hidden"
-                  style={{
-                    clipPath: isEven
-                      ? "polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))"
-                      : "polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px)",
-                  }}
+                  whileHover={{ x: isEven ? -4 : 4, transition: { duration: 0.2 } }}
+                  className="ml-10 md:ml-0 w-full md:w-[45%] relative bg-background/40 backdrop-blur-sm border border-border/60 p-5 md:p-6 group transition-shadow hover:shadow-card-hover"
                 >
                   {/* Top accent */}
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#D4AF37]" />
-
-                  {/* Mission label */}
-                  <div className="absolute top-2 right-4 font-mono-ui text-[9px] text-[#1a1a2e] tracking-widest">
-                    LOG #{TIMELINE.length - idx}
-                  </div>
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-warn-yellow/50" />
 
                   <div className="mb-4">
-                    <p className="font-mono-ui text-[10px] text-[#D4AF37] tracking-[0.2em] mb-2">
-                      [{item.year}]
+                    <p className="font-mono text-xs text-warn-yellow tracking-wider mb-2 uppercase">
+                      {item.year}
                     </p>
-                    <h3 className="font-display text-sm text-cyan-accent mb-1 tracking-wider">
+                    <h3 className="font-display text-lg md:text-xl text-wez-cyan tracking-wide font-bold mb-1">
                       {item.company}
                     </h3>
-                    <p className="font-mono-ui text-[11px] text-crimson tracking-[0.15em] uppercase">
+                    <p className="font-mono text-xs text-foreground/70 tracking-wide uppercase">
                       {item.role}
                     </p>
                   </div>
 
-                  <p className="font-mono-ui text-[12px] text-dim leading-[1.9] mb-6">
+                  <p className="font-mono text-sm text-foreground/70 leading-relaxed mb-5">
                     {item.desc}
                   </p>
 
@@ -108,8 +98,7 @@ export const LegacySection = () => {
                     {item.tech.map((t) => (
                       <span
                         key={t}
-                        className="font-mono-ui text-[9px] border border-[#D4AF3744] text-[#D4AF37] px-2 py-0.5"
-                        style={{ clipPath: "polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%)" }}
+                        className="font-mono text-xs border border-warn-yellow/40 text-warn-yellow/80 px-2.5 py-1"
                       >
                         {t}
                       </span>
@@ -121,19 +110,18 @@ export const LegacySection = () => {
           })}
 
           {/* Current Operation */}
-          <div className="relative flex items-center md:flex-row-reverse mt-16 md:mt-24">
-            <div className="absolute left-[15px] md:left-1/2 w-3 h-3 bg-[#00FF88] rotate-45 -translate-x-1/2 shadow-[0_0_12px_#00FF88] animate-pulse" />
+          <div className="relative flex items-center md:flex-row-reverse mt-12 md:mt-16">
+            <div className="absolute left-[15px] md:left-1/2 w-3 h-3 bg-status-active rotate-45 -translate-x-1/2 shadow-[0_0_12px_rgba(0,255,136,0.6)] animate-pulse" />
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 500, damping: 12 }}
-              className="ml-10 md:ml-0 w-full md:w-[45%] bg-[#0A0A0A] border border-[#00FF88] p-4 flex items-center gap-3"
-              style={{ clipPath: "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)" }}
+              className="ml-10 md:ml-0 w-full md:w-[45%] bg-background/40 backdrop-blur-sm border border-status-active/60 p-4 md:p-5 flex items-center gap-3"
             >
-              <div className="w-2 h-2 bg-[#00FF88] animate-pulse" style={{ clipPath: "polygon(50% 0, 100% 50%, 50% 100%, 0 50%)" }} />
-              <span className="font-mono-ui text-[11px] text-[#00FF88] tracking-widest">
-                CURRENT OPERATION ACTIVE
+              <div className="w-2 h-2 bg-status-active animate-pulse" />
+              <span className="font-mono text-xs text-status-active tracking-widest uppercase">
+                Active Operation
               </span>
             </motion.div>
           </div>

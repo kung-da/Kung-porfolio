@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { BossHPBar } from "@/components/BossHPBar";
@@ -6,12 +6,19 @@ import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { AboutSection } from "@/components/sections/AboutSection";
-import { AbilitySection } from "@/components/sections/AbilitySection";
-import { RaidArchives } from "@/components/sections/RaidArchives";
-import { LegacySection } from "@/components/sections/LegacySection";
-import { ContactTerminal } from "@/components/sections/ContactTerminal";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
+
+// Lazy load sections below the fold for faster initial load
+const AboutSection = lazy(() => import("@/components/sections/AboutSection").then(m => ({ default: m.AboutSection })));
+const AbilitySection = lazy(() => import("@/components/sections/AbilitySection").then(m => ({ default: m.AbilitySection })));
+const RaidArchives = lazy(() => import("@/components/sections/RaidArchives").then(m => ({ default: m.RaidArchives })));
+const LegacySection = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
+const ContactTerminal = lazy(() => import("@/components/sections/ContactTerminal").then(m => ({ default: m.ContactTerminal })));
+
+// Fallback component for lazy sections
+const SectionFallback = () => (
+  <div className="relative w-full min-h-screen bg-[#050505]" aria-busy="true" />
+);
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(
@@ -33,20 +40,36 @@ const Index = () => {
         {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* Bao bọc main bằng motion.main để tạo hiệu ứng xuất hiện */}
+      {/* Main content with optimized entrance animation */}
       {!isLoading && (
         <motion.main
-          initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          initial={{ opacity: 0, scale: 0.99 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           style={{ paddingTop: 0 }}
         >
           <HeroSection />
-          <AboutSection />
-          <AbilitySection />
-          <RaidArchives />
-          <LegacySection />
-          <ContactTerminal />
+          
+          <Suspense fallback={<SectionFallback />}>
+            <AboutSection />
+          </Suspense>
+          
+          <Suspense fallback={<SectionFallback />}>
+            <AbilitySection />
+          </Suspense>
+          
+          <Suspense fallback={<SectionFallback />}>
+            <RaidArchives />
+          </Suspense>
+          
+          <Suspense fallback={<SectionFallback />}>
+            <LegacySection />
+          </Suspense>
+          
+          <Suspense fallback={<SectionFallback />}>
+            <ContactTerminal />
+          </Suspense>
+          
           <Footer />
         </motion.main>
       )}

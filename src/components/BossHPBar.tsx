@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 
-export const BossHPBar = () => {
+export const BossHPBar = memo(() => {
   const progress = useScrollProgress();
   const hp = Math.max(0, 100 - progress * 100);
   const critical = hp < 20;
@@ -58,6 +59,7 @@ export const BossHPBar = () => {
               ? "0 0 12px #FF003C"
               : "0 0 8px rgba(0,245,255,0.5)",
             transition: "width 0.15s linear",
+            willChange: "width",
           }}
         />
       </div>
@@ -71,4 +73,6 @@ export const BossHPBar = () => {
       </span>
     </div>
   );
-};
+});
+
+BossHPBar.displayName = "BossHPBar";
