@@ -1,130 +1,125 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// NAVIGATION — Tactical HUD Command Strip
+// Sits below BossHPBar (top: 36px), hidden during Hero, visible after scroll
+// ─────────────────────────────────────────────────────────────────────────────
 import { useEffect, useRef, useState } from "react";
-import { CircuitBoard, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { CircuitBoard } from "lucide-react";
+import { useGlitch } from "@/hooks/useGlitch";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { label: "ENCOUNTER", id: "home" },
-  { label: "INTEL", id: "about" },
-  { label: "MOVESET", id: "skills" },
-  { label: "ARCHIVES", id: "projects" },
-  { label: "RECORD", id: "experience" },
-  { label: "DUEL", id: "contact" },
+  { label: "ORIGIN",  id: "about"      },
+  { label: "ARSENAL", id: "skills"     },
+  { label: "ARCHIVE", id: "projects"   },
+  { label: "RECORD",  id: "experience" },
+  { label: "SIGNAL",  id: "contact"    },
 ];
 
-export const Navigation = () => {
-  const [active, setActive] = useState("home");
-  const [open, setOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [onHero, setOnHero] = useState(true);
-  const observedIdsRef = useRef<Set<string>>(new Set());
+// Animation variants
+const drawerVariants = {
+  hidden:  { x: "100%", opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 280, damping: 26 } },
+  exit:    { x: "100%", opacity: 0, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } },
+};
 
+const drawerLinkVariants = {
+  hidden:  { opacity: 0, x: 20 },
+  visible: (i: number) => ({
+    opacity: 1, x: 0,
+    transition: { delay: i * 0.08, duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
+
+export const Navigation = () => {
+  const [active,     setActive]    = useState("home");
+  const [open,       setOpen]      = useState(false);
+  const [isScrolled, setScrolled]  = useState(false);
+  const [onHero,     setOnHero]    = useState(true);
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const observedIds = useRef<Set<string>>(new Set());
+  const { triggerGlitch } = useGlitch(400);
+
+  // ── Scroll + section detection ──────────────────────────────────────────
   useEffect(() => {
     let raf = 0;
-    const handleScroll = () => {
+    const onScroll = () => {
       window.cancelAnimationFrame(raf);
-      raf = window.requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 12);
-      });
+      raf = window.requestAnimationFrame(() => setScrolled(window.scrollY > 12));
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
     const ratios = new Map<string, number>();
+    const allIds = ["home", ...LINKS.map((l) => l.id)];
+
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
         });
-
-        // Header visibility: hide while the Hero section is in the center region.
         setOnHero((ratios.get("home") ?? 0) > 0);
 
         let bestId: string | null = null;
         let bestRatio = 0;
-        ratios.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-
+        ratios.forEach((r, id) => { if (r > bestRatio) { bestRatio = r; bestId = id; } });
         if (bestId && bestRatio > 0) setActive(bestId);
       },
-      {
-        // Track the section that crosses the viewport center.
-        // Keep the root area non-zero (top+bottom < 100%).
-        rootMargin: "-45% 0px -45% 0px",
-      }
+      { rootMargin: "-45% 0px -45% 0px" }
     );
 
     const observeTargets = () => {
-      LINKS.forEach((l) => {
-        if (observedIdsRef.current.has(l.id)) return;
-        const el = document.getElementById(l.id);
+      allIds.forEach((id) => {
+        if (observedIds.current.has(id)) return;
+        const el = document.getElementById(id);
         if (!el) return;
         obs.observe(el);
-        observedIdsRef.current.add(l.id);
-        ratios.set(l.id, 0);
+        observedIds.current.add(id);
+        ratios.set(id, 0);
       });
     };
 
     observeTargets();
-
-    // Sections are lazy-loaded; observe them once they hit the DOM.
     let moRaf = 0;
     const mo = new MutationObserver(() => {
       window.cancelAnimationFrame(moRaf);
       moRaf = window.requestAnimationFrame(() => {
         observeTargets();
-        if (observedIdsRef.current.size === LINKS.length) {
-          mo.disconnect();
-        }
+        if (observedIds.current.size >= allIds.length) mo.disconnect();
       });
     });
     mo.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
       window.cancelAnimationFrame(raf);
-      window.cancelAnimationFrame(moRaf);
       mo.disconnect();
       obs.disconnect();
     };
   }, []);
 
+  // ── Scroll handler ───────────────────────────────────────────────────────
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-
     setActive(id);
-
-    const headerEl = document.getElementById("site-header");
-    const headerOffset = (headerEl?.offsetHeight ?? 64) + 36 + 12;
+    // BossHPBar(36px) + Nav(~56px) + 12px gap
+    const headerOffset = 36 + 56 + 12;
     const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    window.scrollTo({
-      top,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
     setOpen(false);
   };
 
   return (
     <>
+      {/* ── Header: sits under BossHPBar at top-9 (36px) ───────────────── */}
       <header
         id="site-header"
         className={cn(
           "fixed left-0 right-0 top-9 z-[85]",
           "border-b transition-[background-color,border-color,box-shadow,backdrop-filter,opacity,visibility] duration-300 ease-out",
+          // Cyan bottom border line
           "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-wez-cyan/50 after:to-transparent after:transition-opacity after:duration-300",
           onHero
             ? "opacity-0 invisible pointer-events-none"
@@ -137,14 +132,13 @@ export const Navigation = () => {
         )}
       >
         <div className="mx-auto grid h-14 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-16 md:px-6">
-          {/* Logo */}
+          {/* ── LEFT: Logo ─── */}
           <div className="flex items-center justify-start">
             <a
+              ref={logoRef}
               href="#home"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo("home");
-              }}
+              onClick={(e) => { e.preventDefault(); scrollTo("home"); }}
+              onMouseEnter={() => triggerGlitch(logoRef.current)}
               className={cn(
                 "group inline-flex items-center gap-3 py-2",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -175,11 +169,8 @@ export const Navigation = () => {
             </a>
           </div>
 
-          {/* Desktop Nav */}
-          <nav
-            className="hidden items-center justify-center md:flex"
-            aria-label="Primary"
-          >
+          {/* ── CENTER: Nav Links ─── */}
+          <nav className="hidden items-center justify-center md:flex" aria-label="Primary">
             <div className="flex items-center gap-1">
               {LINKS.map((l) => {
                 const isActive = active === l.id;
@@ -187,10 +178,7 @@ export const Navigation = () => {
                   <a
                     key={l.id}
                     href={`#${l.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollTo(l.id);
-                    }}
+                    onClick={(e) => { e.preventDefault(); scrollTo(l.id); }}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "group relative px-4 py-2",
@@ -201,9 +189,7 @@ export const Navigation = () => {
                       isActive && "text-wez-cyan drop-shadow-[0_0_8px_rgba(143,239,255,0.4)]"
                     )}
                   >
-                    <span className="transition-colors">
-                      {l.label}
-                    </span>
+                    <span className="transition-colors">{l.label}</span>
                     <span
                       className={cn(
                         "pointer-events-none absolute inset-x-4 -bottom-0.5 h-px",
@@ -218,94 +204,95 @@ export const Navigation = () => {
             </div>
           </nav>
 
-          {/* Mobile Menu */}
-          <div className="flex items-center justify-end md:hidden">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className={cn(
-                    "border-border/70 bg-background/30 backdrop-blur-xl",
-                    "hover:bg-background/50",
-                    "transition-colors",
-                    isScrolled && "border-wez-cyan/30"
-                  )}
-                  aria-label={open ? "Close menu" : "Open menu"}
-                >
-                  <AnimatePresence initial={false} mode="wait">
-                    {open ? (
-                      <motion.span
-                        key="close"
-                        initial={{ opacity: 0, rotate: -90, scale: 0.9 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: 90, scale: 0.9 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                      >
-                        <X className="size-4" />
-                      </motion.span>
-                    ) : (
-                      <motion.span
-                        key="menu"
-                        initial={{ opacity: 0, rotate: 90, scale: 0.9 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: -90, scale: 0.9 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                      >
-                        <Menu className="size-4" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Button>
-              </SheetTrigger>
+          {/* ── RIGHT: Status + Mobile toggle ─── */}
+          <div className="flex items-center justify-end gap-3">
+            <motion.div
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              className="hidden sm:block"
+              style={{ width: 6, height: 6, borderRadius: "50%", background: "#00FF88" }}
+            />
+            <span
+              className="hidden sm:inline font-mono text-[9px] tracking-[0.2em] uppercase"
+              style={{ color: "rgba(0,255,136,0.7)" }}
+            >
+              SYS: ONLINE
+            </span>
 
-              <SheetContent
-                side="right"
-                className={cn(
-                  "border-border/60 bg-background/70 backdrop-blur-xl",
-                  "pt-12",
-                  "shadow-[inset_1px_0_0_hsl(var(--border)/0.6),-20px_0_60px_rgba(0,0,0,0.45)]"
-                )}
-              >
-                <SheetHeader className="space-y-1">
-                  <SheetTitle className="font-display text-base tracking-[0.18em] uppercase">
-                    Navigation
-                  </SheetTitle>
-                  <p className="font-mono text-xs tracking-[0.24em] text-muted-foreground uppercase">
-                    // data_wanderer
-                  </p>
-                </SheetHeader>
-
-                <div className="mt-6 flex flex-col">
-                  {LINKS.map((l) => {
-                    const isActive = active === l.id;
-                    return (
-                      <button
-                        key={l.id}
-                        type="button"
-                        onClick={() => scrollTo(l.id)}
-                        className={cn(
-                          "w-full px-4 py-3 text-left",
-                          "font-display text-sm uppercase tracking-[0.22em]",
-                          "transition-colors",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                          "ring-offset-background",
-                          isActive
-                            ? "border-l-2 border-wez-cyan bg-wez-cyan/10 text-wez-cyan"
-                            : "border-l-2 border-transparent text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                        )}
-                      >
-                        {l.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </SheetContent>
-            </Sheet>
+            {/* Mobile toggle — HUD symbol */}
+            <button
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((v) => !v)}
+              className={cn(
+                "md:hidden border border-border/70 bg-background/30 backdrop-blur-xl",
+                "hover:bg-background/50 transition-colors px-2.5 py-1.5",
+                isScrolled && "border-wez-cyan/30"
+              )}
+            >
+              <span className="font-mono text-sm text-wez-cyan">{open ? "✕" : "⊕"}</span>
+            </button>
           </div>
         </div>
       </header>
+
+      {/* ── Mobile Drawer ──────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              style={{ position: "fixed", inset: 0, zIndex: 88, background: "rgba(5,5,8,0.7)", backdropFilter: "blur(4px)" }}
+            />
+
+            <motion.nav
+              variants={drawerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              aria-label="Mobile navigation"
+              className="fixed top-0 right-0 bottom-0 z-[89] w-[280px] border-l border-border/60 bg-background/70 backdrop-blur-xl pt-12"
+              style={{ boxShadow: "inset 1px 0 0 hsl(var(--border) / 0.6), -20px 0 60px rgba(0,0,0,0.45)" }}
+            >
+              <div className="space-y-1 px-6 pb-6">
+                <div className="font-display text-base tracking-[0.18em] uppercase">Navigation</div>
+                <p className="font-mono text-xs tracking-[0.24em] text-muted-foreground uppercase">// data_wanderer</p>
+              </div>
+
+              <div className="mt-6 flex flex-col">
+                {LINKS.map((l, i) => {
+                  const isActive = active === l.id;
+                  return (
+                    <motion.button
+                      key={l.id}
+                      custom={i}
+                      variants={drawerLinkVariants}
+                      initial="hidden"
+                      animate="visible"
+                      type="button"
+                      onClick={() => scrollTo(l.id)}
+                      className={cn(
+                        "w-full px-4 py-3 text-left",
+                        "font-display text-sm uppercase tracking-[0.22em]",
+                        "transition-colors",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        isActive
+                          ? "border-l-2 border-wez-cyan bg-wez-cyan/10 text-wez-cyan"
+                          : "border-l-2 border-transparent text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      )}
+                    >
+                      {l.label}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

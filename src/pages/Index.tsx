@@ -5,19 +5,22 @@ import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { Footer } from "@/components/Footer";
+import { CustomCursor } from "@/components/CustomCursor";
+import { ScrollIndicator } from "@/components/ScrollIndicator";
+import { SectionDivider } from "@/components/SectionDivider";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
 
 // Lazy load sections below the fold for faster initial load
-const AboutSection = lazy(() => import("@/components/sections/AboutSection").then(m => ({ default: m.AboutSection })));
-const AbilitySection = lazy(() => import("@/components/sections/AbilitySection").then(m => ({ default: m.AbilitySection })));
-const RaidArchives = lazy(() => import("@/components/sections/RaidArchives").then(m => ({ default: m.RaidArchives })));
-const LegacySection = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
+const AboutSection    = lazy(() => import("@/components/sections/AboutSection").then(m => ({ default: m.AboutSection })));
+const AbilitySection  = lazy(() => import("@/components/sections/AbilitySection").then(m => ({ default: m.AbilitySection })));
+const RaidArchives    = lazy(() => import("@/components/sections/RaidArchives").then(m => ({ default: m.RaidArchives })));
+const LegacySection   = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
 const ContactTerminal = lazy(() => import("@/components/sections/ContactTerminal").then(m => ({ default: m.ContactTerminal })));
 
 // Fallback component for lazy sections
 const SectionFallback = () => (
-  <div className="relative w-full min-h-screen bg-[#050505]" aria-busy="true" />
+  <div className="relative w-full min-h-screen bg-[#050508]" aria-busy="true" />
 );
 
 const Index = () => {
@@ -31,10 +34,12 @@ const Index = () => {
   }, [isLoading]);
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
+    <div className="relative min-h-screen bg-[#050508] text-[#E0E0E0] overflow-hidden">
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />
+      <CustomCursor />
+      <ScrollIndicator />
 
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
@@ -49,27 +54,32 @@ const Index = () => {
           style={{ paddingTop: 0 }}
         >
           <HeroSection />
-          
+
+          <SectionDivider num="01" label="ORIGIN" />
           <Suspense fallback={<SectionFallback />}>
             <AboutSection />
           </Suspense>
-          
+
+          <SectionDivider num="02" label="ARSENAL" />
           <Suspense fallback={<SectionFallback />}>
             <AbilitySection />
           </Suspense>
-          
+
+          <SectionDivider num="03" label="ARCHIVE" />
           <Suspense fallback={<SectionFallback />}>
             <RaidArchives />
           </Suspense>
-          
+
+          <SectionDivider num="04" label="RECORD" />
           <Suspense fallback={<SectionFallback />}>
             <LegacySection />
           </Suspense>
-          
+
+          <SectionDivider num="05" label="SIGNAL" />
           <Suspense fallback={<SectionFallback />}>
             <ContactTerminal />
           </Suspense>
-          
+
           <Footer />
         </motion.main>
       )}

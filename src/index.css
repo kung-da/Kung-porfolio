@@ -69,6 +69,13 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Hide default cursor for custom crosshair on desktop */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Orbitron', sans-serif;
     color: var(--text-main);
@@ -255,6 +262,31 @@
     left: -2px;
     text-shadow: 2px 0 var(--neon-cyan);
     animation: glitch-2 0.1s infinite linear alternate-reverse;
+  }
+
+  /* ── Glitch Active (triggered by useGlitch hook) ── */
+  .glitch-active {
+    animation: glitch-ink 0.4s ease-in-out forwards !important;
+  }
+
+  /* ── Atmospheric Noise Layer ── */
+  .atmospheric-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+}
+
+/* ── Prefers reduced motion overrides ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .crt-scanlines,
+  .hud-grid,
+  .atmospheric-noise {
+    display: none !important;
   }
 }
 

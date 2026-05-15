@@ -41,7 +41,7 @@ export const LegacySection = () => {
           className="mb-12 md:mb-16"
         >
           <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
-            // FIELD RECORD
+            // 04 — RECORD
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
           <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
