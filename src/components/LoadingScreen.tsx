@@ -25,20 +25,20 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [exit, setExit] = useState(false);
 
   useEffect(() => {
-    // Phase 0: System Boot (0 - 8.5s) - Increased to allow typewriter to finish
-    const t1 = setTimeout(() => setPhase(1), 8500);
+    // Phase 0: System Boot (0 - 5.6s)
+    const t1 = setTimeout(() => setPhase(1), 5667);
 
-    // Slash cut trigger at 11.5s
-    const t2 = setTimeout(() => setSlash(true), 11500);
+    // Slash cut trigger at 7.6s
+    const t2 = setTimeout(() => setSlash(true), 7667);
 
-    // Screen split & text hide at 11.65s
+    // Screen split & text hide at 7.7s
     const t3 = setTimeout(() => {
       setPhase(2);
       setExit(true);
-    }, 11650);
+    }, 7767);
 
-    // Complete & Unmount at 12.3s
-    const t4 = setTimeout(() => onComplete(), 12300);
+    // Complete & Unmount at 8.2s
+    const t4 = setTimeout(() => onComplete(), 8200);
 
     return () => {
       clearTimeout(t1);
@@ -54,7 +54,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={exit ? { y: "-100%" } : { y: 0 }}
-        transition={{ duration: 0.8, ease: [0.7, 0, 0.3, 1] }}
+        transition={{ duration: 0.53, ease: [0.7, 0, 0.3, 1] }}
         className={`absolute top-0 left-0 right-0 h-1/2 bg-[#020202] z-40 transition-colors ${exit ? 'border-b border-[#ff0000] shadow-[0_10px_30px_rgba(255,0,0,0.3)]' : ''}`}
       />
 
@@ -62,7 +62,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={exit ? { y: "100%" } : { y: 0 }}
-        transition={{ duration: 0.8, ease: [0.7, 0, 0.3, 1] }}
+        transition={{ duration: 0.53, ease: [0.7, 0, 0.3, 1] }}
         className={`absolute bottom-0 left-0 right-0 h-1/2 bg-[#020202] z-40 transition-colors ${exit ? 'border-t border-[#ff0000] shadow-[0_-10px_30px_rgba(255,0,0,0.3)]' : ''}`}
       />
 
@@ -71,7 +71,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
           <motion.div
             key="loading-content"
             exit={{ opacity: 0, scale: 1.1, filter: "blur(15px)" }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="absolute inset-0 flex flex-col items-center justify-center z-50"
           >
             {/* PHASE 0: SOLO LEVELING SYSTEM BOARD */}
@@ -96,7 +96,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                   <motion.div
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 1 }}
+                    transition={{ delay: 0.13, duration: 0.67 }}
                     className="relative w-64 h-80 md:w-80 md:h-[500px] group"
                   >
                     {/* Image with contrast/lighting adjustment */}
@@ -121,7 +121,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     <motion.div
                       initial={{ y: -20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.4 }}
+                      transition={{ delay: 0.27 }}
                       className="mb-6 relative"
                     >
                       <div className="bg-[#FFB7C5] text-[#1a0508] px-6 py-1 font-black text-xl md:text-2xl italic tracking-tighter skew-x-[-15deg] shadow-[4px_4px_0_rgba(255,255,255,0.2)]">
@@ -135,7 +135,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                       <motion.h1
                         initial={{ scale: 1.2, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.8 }}
+                        transition={{ delay: 0.4, duration: 0.53 }}
                         className="text-white font-serif font-black relative z-10"
                         style={{
                           fontSize: "clamp(3rem, 10vw, 7rem)",
@@ -150,7 +150,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 1, duration: 1 }}
+                        transition={{ delay: 0.67, duration: 0.67 }}
                         className="font-display text-[#FFB7C5] text-xl md:text-3xl tracking-[0.6em] font-black uppercase mt-4 italic opacity-80"
                       >
                         WARDEN WEZAEMON
@@ -161,7 +161,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 1.4 }}
+                      transition={{ delay: 0.93 }}
                       className="mt-8 font-serif text-white/50 text-xl md:text-3xl tracking-[0.2em] italic border-l-4 border-[#FFB7C5] pl-6"
                     >
                       に遭遇しました
@@ -183,7 +183,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         initial={{ scaleX: 0, opacity: 1 }}
         animate={slash ? (exit ? { opacity: 0 } : { scaleX: 1 }) : { scaleX: 0 }}
-        transition={{ duration: 0.2, ease: "circOut" }}
+        transition={{ duration: 0.13, ease: "circOut" }}
         className="absolute top-1/2 left-[-30%] right-[-30%] h-[10px] bg-white z-[300] origin-left"
         style={{
           boxShadow: "0 0 80px #ff0000, 0 0 30px #fff",
@@ -215,7 +215,7 @@ const SoloLevelingBoard = () => {
         if (lineIndex < lines.length - 1) {
           setLineIndex(prev => prev + 1);
         }
-      }, 800);
+      }, 533);
       return () => clearTimeout(timer);
     }
   }, [lineIndex]);
@@ -330,7 +330,7 @@ const TypewriterRow = ({ label, value, sub, valType = 'value', active, onComplet
         clearInterval(labelInterval);
         setLabelDone(true);
       }
-    }, 40);
+    }, 27);
 
     return () => clearInterval(labelInterval);
   }, [active, label]);
@@ -346,7 +346,7 @@ const TypewriterRow = ({ label, value, sub, valType = 'value', active, onComplet
           setValueDone(true);
           onComplete();
         }
-      }, 40);
+      }, 27);
       return () => clearInterval(valueInterval);
     }
   }, [labelDone, value, onComplete, valueDone]);

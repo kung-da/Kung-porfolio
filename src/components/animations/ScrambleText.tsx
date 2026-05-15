@@ -23,9 +23,9 @@ export const ScrambleText = ({ text, delay = 0, duration = 1.5, className = "" }
       for (let i = 0; i < text.length; i++) {
         const from = JAPANESE_CHARS[Math.floor(Math.random() * JAPANESE_CHARS.length)];
         const to = text[i];
-        // Increased ranges for a slower reveal (roughly 2x slower)
-        const start = Math.floor(Math.random() * 80);
-        const end = start + Math.floor(Math.random() * 100);
+        // Reduced ranges for a faster reveal (1.5x faster)
+        const start = Math.floor(Math.random() * 53);
+        const end = start + Math.floor(Math.random() * 67);
         queue.push({ from, to, start, end });
       }
       queueRef.current = queue;
@@ -42,8 +42,8 @@ export const ScrambleText = ({ text, delay = 0, duration = 1.5, className = "" }
           complete++;
           newOutput += to;
         } else if (frameCountRef.current >= start) {
-          // Slightly slower character rotation (0.2 instead of 0.28)
-          if (!char || Math.random() < 0.2) {
+          // Faster character rotation
+          if (!char || Math.random() < 0.3) {
             char = JAPANESE_CHARS[Math.floor(Math.random() * JAPANESE_CHARS.length)];
             queueRef.current[i].char = char;
           }

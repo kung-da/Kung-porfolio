@@ -34,11 +34,11 @@ export const HeroSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.53, ease: "easeOut" }}
           className="mb-4"
         >
           <h3 className="font-display text-xs md:text-sm tracking-[0.4em] text-[#8FEFFF] uppercase drop-shadow-[0_0_8px_rgba(143,239,255,0.6)]">
-            <ScrambleText text="WEZAEMON • TOMBGUARD" delay={0.5} />
+            <ScrambleText text="WEZAEMON • TOMBGUARD" delay={0.33} />
           </h3>
         </motion.div>
 
@@ -46,17 +46,17 @@ export const HeroSection = () => {
         <motion.h1
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.67, ease: [0.16, 1, 0.3, 1] }}
           className="font-black uppercase tracking-tighter leading-none mb-4 text-[#E0E0E0] relative"
           style={{ fontSize: "clamp(4rem, 10vw, 12rem)", textShadow: "0 0 50px rgba(139, 0, 0, 0.5)" }}
         >
           <span className="relative inline-block">
-            <ScrambleText text="KUNG" delay={0.8} />
+            <ScrambleText text="KUNG" delay={0.53} />
             {/* Katana slash line through text */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 1.5, duration: 0.5, ease: "circOut" }}
+              transition={{ delay: 1.0, duration: 0.33, ease: "circOut" }}
               className="absolute top-1/2 left-[-15%] right-[-15%] h-[5px] bg-[#8B0000] origin-left z-20"
               style={{ transform: "translateY(-50%) rotate(-4deg)", boxShadow: "0 0 20px #8B0000" }}
             />
@@ -67,10 +67,10 @@ export const HeroSection = () => {
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
+          transition={{ delay: 0.2, duration: 0.53 }}
           className="font-mono text-sm md:text-lg tracking-[0.3em] text-[#D4AF37] mb-8 px-6 py-2 border-b border-t border-[#D4AF37]/30 bg-[#0a0a0a]/40 backdrop-blur-sm uppercase min-h-[40px] flex items-center"
         >
-          <ScrambleText text="Warden of the Digital Grave" delay={1.2} />
+          <ScrambleText text="Warden of the Digital Grave" delay={0.8} />
         </motion.h2>
 
         {/* Subtitle / Description */}
@@ -78,25 +78,25 @@ export const HeroSection = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
+            transition={{ delay: 1.0 }}
           >
-            <ScrambleText text="Full-stack Developer" delay={1.8} />
+            <ScrambleText text="Full-stack Developer" delay={1.2} />
             <span className="text-[#8B0000] mx-2">|</span>
-            <ScrambleText text="Data Engineer" delay={2.0} />
+            <ScrambleText text="Data Engineer" delay={1.33} />
             <span className="text-[#8B0000] mx-2">|</span>
-            <ScrambleText text="Anime Soul" delay={2.2} />
+            <ScrambleText text="Anime Soul" delay={1.47} />
           </motion.div>
           
           <br />
           <motion.span 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.5 }}
+            transition={{ delay: 1.67 }}
             className="block mt-4 italic text-[#888888] font-serif text-base"
           >
             <ScrambleText 
               text='"Forging systems beyond mortal limits, where code meets the blade."' 
-              delay={3.0} 
+              delay={2.0} 
             />
           </motion.span>
         </div>

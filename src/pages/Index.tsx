@@ -45,7 +45,7 @@ const Index = () => {
         <motion.main
           initial={{ opacity: 0, scale: 0.99 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          transition={{ duration: 0.53, ease: [0.16, 1, 0.3, 1], delay: 0.07 }}
           style={{ paddingTop: 0 }}
         >
           <HeroSection />
