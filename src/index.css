@@ -141,10 +141,17 @@
     text-shadow: 0 0 8px rgba(0, 245, 255, 0.6), 0 0 20px rgba(0, 245, 255, 0.3);
   }
 
-  /* ── CRT Scanlines ── */
+  /* ── CRT Scanlines — lightweight version ── */
   .crt-scanlines {
-    background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
-    background-size: 100% 4px;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.15) 3px,
+      rgba(0,0,0,0.15) 4px
+    );
+    contain: strict;
+    will-change: auto;
   }
 
   /* ── Noise Grain ── */
@@ -159,13 +166,29 @@
     mix-blend-mode: overlay;
   }
 
-  /* ── HUD Grid ── */
+  /* ── HUD Grid — lighter, wider spacing ── */
   .hud-grid {
     background-image:
-      linear-gradient(var(--neon-cyan) 1px, transparent 1px),
-      linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.03;
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    contain: strict;
+  }
+
+  /* ── Section vignette — draws focus to center content ── */
+  .section-vignette {
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(10,10,18,0) 0%, rgba(10,10,18,0) 45%, rgba(5,5,8,0.7) 100%),
+      linear-gradient(180deg, rgba(10,10,20,0.4) 0%, rgba(5,5,8,0) 15%, rgba(5,5,8,0) 85%, rgba(10,10,20,0.5) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Section panel floor — subtle gradient that lifts cards ── */
+  .section-floor {
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 30%, rgba(0,229,255,0.015) 0%, transparent 40%);
+    pointer-events: none;
   }
 
   /* ── Chamfered Clip Shapes ── */

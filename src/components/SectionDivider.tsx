@@ -27,7 +27,7 @@ export const SectionDivider = ({ num, label }: SectionDividerProps) => (
     <span
       style={{
         position: "relative",
-        background: "#050508",
+        background: "#060610",
         padding: "0 16px",
         fontFamily: "'Share Tech Mono', monospace",
         fontSize: 10,

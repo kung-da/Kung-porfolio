@@ -102,12 +102,12 @@ export const AboutSection = () => {
     <section
       id="about"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 bg-[#050508] overflow-hidden"
+      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #060610 0%, #08081a 40%, #0a0a14 70%, #060610 100%)" }}
     >
-      {/* BG layers */}
-      <div className="absolute inset-0 crt-scanlines opacity-[0.03] pointer-events-none z-0" />
-      <div className="absolute inset-0 hud-grid pointer-events-none z-0" />
-      <div className="absolute inset-0 pointer-events-none z-0" style={{ background: "radial-gradient(ellipse at 70% 40%, rgba(139,0,0,0.06) 0%, transparent 60%)" }} />
+      {/* Single lightweight BG overlay */}
+      <div className="absolute inset-0 section-vignette z-0" />
+      <div className="absolute inset-0 section-floor z-0" />
 
       <div className="container mx-auto max-w-6xl relative z-10">
         {/* ── Section Header ─── */}

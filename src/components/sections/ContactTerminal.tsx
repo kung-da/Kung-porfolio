@@ -29,10 +29,10 @@ const ParticleField = () => {
     if (!ctx) return;
     let w = canvas.width = canvas.offsetWidth;
     let h = canvas.height = canvas.offsetHeight;
-    const particles = Array.from({ length: 50 }, () => ({
+    const particles = Array.from({ length: 25 }, () => ({
       x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-      alpha: Math.random() * 0.4 + 0.1, w: Math.random() * 2 + 0.5, h: Math.random() * 1 + 0.5,
+      vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+      alpha: Math.random() * 0.35 + 0.1, w: Math.random() * 2 + 0.5, h: Math.random() * 1 + 0.5,
     }));
     let rafId: number;
     const draw = () => {
@@ -129,9 +129,11 @@ export const ContactTerminal = () => {
         )}
       </AnimatePresence>
 
-      <section id="contact" ref={ref} className="relative min-h-screen py-24 px-6 md:px-12 bg-[#050508] overflow-hidden">
-        <div className="absolute inset-0 crt-scanlines opacity-[0.02] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 110%, rgba(139,0,0,0.08) 0%, transparent 60%)" }} />
+      <section id="contact" ref={ref} className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+        style={{ background: "linear-gradient(180deg, #060610 0%, #07071a 40%, #0a0a16 70%, #060610 100%)" }}
+      >
+        <div className="absolute inset-0 section-vignette pointer-events-none" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.05) 0%, transparent 50%)" }} />
         <ParticleField />
 
         <div className="container mx-auto max-w-5xl relative z-10">

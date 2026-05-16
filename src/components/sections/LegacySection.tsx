@@ -26,10 +26,12 @@ const TIMELINE = [
 
 export const LegacySection = () => {
   return (
-    <section id="experience" className="relative w-full min-h-screen py-24 px-6 md:px-12 bg-[#050505] overflow-hidden">
+    <section id="experience" className="relative w-full min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #060610 0%, #080816 40%, #0a0a14 70%, #060610 100%)" }}
+    >
       {/* BG */}
-      <div className="absolute inset-0 crt-scanlines opacity-[0.03] pointer-events-none" />
-      <div className="absolute inset-0 hud-grid pointer-events-none" />
+      <div className="absolute inset-0 section-vignette pointer-events-none" />
+      <div className="absolute inset-0 section-floor pointer-events-none" />
 
       <div className="container mx-auto max-w-5xl relative z-10">
         {/* Header */}

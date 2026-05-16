@@ -139,10 +139,11 @@ export const AbilitySection = () => {
     <section
       id="skills"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 bg-[#050508] overflow-hidden"
+      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #060610 0%, #080818 40%, #0a0a16 70%, #060610 100%)" }}
     >
-      <div className="absolute inset-0 crt-scanlines opacity-[0.025] pointer-events-none" />
-      <div className="absolute inset-0 hud-grid pointer-events-none" />
+      <div className="absolute inset-0 section-vignette pointer-events-none" />
+      <div className="absolute inset-0 section-floor pointer-events-none" />
 
       <div className="container mx-auto max-w-6xl relative z-10">
         {/* ── Header ── */}
@@ -165,10 +166,8 @@ export const AbilitySection = () => {
             <span className="text-crimson/60">SYS: LOADING COMBAT MODULES...</span>
             <div className="flex gap-[2px]">
               {Array.from({ length: 10 }).map((_, i) => (
-                <motion.div
+                <div
                   key={i}
-                  animate={inView ? { background: ["rgba(139,0,0,0.15)", "#8b0000", "rgba(139,0,0,0.15)"] } : {}}
-                  transition={{ duration: 0.8, delay: i * 0.08, repeat: Infinity }}
                   style={{ width: 8, height: 8, background: i < 9 ? "#8b0000" : "rgba(139,0,0,0.15)" }}
                 />
               ))}

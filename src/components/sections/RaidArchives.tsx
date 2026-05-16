@@ -158,10 +158,11 @@ export const RaidArchives = () => {
     <section
       id="projects"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 bg-[#050508] overflow-hidden"
+      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #060610 0%, #07071a 40%, #0a0a16 70%, #060610 100%)" }}
     >
-      <div className="absolute inset-0 crt-scanlines opacity-[0.025] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(139,0,0,0.05) 0%, transparent 55%)" }} />
+      <div className="absolute inset-0 section-vignette pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(139,0,0,0.04) 0%, transparent 55%)" }} />
 
       <div className="container mx-auto max-w-6xl relative z-10">
         {/* ── Header ── */}
@@ -235,7 +236,6 @@ export const RaidArchives = () => {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 font-mono text-sm tracking-[0.25em] text-crimson/50 uppercase relative">
-            <div className="hud-grid absolute inset-0 opacity-[0.02]" />
             NO OPS FOUND IN THIS CATEGORY
           </div>
         ) : (
