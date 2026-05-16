@@ -136,7 +136,7 @@ export const AboutSection = () => {
           {/* LEFT — Dossier */}
           <motion.div variants={leftColVariants} className="flex flex-col gap-8">
             {/* File header panel */}
-            <div className="border border-crimson/30 bg-crimson/[0.03] p-5 md:p-6 relative overflow-hidden">
+            <div className="border border-crimson/40 bg-[rgba(139,0,0,0.06)] p-5 md:p-6 relative overflow-hidden shadow-[inset_0_1px_0_rgba(139,0,0,0.08),0_4px_16px_rgba(0,0,0,0.3)]">
               {/* Top accent */}
               <motion.div
                 initial={{ scaleX: 0 }}
@@ -253,7 +253,7 @@ export const AboutSection = () => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5 }}
-                className="mt-4 border border-border/60 bg-background/40 backdrop-blur-md px-4 py-2.5 text-center"
+                className="mt-4 border border-[rgba(143,239,255,0.12)] bg-[rgba(10,10,18,0.7)] backdrop-blur-md px-4 py-2.5 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.04)]"
               >
                 <span className="font-mono text-xs text-wez-cyan tracking-widest uppercase">
                   Senior Data Engineer

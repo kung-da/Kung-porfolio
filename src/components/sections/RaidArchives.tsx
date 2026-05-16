@@ -28,7 +28,7 @@ const SkeletonCard = ({ i }: { i: number }) => (
     initial={{ opacity: 0 }}
     animate={{ opacity: [0.3, 0.6, 0.3] }}
     transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2 }}
-    className="bg-background/60 border border-border/30 h-[320px]"
+    className="bg-[rgba(10,10,18,0.6)] border border-[rgba(143,239,255,0.08)] h-[320px]"
   />
 );
 
@@ -52,8 +52,9 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
     exit="exit"
     className={`
       group relative border transition-all duration-300 overflow-hidden flex flex-col
-      border-border/40 bg-background/60 backdrop-blur-sm
-      hover:border-wez-cyan/40 hover:shadow-card-hover
+      border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.7)] backdrop-blur-sm
+      shadow-[inset_0_1px_0_rgba(143,239,255,0.04),0_2px_8px_rgba(0,0,0,0.3)]
+      hover:border-wez-cyan/40 hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_24px_rgba(143,239,255,0.1),inset_0_1px_0_rgba(143,239,255,0.06),0_12px_24px_rgba(0,0,0,0.4)]
       ${isFeatured ? "col-span-full" : ""}
     `}
   >
@@ -179,7 +180,7 @@ export const RaidArchives = () => {
           </h2>
 
           {/* Stats row */}
-          <div className="border border-border/40 bg-background/30 p-4 flex items-center justify-between flex-wrap gap-3">
+          <div className="border border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.6)] p-4 flex items-center justify-between flex-wrap gap-3 shadow-[inset_0_1px_0_rgba(143,239,255,0.03)]">
             <span className="font-mono text-xs text-wez-cyan/70 tracking-[0.2em]">
               ── CLASSIFIED ARCHIVE ────────────
             </span>

@@ -73,7 +73,7 @@ export const LegacySection = () => {
                   viewport={{ once: true, margin: "-10%" }}
                   transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.1 }}
                   whileHover={{ x: isEven ? -4 : 4, transition: { duration: 0.2 } }}
-                  className="ml-10 md:ml-0 w-full md:w-[45%] relative bg-background/40 backdrop-blur-sm border border-border/60 p-5 md:p-6 group transition-shadow hover:shadow-card-hover"
+                  className="ml-10 md:ml-0 w-full md:w-[45%] relative bg-[rgba(10,10,18,0.7)] backdrop-blur-sm border border-[rgba(252,238,10,0.12)] p-5 md:p-6 group transition-all shadow-[inset_0_1px_0_rgba(252,238,10,0.04),0_2px_8px_rgba(0,0,0,0.3)] hover:border-[rgba(252,238,10,0.25)] hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_20px_rgba(252,238,10,0.06),inset_0_1px_0_rgba(252,238,10,0.06),0_12px_24px_rgba(0,0,0,0.4)]"
                 >
                   {/* Top accent */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-warn-yellow/50" />
@@ -117,7 +117,7 @@ export const LegacySection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 500, damping: 12 }}
-              className="ml-10 md:ml-0 w-full md:w-[45%] bg-background/40 backdrop-blur-sm border border-status-active/60 p-4 md:p-5 flex items-center gap-3"
+              className="ml-10 md:ml-0 w-full md:w-[45%] bg-[rgba(10,10,18,0.7)] backdrop-blur-sm border border-status-active/60 p-4 md:p-5 flex items-center gap-3 shadow-[inset_0_1px_0_rgba(0,255,136,0.05),0_2px_8px_rgba(0,0,0,0.3)]"
             >
               <div className="w-2 h-2 bg-status-active animate-pulse" />
               <span className="font-mono text-xs text-status-active tracking-widest uppercase">

@@ -174,7 +174,7 @@ export const ContactTerminal = () => {
                     key="success"
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="border border-wez-cyan/30 bg-wez-cyan/[0.04] p-12 text-center"
+                    className="border border-wez-cyan/35 bg-[rgba(0,229,255,0.05)] p-12 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.06),0_4px_16px_rgba(0,0,0,0.3)]"
                   >
                     <p className="font-display text-lg font-bold text-wez-cyan tracking-[0.2em] mb-4">
                       SIGNAL RECEIVED

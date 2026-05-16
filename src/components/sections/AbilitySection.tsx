@@ -112,15 +112,15 @@ const SkillCard = ({ skill, index, isSelected, onSelect }: { skill: Skill; index
     onKeyDown={(e) => e.key === "Enter" && onSelect()}
     className={`p-4 border transition-all duration-200 relative overflow-hidden ${
       isSelected
-        ? "border-wez-cyan/50 bg-wez-cyan/[0.05] shadow-[0_0_16px_rgba(143,239,255,0.08)]"
-        : "border-border/60 bg-background/40 hover:border-wez-cyan/30 hover:shadow-card-hover"
+        ? "border-wez-cyan/50 bg-wez-cyan/[0.07] shadow-[0_0_20px_rgba(143,239,255,0.12)]"
+        : "border-[rgba(143,239,255,0.12)] bg-[rgba(10,10,18,0.7)] shadow-[inset_0_1px_0_rgba(143,239,255,0.04),0_2px_8px_rgba(0,0,0,0.3)] hover:border-wez-cyan/35 hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_20px_rgba(143,239,255,0.1),inset_0_1px_0_rgba(143,239,255,0.06)]"
     }`}
     style={{ cursor: "pointer" }}
   >
     {isSelected && (
       <motion.div layoutId="selected-skill" className="absolute top-0 left-0 right-0 h-px bg-wez-cyan" />
     )}
-    <div className={`font-mono text-sm mb-2 tracking-wide ${isSelected ? "text-wez-cyan font-semibold" : "text-foreground/90"}`}>
+    <div className={`font-mono text-sm mb-2 tracking-wide ${isSelected ? "text-wez-cyan font-semibold" : "text-foreground"}`}>
       {skill.name}
     </div>
     <ProficiencyBar lvl={skill.lvl} active={true} />
@@ -256,7 +256,7 @@ export const AbilitySection = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="border border-crimson/30 bg-background/60 backdrop-blur-sm p-5 relative overflow-hidden hidden md:block"
+                className="border border-crimson/40 bg-[rgba(10,10,18,0.75)] backdrop-blur-sm p-5 relative overflow-hidden hidden md:block shadow-[inset_0_1px_0_rgba(139,0,0,0.1),0_4px_16px_rgba(0,0,0,0.3)]"
               >
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-crimson via-enrage to-transparent" />
 
@@ -293,7 +293,7 @@ export const AbilitySection = () => {
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="border border-border/30 bg-background/30 h-[200px] hidden md:flex items-center justify-center"
+                className="border border-[rgba(143,239,255,0.08)] bg-[rgba(10,10,18,0.5)] h-[200px] hidden md:flex items-center justify-center"
               >
                 <span className="font-mono text-xs tracking-[0.2em] text-crimson/40 uppercase">SELECT A WEAPON</span>
               </motion.div>
