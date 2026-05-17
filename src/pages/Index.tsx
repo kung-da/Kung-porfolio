@@ -10,10 +10,10 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
 
 // Lazy load sections below the fold for faster initial load
-const AboutSection    = lazy(() => import("@/components/sections/AboutSection").then(m => ({ default: m.AboutSection })));
-const AbilitySection  = lazy(() => import("@/components/sections/AbilitySection").then(m => ({ default: m.AbilitySection })));
-const RaidArchives    = lazy(() => import("@/components/sections/RaidArchives").then(m => ({ default: m.RaidArchives })));
-const LegacySection   = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
+const AboutSection = lazy(() => import("@/components/sections/AboutSection").then(m => ({ default: m.AboutSection })));
+const AbilitySection = lazy(() => import("@/components/sections/AbilitySection").then(m => ({ default: m.AbilitySection })));
+const RaidArchives = lazy(() => import("@/components/sections/RaidArchives").then(m => ({ default: m.RaidArchives })));
+const LegacySection = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
 const ContactTerminal = lazy(() => import("@/components/sections/ContactTerminal").then(m => ({ default: m.ContactTerminal })));
 
 // Fallback component for lazy sections

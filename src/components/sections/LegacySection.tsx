@@ -27,7 +27,7 @@ const TIMELINE = [
 export const LegacySection = () => {
   return (
     <section id="experience" className="relative w-full min-h-screen py-24 px-6 md:px-12 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #060610 0%, #080816 40%, #0a0a14 70%, #060610 100%)" }}
+      style={{ background: "transparent" }}
     >
       {/* BG */}
       <div className="absolute inset-0 section-vignette pointer-events-none" />
@@ -42,7 +42,7 @@ export const LegacySection = () => {
           transition={{ type: "spring", stiffness: 500, damping: 12 }}
           className="mb-12 md:mb-16"
         >
-          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
             // 04 — RECORD
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
@@ -81,18 +81,18 @@ export const LegacySection = () => {
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-warn-yellow/50" />
 
                   <div className="mb-4">
-                    <p className="font-mono text-xs text-warn-yellow tracking-wider mb-2 uppercase">
+                    <p className="font-mono text-xs text-warn-yellow/90 tracking-[0.15em] mb-2 uppercase">
                       {item.year}
                     </p>
                     <h3 className="font-display text-lg md:text-xl text-wez-cyan tracking-wide font-bold mb-1">
                       {item.company}
                     </h3>
-                    <p className="font-mono text-xs text-foreground/70 tracking-wide uppercase">
+                    <p className="font-mono text-sm text-foreground/60 tracking-[0.12em] uppercase">
                       {item.role}
                     </p>
                   </div>
 
-                  <p className="font-mono text-sm text-foreground/70 leading-relaxed mb-5">
+                  <p className="font-mono text-sm text-foreground/65 leading-relaxed mb-5">
                     {item.desc}
                   </p>
 
@@ -100,7 +100,7 @@ export const LegacySection = () => {
                     {item.tech.map((t) => (
                       <span
                         key={t}
-                        className="font-mono text-xs border border-warn-yellow/40 text-warn-yellow/80 px-2.5 py-1"
+                        className="font-mono text-xs border border-warn-yellow/30 text-warn-yellow/75 px-2.5 py-1 tracking-[0.1em]"
                       >
                         {t}
                       </span>

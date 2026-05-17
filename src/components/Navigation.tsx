@@ -16,8 +16,19 @@ export const Navigation = () => {
   const [open, setOpen] = useState(false);
   const [isScrolled, setScrolled] = useState(false);
   const [onHero, setOnHero] = useState(true);
+  const [glowTrigger, setGlowTrigger] = useState(false);
 
   const logoRef = useRef<HTMLAnchorElement>(null);
+  const isScrollingRef = useRef(false);
+
+  // ── Pulse glow on active page changes ──────────────────────────────────
+  useEffect(() => {
+    if (active && active !== "home" && !onHero) {
+      setGlowTrigger(true);
+      const timer = setTimeout(() => setGlowTrigger(false), 900);
+      return () => clearTimeout(timer);
+    }
+  }, [active, onHero]);
 
   // ── Glitch effect on Logo ───────────────────────────────────────────────
   const triggerGlitch = (el: HTMLElement | null) => {
@@ -31,20 +42,24 @@ export const Navigation = () => {
     let raf = 0;
     const onScroll = () => {
       window.cancelAnimationFrame(raf);
-      raf = window.requestAnimationFrame(() => setScrolled(window.scrollY > 12));
+      raf = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 12);
+        setOnHero(window.scrollY < 300);
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
     const ratios = new Map<string, number>();
-    const allIds = ["home", ...LINKS.map((l) => l.id)];
+    const allIds = LINKS.map((l) => l.id);
 
     const obs = new IntersectionObserver(
       (entries) => {
+        if (isScrollingRef.current) return;
+
         entries.forEach((e) => {
           ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
         });
-        setOnHero((ratios.get("home") ?? 0) > 0);
 
         let bestId: string | null = null;
         let bestRatio = 0;
@@ -54,11 +69,11 @@ export const Navigation = () => {
             bestId = id;
           }
         });
-        if (bestId && bestRatio > 0 && bestId !== "home") {
+        if (bestId && bestRatio > 0) {
           setActive(bestId);
         }
       },
-      { rootMargin: "-45% 0px -45% 0px" }
+      { rootMargin: "-20% 0px -20% 0px" }
     );
 
     allIds.forEach((id) => {
@@ -75,16 +90,26 @@ export const Navigation = () => {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
+
+    setActive(id);
+    isScrollingRef.current = true;
+
     const offset = 64; // height of the sticky nav
     const bodyRect = document.body.getBoundingClientRect().top;
     const elementRect = el.getBoundingClientRect().top;
     const elementPosition = elementRect - bodyRect;
     const offsetPosition = elementPosition - offset;
+
     window.scrollTo({
       top: offsetPosition,
       behavior: "smooth"
     });
     setOpen(false);
+
+    // Re-enable observer updates after smooth scroll completes
+    setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 850);
   };
 
   // Animation variants for Mobile drawer
@@ -111,15 +136,21 @@ export const Navigation = () => {
           "fixed left-0 right-0 top-9 z-[85]",
           "border-b transition-[background-color,border-color,box-shadow,backdrop-filter,opacity,visibility] duration-300 ease-out",
           // Cyan bottom border line
-          "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-wez-cyan/50 after:to-transparent after:transition-opacity after:duration-300",
+          "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:transition-all after:duration-500",
           onHero
             ? "opacity-0 invisible pointer-events-none"
             : isScrolled
               ? [
-                  "opacity-100 visible bg-background/60 backdrop-blur-xl border-border/60 after:opacity-100",
-                  "shadow-[inset_0_1px_0_hsl(var(--foreground)/0.06),0_10px_30px_rgba(0,0,0,0.35)]",
+                  "opacity-100 visible bg-background/70 backdrop-blur-xl border-border/40",
+                  "shadow-[inset_0_1px_0_hsl(var(--foreground)/0.06),0_10px_30px_rgba(0,0,0,0.45),0_1px_6px_rgba(0,245,255,0.08)]",
+                  glowTrigger
+                    ? "after:opacity-100 after:bg-wez-cyan after:shadow-[0_0_12px_rgba(0,245,255,0.7),0_0_3px_rgba(0,245,255,0.4)] after:scale-y-[1.5]"
+                    : "after:opacity-100 after:bg-wez-cyan/35 after:shadow-[0_0_3px_rgba(0,245,255,0.15)] after:scale-y-[1]",
                 ]
-              : "opacity-100 visible bg-transparent backdrop-blur-sm border-transparent after:opacity-0"
+              : [
+                  "opacity-100 visible bg-transparent backdrop-blur-sm border-transparent",
+                  "after:opacity-30 after:bg-gradient-to-r after:from-transparent after:via-wez-cyan/30 after:to-transparent after:scale-y-[1]"
+                ]
         )}
       >
         <div className="mx-auto grid h-14 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-16 md:px-6">
@@ -142,7 +173,7 @@ export const Navigation = () => {
                   "relative grid size-9 place-items-center",
                   "border border-border/60 bg-background/30 backdrop-blur-md",
                   "transition-colors",
-                  isScrolled && "border-wez-cyan/30"
+                  isScrolled && "border-wez-cyan/30 shadow-[0_0_4px_rgba(0,245,255,0.1)]"
                 )}
               >
                 <CircuitBoard className="size-4 text-wez-cyan" aria-hidden="true" />
@@ -150,10 +181,10 @@ export const Navigation = () => {
               </span>
 
               <span className="flex flex-col leading-none">
-                <span className="font-display text-[11px] font-semibold tracking-[0.22em] text-foreground uppercase md:text-[12px]">
+                <span className="font-display text-[11px] font-semibold tracking-[0.22em] text-foreground uppercase md:text-[12px] group-hover:text-wez-cyan transition-colors">
                   Data Wanderer
                 </span>
-                <span className="font-jp text-[10px] tracking-[0.18em] text-muted-foreground">
+                <span className="font-jp text-[10px] tracking-[0.18em] text-muted-foreground group-hover:text-wez-cyan/80 transition-colors">
                   データ
                 </span>
               </span>
@@ -177,16 +208,15 @@ export const Navigation = () => {
                       "text-muted-foreground transition-all duration-200",
                       "hover:text-wez-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       "ring-offset-background",
-                      isActive && "text-wez-cyan drop-shadow-[0_0_8px_rgba(143,239,255,0.4)]"
+                      isActive && "text-wez-cyan drop-shadow-[0_0_6px_rgba(0,245,255,0.35)]"
                     )}
                   >
                     <span className="transition-colors">{l.label}</span>
                     <span
                       className={cn(
-                        "pointer-events-none absolute inset-x-4 -bottom-0.5 h-px",
-                        "bg-gradient-to-r from-transparent via-wez-cyan/80 to-transparent",
-                        "opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        isActive && "opacity-100"
+                        "pointer-events-none absolute inset-x-4 -bottom-0.5 h-[2px] transition-all duration-300",
+                        "opacity-0 group-hover:opacity-100 group-hover:bg-wez-cyan/40 group-hover:shadow-[0_0_4px_rgba(0,245,255,0.2)]",
+                        isActive && "opacity-100 bg-wez-cyan shadow-[0_0_6px_rgba(0,245,255,0.4)]"
                       )}
                     />
                   </a>
@@ -198,14 +228,14 @@ export const Navigation = () => {
           {/* ── RIGHT: Status + Mobile toggle ─── */}
           <div className="flex items-center justify-end gap-3">
             <motion.div
-              animate={{ opacity: [1, 0.3, 1] }}
+              animate={{ opacity: [1, 0.4, 1] }}
               transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               className="hidden sm:block"
-              style={{ width: 6, height: 6, borderRadius: "50%", background: "#00FF88" }}
+              style={{ width: 6, height: 6, borderRadius: "50%", background: "#00FF88", boxShadow: "0 0 6px rgba(0,255,136,0.4)" }}
             />
             <span
               className="hidden sm:inline font-mono text-[9px] tracking-[0.2em] uppercase"
-              style={{ color: "rgba(0,255,136,0.7)" }}
+              style={{ color: "#00FF88", textShadow: "0 0 4px rgba(0,255,136,0.25)" }}
             >
               SYS: ONLINE
             </span>

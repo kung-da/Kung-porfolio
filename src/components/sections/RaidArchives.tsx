@@ -10,11 +10,11 @@ const FILTERS = ["ALL", "Pipeline", "Dashboard", "Analytics", "Other"] as const;
 type Filter = typeof FILTERS[number];
 
 const headerVariants = {
-  hidden:  { opacity: 0, y: -20 },
+  hidden: { opacity: 0, y: -20 },
   visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 18 } },
 };
 const cardVariants = {
-  hidden:  { opacity: 0, y: 28, scale: 0.97 },
+  hidden: { opacity: 0, y: 28, scale: 0.97 },
   visible: (i: number) => ({
     opacity: 1, y: 0, scale: 1,
     transition: { delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] },
@@ -79,10 +79,10 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
     <div className={`${isFeatured ? "p-6 md:p-7" : "p-5"} flex-1 flex flex-col gap-3`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-mono text-xs text-wez-cyan/70 tracking-[0.22em] uppercase mb-1">
+          <p className="font-mono text-sm text-wez-cyan/60 tracking-[0.2em] uppercase mb-1">
             ── OP // {p.name.toUpperCase()} ──
           </p>
-          <p className="font-mono text-[11px] text-crimson/70 tracking-wider uppercase">
+          <p className="font-mono text-xs text-crimson/60 tracking-[0.15em] uppercase">
             CATEGORY: {p.category}
           </p>
         </div>
@@ -97,13 +97,13 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
         )}
       </div>
 
-      <p className="font-mono text-sm text-foreground/70 leading-relaxed line-clamp-2">
+      <p className="font-mono text-sm text-foreground/65 leading-relaxed line-clamp-2">
         {p.description}
       </p>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-2">
         {p.techStack.slice(0, 4).map((t) => (
-          <span key={t} className="font-mono text-[11px] tracking-wider border border-wez-cyan/25 text-wez-cyan/70 px-2.5 py-0.5 uppercase">
+          <span key={t} className="font-mono text-xs tracking-[0.12em] border border-wez-cyan/20 text-wez-cyan/65 px-2.5 py-1 uppercase">
             {t}
           </span>
         ))}
@@ -150,7 +150,7 @@ export const RaidArchives = () => {
   const featured = filtered.find((p) => p.featured);
   const rest = filtered.filter((p) => !p.featured || p !== featured);
 
-  const total  = projects.length;
+  const total = projects.length;
   const active = projects.filter((p) => p.featured).length;
   const sealed = total - active;
 
@@ -159,7 +159,7 @@ export const RaidArchives = () => {
       id="projects"
       ref={ref}
       className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #060610 0%, #07071a 40%, #0a0a16 70%, #060610 100%)" }}
+      style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(139,0,0,0.04) 0%, transparent 55%)" }} />
@@ -172,7 +172,7 @@ export const RaidArchives = () => {
           animate={inView ? "visible" : "hidden"}
           className="mb-12 md:mb-16"
         >
-          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
             // 03 — ARCHIVE
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
@@ -188,8 +188,8 @@ export const RaidArchives = () => {
             <div className="flex gap-5">
               {[
                 { label: "TOTAL OPS", value: total, cls: "text-wez-cyan/70" },
-                { label: "ACTIVE",    value: active, cls: "text-enrage" },
-                { label: "SEALED",    value: sealed, cls: "text-muted-foreground" },
+                { label: "ACTIVE", value: active, cls: "text-enrage" },
+                { label: "SEALED", value: sealed, cls: "text-muted-foreground" },
               ].map((s) => (
                 <span key={s.label} className={`font-mono text-xs tracking-wider ${s.cls}`}>
                   {s.label}: [{s.value}]
@@ -212,11 +212,10 @@ export const RaidArchives = () => {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`font-mono text-xs tracking-[0.2em] uppercase px-4 py-2 border transition-all relative overflow-hidden ${
-                  isActive
+                className={`font-mono text-xs tracking-[0.2em] uppercase px-4 py-2 border transition-all relative overflow-hidden ${isActive
                     ? "border-crimson text-enrage bg-crimson/[0.12]"
                     : "border-border/40 text-muted-foreground hover:text-foreground/80 hover:border-border/70"
-                }`}
+                  }`}
               >
                 {f}
               </button>

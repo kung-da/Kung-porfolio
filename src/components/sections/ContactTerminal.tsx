@@ -7,7 +7,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 
 // ── Animation variants ────────────────────────────────────────────────────────
 const fieldVariants = {
-  hidden:  { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 16 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
     transition: { delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] },
@@ -15,7 +15,7 @@ const fieldVariants = {
 };
 
 const rightPanelVariants = {
-  hidden:  { opacity: 0, x: 30 },
+  hidden: { opacity: 0, x: 30 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 260, damping: 22, delay: 0.2 } },
 };
 
@@ -63,7 +63,7 @@ const TermInput = ({ label, fieldId, placeholder, type = "text", value, onChange
   const borderColor = focused ? "border-wez-cyan" : "border-crimson/40";
   return (
     <div className="relative">
-      <label htmlFor={fieldId} className={`block font-mono text-xs tracking-[0.25em] uppercase mb-1.5 transition-colors ${focused ? "text-wez-cyan/90" : "text-crimson/70"}`}>
+      <label htmlFor={fieldId} className={`block font-mono text-sm tracking-[0.2em] uppercase mb-2 transition-colors ${focused ? "text-wez-cyan/80" : "text-crimson/60"}`}>
         {label}:
       </label>
       <div className="relative">
@@ -89,12 +89,12 @@ const TermInput = ({ label, fieldId, placeholder, type = "text", value, onChange
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 export const ContactTerminal = () => {
-  const [form, setForm]       = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError]     = useState(false);
-  const [txId, setTxId]       = useState("");
-  const [flash, setFlash]     = useState(false);
+  const [error, setError] = useState(false);
+  const [txId, setTxId] = useState("");
+  const [flash, setFlash] = useState(false);
 
   const ref = useRef<HTMLElement>(null!);
   const inView = useInView(ref, { once: true, margin: "-10%" as any });
@@ -115,8 +115,8 @@ export const ContactTerminal = () => {
   };
 
   const COMM_LINKS = [
-    { label: "GITHUB",      href: "https://github.com/kung-da",  icon: "⎇" },
-    { label: "LINKEDIN",    href: "https://linkedin.com/in/cung", icon: "in" },
+    { label: "GITHUB", href: "https://github.com/kung-da", icon: "⎇" },
+    { label: "LINKEDIN", href: "https://linkedin.com/in/cung", icon: "in" },
     { label: "EMAIL RELAY", href: "mailto:hello@cung-master.dev", icon: "@" },
   ];
 
@@ -130,7 +130,7 @@ export const ContactTerminal = () => {
       </AnimatePresence>
 
       <section id="contact" ref={ref} className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
-        style={{ background: "linear-gradient(180deg, #060610 0%, #07071a 40%, #0a0a16 70%, #060610 100%)" }}
+        style={{ background: "transparent" }}
       >
         <div className="absolute inset-0 section-vignette pointer-events-none" />
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.05) 0%, transparent 50%)" }} />
@@ -144,7 +144,7 @@ export const ContactTerminal = () => {
             transition={{ duration: 0.5 }}
             className="mb-12 md:mb-16"
           >
-            <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+            <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
               // 05 — SIGNAL
             </p>
             <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
@@ -152,10 +152,10 @@ export const ContactTerminal = () => {
               Open <span className="text-wez-cyan">Transmission</span>
             </h2>
 
-            <div className="font-mono text-xs tracking-wider text-wez-cyan/60 flex gap-4 md:gap-6 flex-wrap items-center">
+            <div className="font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex gap-4 md:gap-6 flex-wrap items-center">
               <span>─── WINDOW OPEN ────────</span>
-              <span className="text-crimson/60">ENCRYPTION: AES-256</span>
-              <span className="text-crimson/60">LATENCY: 12ms</span>
+              <span className="text-crimson/50">ENCRYPTION: AES-256</span>
+              <span className="text-crimson/50">LATENCY: 12ms</span>
               <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} className="text-status-active">
                 ● UPLINK: ACTIVE
               </motion.span>
@@ -189,8 +189,8 @@ export const ContactTerminal = () => {
                 ) : (
                   <motion.form key="form" onSubmit={submit} className="flex flex-col gap-7">
                     {[
-                      { label: "SENDER_ID",    key: "name"  as const, placeholder: "ENTER DESIGNATION...", type: "text" },
-                      { label: "SUBJECT_LINE", key: "email" as const, placeholder: "RELAY ADDRESS...",      type: "email" },
+                      { label: "SENDER_ID", key: "name" as const, placeholder: "ENTER DESIGNATION...", type: "text" },
+                      { label: "SUBJECT_LINE", key: "email" as const, placeholder: "RELAY ADDRESS...", type: "email" },
                     ].map((f, i) => (
                       <motion.div key={f.key} custom={i} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
                         <TermInput fieldId={`contact-${f.key}`} label={f.label} placeholder={f.placeholder} type={f.type}
@@ -208,13 +208,12 @@ export const ContactTerminal = () => {
                         disabled={sending}
                         whileHover={!sending ? { x: 4 } : {}}
                         whileTap={!sending ? { scale: 0.98 } : {}}
-                        className={`w-full py-3.5 px-6 font-mono text-sm tracking-[0.25em] uppercase border transition-all relative overflow-hidden flex items-center justify-center gap-3 ${
-                          error
+                        className={`w-full py-3.5 px-6 font-mono text-sm tracking-[0.25em] uppercase border transition-all relative overflow-hidden flex items-center justify-center gap-3 ${error
                             ? "border-enrage text-enrage bg-enrage/[0.06]"
                             : sending
                               ? "border-border/50 text-muted-foreground"
                               : "border-crimson/50 text-foreground bg-crimson/[0.06] hover:bg-crimson/10 shadow-[0_0_20px_rgba(139,0,0,0.1)]"
-                        }`}
+                          }`}
                       >
                         {sending && (
                           <motion.div animate={{ width: ["0%", "100%"] }} transition={{ duration: 1.4, ease: "linear" }}
@@ -231,7 +230,7 @@ export const ContactTerminal = () => {
             {/* RIGHT — Comm links */}
             <motion.div variants={rightPanelVariants} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-6">
               <div>
-                <p className="font-mono text-xs text-wez-cyan/60 tracking-[0.2em] uppercase mb-3">
+                <p className="font-mono text-sm text-wez-cyan/50 tracking-[0.18em] uppercase mb-3">
                   AVAILABLE COMM CHANNELS
                 </p>
                 <div className="h-px bg-border/30 mb-5" />
@@ -248,8 +247,8 @@ export const ContactTerminal = () => {
                     className="flex items-center gap-3 py-3 border-b border-border/20 no-underline transition-colors group"
                   >
                     <div className="w-2 h-2 bg-crimson/60 rounded-full flex-shrink-0 group-hover:bg-crimson transition-colors" />
-                    <span className="font-mono text-xs text-wez-cyan/60 tracking-wider w-5 flex-shrink-0">{l.icon}</span>
-                    <span className="font-mono text-sm text-foreground/70 tracking-[0.2em] uppercase group-hover:text-foreground/90 transition-colors">
+                    <span className="font-mono text-xs text-wez-cyan/50 tracking-[0.15em] w-5 flex-shrink-0">{l.icon}</span>
+                    <span className="font-mono text-sm text-foreground/65 tracking-[0.18em] uppercase group-hover:text-foreground/85 transition-colors">
                       {l.label}
                     </span>
                     <span className="font-mono text-sm text-crimson/40 ml-auto">→</span>
@@ -261,7 +260,7 @@ export const ContactTerminal = () => {
 
               {/* Location */}
               <div>
-                <p className="font-mono text-xs text-crimson/70 tracking-[0.2em] uppercase mb-3">LOCATION NODE:</p>
+                <p className="font-mono text-sm text-crimson/60 tracking-[0.18em] uppercase mb-3">LOCATION NODE:</p>
                 <div className="flex items-center gap-3">
                   <motion.div
                     animate={{ opacity: [1, 0.2, 1], scale: [1, 1.3, 1] }}
@@ -270,8 +269,8 @@ export const ContactTerminal = () => {
                     style={{ boxShadow: "0 0 10px rgba(0,255,136,0.5)" }}
                   />
                   <div>
-                    <p className="font-mono text-sm text-foreground/85 tracking-wider">Vietnam — South Sector</p>
-                    <p className="font-mono text-xs text-wez-cyan/50 tracking-wider mt-0.5">ICT (UTC+7) · Response &lt; 24H</p>
+                    <p className="font-mono text-sm text-foreground/80 tracking-[0.12em]">Vietnam — South Sector</p>
+                    <p className="font-mono text-xs text-wez-cyan/45 tracking-[0.12em] mt-0.5">ICT (UTC+7) · Response &lt; 24H</p>
                   </div>
                 </div>
               </div>

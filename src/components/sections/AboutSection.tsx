@@ -12,15 +12,15 @@ const containerVariants = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 const leftColVariants = {
-  hidden:  { opacity: 0, x: -40 },
+  hidden: { opacity: 0, x: -40 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 260, damping: 22 } },
 };
 const rightColVariants = {
-  hidden:  { opacity: 0, scale: 0.92 },
+  hidden: { opacity: 0, scale: 0.92 },
   visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 220, damping: 20, delay: 0.1 } },
 };
 const fieldVariants = {
-  hidden:  { opacity: 0, x: 20 },
+  hidden: { opacity: 0, x: 20 },
   visible: (i: number) => ({
     opacity: 1, x: 0,
     transition: { delay: i * 0.07, duration: 0.4, ease: [0.16, 1, 0.3, 1] },
@@ -103,7 +103,7 @@ export const AboutSection = () => {
       id="about"
       ref={ref}
       className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #060610 0%, #08081a 40%, #0a0a14 70%, #060610 100%)" }}
+      style={{ background: "transparent" }}
     >
       {/* Single lightweight BG overlay */}
       <div className="absolute inset-0 section-vignette z-0" />
@@ -117,7 +117,7 @@ export const AboutSection = () => {
           transition={{ duration: 0.4 }}
           className="mb-12 md:mb-16"
         >
-          <p className="font-mono text-xs text-crimson mb-2 tracking-widest uppercase">
+          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
             // 01 — ORIGIN
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
@@ -147,19 +147,19 @@ export const AboutSection = () => {
               />
 
               <div className="flex justify-between items-start mb-6">
-                <span className="font-mono text-xs text-wez-cyan tracking-[0.22em] uppercase font-semibold">
+                <span className="font-mono text-sm text-wez-cyan tracking-[0.22em] uppercase font-semibold">
                   [DOSSIER]
                 </span>
-                <span className="font-mono text-xs text-wez-cyan/50 tracking-wider">
+                <span className="font-mono text-xs text-wez-cyan/40 tracking-[0.2em]">
                   FILE #0042
                 </span>
               </div>
 
               {/* Fields */}
               {[
-                { label: "DESIGNATION",    value: designation || "▋" },
+                { label: "DESIGNATION", value: designation || "▋" },
                 { label: "CLASSIFICATION", value: "ARCHITECT" },
-                { label: "STATUS",         value: "ACTIVE", valueColor: "#00FF88" },
+                { label: "STATUS", value: "ACTIVE", valueColor: "#00FF88" },
               ].map((f, i) => (
                 <motion.div
                   key={f.label}
@@ -167,7 +167,7 @@ export const AboutSection = () => {
                   variants={fieldVariants}
                   className="flex justify-between items-center py-3 border-b border-crimson/20"
                 >
-                  <span className="font-mono text-xs text-wez-cyan/80 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-sm text-wez-cyan/70 tracking-[0.18em] uppercase">
                     {f.label}:
                   </span>
                   <span className="font-mono text-sm font-semibold tracking-wider" style={{ color: f.valueColor ?? "#E0E0E0" }}>
@@ -178,7 +178,7 @@ export const AboutSection = () => {
 
               {/* Threat level */}
               <div className="mt-4">
-                <div className="font-mono text-xs text-wez-cyan/80 tracking-[0.2em] uppercase mb-3">
+                <div className="font-mono text-sm text-wez-cyan/70 tracking-[0.18em] uppercase mb-3">
                   THREAT LEVEL:
                 </div>
                 <ThreatMeter active={inView} />
@@ -187,10 +187,10 @@ export const AboutSection = () => {
 
             {/* Field report */}
             <div className="border-l-2 border-crimson/50 pl-5 md:pl-6">
-              <div className="font-mono text-xs text-crimson tracking-[0.2em] uppercase mb-3">
+              <div className="font-mono text-sm text-crimson/90 tracking-[0.18em] uppercase mb-3">
                 ── FIELD REPORT ──
               </div>
-              <p className="font-mono text-sm text-foreground/80 leading-[1.9]">
+              <p className="font-mono text-sm text-foreground/75 leading-[2]">
                 {fieldReport}
                 {inView && fieldReport.length < FIELD_REPORT.length && (
                   <span className="animate-blink ml-1 text-wez-cyan">█</span>
@@ -200,17 +200,17 @@ export const AboutSection = () => {
 
             {/* Signature skills */}
             <div>
-              <div className="font-mono text-xs text-wez-cyan/70 tracking-[0.2em] uppercase mb-3">
+              <div className="font-mono text-sm text-wez-cyan/60 tracking-[0.18em] uppercase mb-3">
                 ── SIGNATURE SKILLS ──
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2.5">
                 {SIGNATURE_SKILLS.map((skill, i) => (
                   <motion.span
                     key={skill}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ delay: 2.2 + i * 0.08, type: "spring", stiffness: 300 }}
-                    className="font-mono text-xs tracking-[0.18em] uppercase px-3 py-1.5 border border-wez-cyan/30 text-wez-cyan/80 bg-wez-cyan/[0.04]"
+                    className="font-mono text-xs tracking-[0.18em] uppercase px-3.5 py-2 border border-wez-cyan/25 text-wez-cyan/75 bg-wez-cyan/[0.04]"
                   >
                     {skill}
                   </motion.span>
@@ -253,7 +253,7 @@ export const AboutSection = () => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5 }}
-                className="mt-4 border border-[rgba(143,239,255,0.12)] bg-[rgba(10,10,18,0.7)] backdrop-blur-md px-4 py-2.5 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.04)]"
+                className="mt-4 border border-[rgba(143,239,255,0.15)] bg-[rgba(10,10,18,0.7)] backdrop-blur-md px-4 py-3 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.04)]"
               >
                 <span className="font-mono text-xs text-wez-cyan tracking-widest uppercase">
                   Senior Data Engineer
