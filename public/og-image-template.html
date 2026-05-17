@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1200" />
+  <title>OG Image Generator — CUNG-MASTER</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #0A0A0A;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 64px 80px;
+      position: relative;
+    }
+
+    /* ─── Background grid ─── */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(143, 239, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(143, 239, 255, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* ─── Left accent bar ─── */
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      background: #8FEFFF;
+      box-shadow: 0 0 30px rgba(143, 239, 255, 0.6);
+    }
+
+    /* ─── Corner decoration top-right ─── */
+    .corner-tl {
+      position: absolute;
+      top: 32px;
+      right: 64px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(143, 239, 255, 0.5);
+      letter-spacing: 0.15em;
+    }
+
+    /* ─── Corner decoration bottom-right ─── */
+    .corner-br {
+      position: absolute;
+      bottom: 32px;
+      right: 64px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(250, 250, 248, 0.3);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── System tag top-left ─── */
+    .sys-tag {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(143, 239, 255, 0.6);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ─── Main content ─── */
+    .content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .eyebrow {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8FEFFF;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      color: #FAFAF8;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      text-shadow: 6px 6px 0 #0A0A0A;
+      margin-bottom: 8px;
+    }
+
+    .name span {
+      color: #8FEFFF;
+      text-shadow: 6px 6px 0 #0A0A0A, 0 0 40px rgba(143, 239, 255, 0.5);
+    }
+
+    .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: rgba(250, 250, 248, 0.6);
+      letter-spacing: 0.05em;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* ─── Role badges ─── */
+    .badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #0A0A0A;
+      background: #8FEFFF;
+      padding: 6px 14px;
+      font-weight: 500;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.8);
+      letter-spacing: 0.05em;
+    }
+
+    .badge.outline {
+      background: transparent;
+      color: #8FEFFF;
+      border: 1.5px solid #8FEFFF;
+      box-shadow: 3px 3px 0 #8FEFFF;
+    }
+
+    /* ─── Right side decorative element ─── */
+    .right-deco {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: right;
+    }
+
+    .jp-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 100px;
+      font-weight: 900;
+      color: rgba(143, 239, 255, 0.06);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      white-space: nowrap;
+    }
+
+    /* ─── Glitch lines ─── */
+    .glitch-line {
+      position: absolute;
+      height: 1px;
+      background: rgba(143, 239, 255, 0.15);
+    }
+    .glitch-line:nth-child(1) { width: 180px; top: 140px; right: 200px; }
+    .glitch-line:nth-child(2) { width: 60px;  top: 200px; right: 120px; }
+    .glitch-line:nth-child(3) { width: 120px; top: 380px; right: 300px; }
+  </style>
+</head>
+<body>
+  <div class="accent-bar"></div>
+
+  <div class="sys-tag">// SYS.PORTFOLIO.ACTIVE</div>
+  <div class="corner-tl">WEZAEMON_THE_TOMBGUARD.EXE</div>
+  <div class="corner-br">sinhcungportfolio.vercel.app</div>
+
+  <div class="glitch-line"></div>
+  <div class="glitch-line"></div>
+  <div class="glitch-line"></div>
+
+  <div class="content">
+    <div class="eyebrow">⬡ Cyber Samurai Portfolio</div>
+    <div class="name">CUNG<br/><span>MASTER</span></div>
+    <div class="subtitle">Data Engineer · AI Developer · System Builder</div>
+    <div class="badges">
+      <div class="badge">Python</div>
+      <div class="badge">Airflow</div>
+      <div class="badge">dbt</div>
+      <div class="badge outline">View Projects →</div>
+    </div>
+  </div>
+
+  <div class="right-deco">
+    <div class="jp-text">侍</div>
+  </div>
+</body>
+</html>
+
+<!--
+  CÁCH TẠO OG IMAGE:
+  1. Mở file này trong Chrome/Edge
+  2. DevTools (F12) → Command Palette (Ctrl+Shift+P) → "Capture screenshot"
+     HOẶC dùng: window size 1200x630 rồi screenshot
+  3. Hoặc dùng tool online: https://screenshotone.com / puppeteer / playwright
+
+  PUPPETEER SCRIPT (nếu có Node.js):
+  ---
+  const puppeteer = require('puppeteer');
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1200, height: 630 });
+  await page.goto('file:///path/to/og-image-template.html');
+  await page.waitForTimeout(1000); // wait for fonts
+  await page.screenshot({ path: 'public/og-image.png' });
+  await browser.close();
+  ---
+
+  Sau khi tạo xong, đặt file vào: /public/og-image.png
+-->

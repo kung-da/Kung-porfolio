@@ -1,12 +1,7 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// NAVIGATION — Tactical HUD Command Strip
-// Sits below BossHPBar (top: 36px), hidden during Hero, visible after scroll
-// ─────────────────────────────────────────────────────────────────────────────
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 import { CircuitBoard } from "lucide-react";
-import { useGlitch } from "@/hooks/useGlitch";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
   { label: "ORIGIN",  id: "about"      },
@@ -16,29 +11,20 @@ const LINKS = [
   { label: "SIGNAL",  id: "contact"    },
 ];
 
-// Animation variants
-const drawerVariants = {
-  hidden:  { x: "100%", opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 280, damping: 26 } },
-  exit:    { x: "100%", opacity: 0, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } },
-};
-
-const drawerLinkVariants = {
-  hidden:  { opacity: 0, x: 20 },
-  visible: (i: number) => ({
-    opacity: 1, x: 0,
-    transition: { delay: i * 0.08, duration: 0.25, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
-
 export const Navigation = () => {
-  const [active,     setActive]    = useState("home");
-  const [open,       setOpen]      = useState(false);
-  const [isScrolled, setScrolled]  = useState(false);
-  const [onHero,     setOnHero]    = useState(true);
+  const [active, setActive] = useState("about");
+  const [open, setOpen] = useState(false);
+  const [isScrolled, setScrolled] = useState(false);
+  const [onHero, setOnHero] = useState(true);
+
   const logoRef = useRef<HTMLAnchorElement>(null);
-  const observedIds = useRef<Set<string>>(new Set());
-  const { triggerGlitch } = useGlitch(400);
+
+  // ── Glitch effect on Logo ───────────────────────────────────────────────
+  const triggerGlitch = (el: HTMLElement | null) => {
+    if (!el) return;
+    el.classList.add("animate-glitch");
+    setTimeout(() => el.classList.remove("animate-glitch"), 400);
+  };
 
   // ── Scroll + section detection ──────────────────────────────────────────
   useEffect(() => {
@@ -62,58 +48,63 @@ export const Navigation = () => {
 
         let bestId: string | null = null;
         let bestRatio = 0;
-        ratios.forEach((r, id) => { if (r > bestRatio) { bestRatio = r; bestId = id; } });
-        if (bestId && bestRatio > 0) setActive(bestId);
+        ratios.forEach((r, id) => {
+          if (r > bestRatio) {
+            bestRatio = r;
+            bestId = id;
+          }
+        });
+        if (bestId && bestRatio > 0 && bestId !== "home") {
+          setActive(bestId);
+        }
       },
       { rootMargin: "-45% 0px -45% 0px" }
     );
 
-    const observeTargets = () => {
-      allIds.forEach((id) => {
-        if (observedIds.current.has(id)) return;
-        const el = document.getElementById(id);
-        if (!el) return;
-        obs.observe(el);
-        observedIds.current.add(id);
-        ratios.set(id, 0);
-      });
-    };
-
-    observeTargets();
-    let moRaf = 0;
-    const mo = new MutationObserver(() => {
-      window.cancelAnimationFrame(moRaf);
-      moRaf = window.requestAnimationFrame(() => {
-        observeTargets();
-        if (observedIds.current.size >= allIds.length) mo.disconnect();
-      });
+    allIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
     });
-    mo.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.cancelAnimationFrame(raf);
-      mo.disconnect();
       obs.disconnect();
     };
   }, []);
 
-  // ── Scroll handler ───────────────────────────────────────────────────────
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    setActive(id);
-    // BossHPBar(36px) + Nav(~56px) + 12px gap
-    const headerOffset = 36 + 56 + 12;
-    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    const offset = 64; // height of the sticky nav
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elementRect = el.getBoundingClientRect().top;
+    const elementPosition = elementRect - bodyRect;
+    const offsetPosition = elementPosition - offset;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth"
+    });
     setOpen(false);
+  };
+
+  // Animation variants for Mobile drawer
+  const drawerVariants = {
+    hidden: { x: "100%", transition: { type: "tween", duration: 0.25, ease: "easeIn" } },
+    visible: { x: 0, transition: { type: "spring", damping: 25, stiffness: 200 } },
+    exit: { x: "100%", transition: { type: "tween", duration: 0.2, ease: "easeIn" } },
+  };
+
+  const drawerLinkVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: 0.1 + i * 0.05, duration: 0.3, ease: "easeOut" }
+    })
   };
 
   return (
     <>
-      {/* ── Header: sits under BossHPBar at top-9 (36px) ───────────────── */}
       <header
         id="site-header"
         className={cn(

@@ -6,7 +6,7 @@ export const CustomCursor = () => {
 
   return (
     <>
-      {/* Inner dot / crosshair */}
+      {/* Inner dot / crosshair — REMOVED CROSSHAIR AS REQUESTED */}
       <div
         id="custom-cursor"
         aria-hidden="true"
@@ -20,46 +20,7 @@ export const CustomCursor = () => {
           zIndex: 99999,
           willChange: "transform",
         }}
-      >
-        {/* Vertical bar */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: 1,
-            height: 12,
-            background: "#8b0000",
-            transform: "translate(-50%, -50%)",
-            boxShadow: "0 0 4px rgba(139,0,0,0.8)",
-          }}
-        />
-        {/* Horizontal bar */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: 12,
-            height: 1,
-            background: "#8b0000",
-            transform: "translate(-50%, -50%)",
-            boxShadow: "0 0 4px rgba(139,0,0,0.8)",
-          }}
-        />
-        {/* Center dot */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: 2,
-            height: 2,
-            background: "#e74c3c",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      </div>
+      />
 
       {/* Outer lagging ring */}
       <div

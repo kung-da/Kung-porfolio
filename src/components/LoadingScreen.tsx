@@ -104,6 +104,7 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                       <img
                         src={wazaemonImg}
                         alt="Wezaemon"
+                        loading="lazy"
                         className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 transition-all duration-1000"
                       />
                       {/* Gradient Overlay for "Light and Dark" */}

@@ -5,8 +5,6 @@ import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { Footer } from "@/components/Footer";
-import { CustomCursor } from "@/components/CustomCursor";
-import { ScrollIndicator } from "@/components/ScrollIndicator";
 import { SectionDivider } from "@/components/SectionDivider";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
@@ -20,7 +18,7 @@ const ContactTerminal = lazy(() => import("@/components/sections/ContactTerminal
 
 // Fallback component for lazy sections
 const SectionFallback = () => (
-  <div className="relative w-full min-h-screen bg-[#050508]" aria-busy="true" />
+  <div className="relative w-full min-h-screen bg-[#050505]" aria-busy="true" />
 );
 
 const Index = () => {
@@ -34,12 +32,10 @@ const Index = () => {
   }, [isLoading]);
 
   return (
-    <div className="relative min-h-screen bg-[#050508] text-[#E0E0E0] overflow-hidden">
+    <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
       <NoiseOverlay />
       <BossHPBar />
       <Navigation />
-      <CustomCursor />
-      <ScrollIndicator />
 
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}

@@ -69,10 +69,13 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Hide default cursor for custom crosshair on desktop */
+  /* Standard crosshair cursor on desktop */
   @media (pointer: fine) {
-    *, *::before, *::after {
-      cursor: none !important;
+    html, body {
+      cursor: crosshair;
+    }
+    a, button, select, input, textarea, [role="button"], [data-cursor-hover] {
+      cursor: pointer;
     }
   }
 

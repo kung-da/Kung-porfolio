@@ -49,7 +49,7 @@ export const HunterProfile = () => {
                 overflow: "hidden",
               }}
             >
-              <img src={profilePic} alt="cung-master" className="w-full h-full object-cover" style={{ filter: "grayscale(0.6) contrast(1.1)" }} />
+              <img src={profilePic} alt="cung-master" loading="lazy" className="w-full h-full object-cover" style={{ filter: "grayscale(0.6) contrast(1.1)" }} />
             </div>
 
             <span className="absolute bottom-3 right-4 font-mono-ui text-[10px] text-stone tracking-[0.3em]">

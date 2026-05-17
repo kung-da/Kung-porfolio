@@ -3,19 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ─── Primary Meta ─────────────────────────────────────────────── -->
     <title>CUNG-MASTER · Cyber Samurai Portfolio</title>
     <meta name="description" content="Wezaemon the Tombguard — Cyber-Undead Samurai Portfolio. Data Engineer · AI Developer · System Builder." />
     <meta name="author" content="cung-master" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <!-- ─── Open Graph (Facebook, LinkedIn, Discord) ──────────────────── -->
+    <meta property="og:title"       content="CUNG-MASTER · Cyber Samurai Portfolio" />
+    <meta property="og:description" content="Forging scalable systems beyond limits — Data Engineer · AI Developer · System Builder." />
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://sinhcungportfolio.vercel.app" />
+    <meta property="og:image"       content="https://sinhcungportfolio.vercel.app/og-image.png" />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt"   content="CUNG-MASTER Portfolio — Cyber Samurai Data Engineer" />
+    <meta property="og:site_name"   content="CUNG-MASTER Portfolio" />
+    <meta property="og:locale"      content="en_US" />
+
+    <!-- ─── Twitter Card ─────────────────────────────────────────────── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="CUNG-MASTER · Cyber Samurai Portfolio" />
+    <meta name="twitter:description" content="Forging scalable systems beyond limits — Data Engineer · AI Developer · System Builder." />
+    <meta name="twitter:image"       content="https://sinhcungportfolio.vercel.app/og-image.png" />
+
+    <!-- ─── Favicon ──────────────────────────────────────────────────── -->
+    <link rel="icon"             type="image/png"  href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180"   href="/favicon.png" />
+
+    <!-- ─── Google Fonts: Preconnect ─────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;700&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <meta property="og:title" content="CUNG-MASTER · Cyber Samurai Portfolio" />
-    <meta property="og:description" content="Forging scalable systems beyond limits — Data Engineer · AI Developer" />
-    <meta property="og:type" content="website" />
+    <!--
+      TASK 1 FIX: Chỉ load những font thực sự dùng trong tailwind.config.ts
+      REMOVED: Share Tech Mono (replaced by Inter + JetBrains Mono)
+      FIXED:   Noto+Sans+JP → Noto+Serif+JP (config dùng "Noto Serif JP" không phải Sans)
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
+      Font roles:
+        Inter          → font-sans  (body prose, descriptions)
+        JetBrains Mono → font-mono  (code, tech tags, data values)
+        Orbitron       → font-display (H1 hero, large decorative)
+        Rajdhani       → font-title  (H2, H3, nav, card titles)
+        Noto Serif JP  → font-jp    (kanji/JP decorative accents)
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Preload the 2 most critical fonts to avoid FOUT on first paint.
+      Inter = body text (appears immediately everywhere)
+      Orbitron = hero title (above the fold, large impact)
+    -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+    />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap"
+    />
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
