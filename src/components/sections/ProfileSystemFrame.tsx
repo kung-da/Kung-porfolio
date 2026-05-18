@@ -3,56 +3,49 @@ type ProfileSystemFrameProps = {
   imageAlt?: string;
 };
 
-const barcodeLines = [10, 18, 7, 22, 12, 16, 8, 20, 11, 15, 6, 19];
+const footerBars = Array.from({ length: 22 }, (_, index) => index);
 
 export const ProfileSystemFrame = ({ imageSrc, imageAlt = "Kung profile" }: ProfileSystemFrameProps) => {
   return (
-    <figure className="profile-system-frame" aria-label="Kung profile system frame">
-      <div className="profile-system-frame__header">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="profile-system-frame__status" aria-hidden="true" />
-          <span className="truncate font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-100/85">
-            Kung Profile
-          </span>
-          <span className="h-px w-16 bg-gradient-to-r from-red-500/80 to-transparent sm:w-24" aria-hidden="true" />
+    <figure className="about-kung-card" aria-label="Kung profile system frame">
+      <div className="about-kung-card__header">
+        <div className="about-kung-card__header-left">
+          <span className="about-kung-card__dot" aria-hidden="true" />
+          <span className="about-kung-card__label">Kung Profile</span>
         </div>
-
-        <div className="flex items-center gap-1.5" aria-hidden="true">
-          <span className="h-1 w-1 bg-red-400/70" />
-          <span className="h-1 w-4 bg-red-500/35" />
-          <span className="h-1 w-1 bg-slate-100/45" />
-        </div>
+        <span className="about-kung-card__dots" aria-hidden="true">.....</span>
       </div>
 
-      <div className="profile-system-frame__body">
-        <div className="profile-system-frame__vertical-id">ID: KG-9701-DEV</div>
-        <img src={imageSrc} alt={imageAlt} loading="lazy" className="profile-system-frame__image" />
-        <div className="profile-system-frame__image-shade" aria-hidden="true" />
-        <div className="profile-system-frame__noise" aria-hidden="true" />
-        <div className="profile-system-frame__scan-line" aria-hidden="true" />
-
-        <span className="profile-system-frame__bracket profile-system-frame__bracket--tl" aria-hidden="true" />
-        <span className="profile-system-frame__bracket profile-system-frame__bracket--tr" aria-hidden="true" />
-        <span className="profile-system-frame__bracket profile-system-frame__bracket--bl" aria-hidden="true" />
-        <span className="profile-system-frame__bracket profile-system-frame__bracket--br" aria-hidden="true" />
+      <div className="about-kung-card__image-area">
+        <img src={imageSrc} alt={imageAlt} loading="lazy" className="about-kung-card__image" />
+        <span className="about-kung-card__corner about-kung-card__corner--tl" aria-hidden="true" />
+        <span className="about-kung-card__corner about-kung-card__corner--tr" aria-hidden="true" />
+        <span className="about-kung-card__corner about-kung-card__corner--br" aria-hidden="true" />
+        <span className="about-kung-card__side-text" aria-hidden="true">ID:66-6.00-98:3</span>
+        <span className="about-kung-card__red-bar" aria-hidden="true" />
+        <span className="about-kung-card__vignette" aria-hidden="true" />
+        <span className="about-kung-card__scanline" aria-hidden="true" />
       </div>
 
-      <figcaption className="profile-system-frame__footer">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="h-2 w-2 bg-red-500/70" aria-hidden="true" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-200/75">
+      <figcaption className="about-kung-card__footer">
+        <div className="about-kung-card__footer-row">
+          <div className="about-kung-card__footer-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="1.5" />
+              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
             Data Engineer
-          </span>
+          </div>
         </div>
 
-        <div className="profile-system-frame__barcode" aria-hidden="true">
-          {barcodeLines.map((height, index) => (
-            <span key={`${height}-${index}`} style={{ height }} />
+        <div className="about-kung-card__bar" aria-hidden="true">
+          {footerBars.map((item) => (
+            <span key={item} />
           ))}
         </div>
 
-        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
-          System Status: <span className="text-red-400">Stable</span>
+        <div className="about-kung-card__status">
+          System Status: <span>Stable</span>
         </div>
       </figcaption>
     </figure>
