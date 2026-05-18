@@ -1,138 +1,86 @@
 // About section
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import profile from "@/assets/profile-picture.jpg";
+import profileImageAsset from "@/assets/profile-picture.jpg";
+import { ProfileSystemFrame } from "@/components/sections/ProfileSystemFrame";
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-};
+import "./AboutSection.css";
 
-const leftColVariants = {
-  hidden: { opacity: 0, x: -40 },
-  visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 260, damping: 22 } },
-};
+const profileImage = profileImageAsset;
 
-const rightColVariants = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 220, damping: 20, delay: 0.1 } },
-};
-
-const useTyping = (text: string, active: boolean, speed = 38) => {
-  const [display, setDisplay] = useState("");
-
-  useEffect(() => {
-    if (!active) return;
-
-    let i = 0;
-    const id = setInterval(() => {
-      setDisplay(text.slice(0, i + 1));
-      i++;
-      if (i >= text.length) clearInterval(id);
-    }, speed);
-
-    return () => clearInterval(id);
-  }, [active, text, speed]);
-
-  return display;
-};
-
-const FIELD_REPORT =
-  "I build reliable data pipelines, analytics systems, and AI-enabled products with a focus on clear architecture, dependable delivery, and practical business value.";
-const SIGNATURE_SKILLS = ["DATA PIPELINE", "LLM / AGENTS", "SYSTEM DESIGN", "CLOUD INFRA"];
+const introParts = [
+  "I'm Kung, a builder who loves turning ideas into impactful digital experiences. I focus on ",
+  { text: "Data Engineering" },
+  ", ",
+  { text: "Frontend" },
+  " development, and ",
+  { text: "AI-assisted" },
+  " projects to solve real-world problems.",
+];
 
 export const AboutSection = () => {
-  const ref = useRef<HTMLElement>(null!);
-  const inView = useInView(ref, { once: true, margin: "-12%" as any });
-  const fieldReport = useTyping(FIELD_REPORT, inView, 22);
-
   return (
     <section
       id="about"
-      ref={ref}
-      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
-      style={{ background: "transparent" }}
+      className="about-dossier-section content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
+      aria-labelledby="about-kung-title"
     >
-      <div className="absolute inset-0 section-vignette z-0" />
-      <div className="absolute inset-0 section-floor z-0" />
+      <div className="absolute inset-0 z-[2] section-vignette pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-0 z-[2] section-floor pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-0 z-[2] atmospheric-noise pointer-events-none" aria-hidden="true" />
+      <div className="about-circuit-line about-circuit-line--top" aria-hidden="true" />
+      <div className="about-circuit-line about-circuit-line--bottom" aria-hidden="true" />
 
-      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="mb-8 xl:mb-10"
-        >
-          <h2
-            className="section-title font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl"
-            data-text="ABOUT KUNG"
-          >
-            About <span className="text-wez-cyan">Kung</span>
-          </h2>
-        </motion.div>
+      <div className="container relative z-10 mx-auto w-full max-w-[1440px] pb-16 pt-4 md:pb-20 lg:pb-12">
+        <div className="about-dossier-shell grid min-h-[min(760px,calc(100svh-9rem))] grid-cols-1 items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 xl:gap-20">
+          <div className="flex justify-center lg:justify-start">
+            <ProfileSystemFrame imageSrc={profileImage} imageAlt="Kung profile portrait" />
+          </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1.25fr_0.75fr] xl:gap-14"
-        >
-          <motion.div variants={leftColVariants} className="flex flex-col gap-6">
-            <div className="border-l-2 border-crimson/50 pl-5 md:pl-6">
-              <div className="font-mono text-sm text-crimson/90 tracking-[0.18em] uppercase mb-3">
-                -- FIELD REPORT --
-              </div>
-              <p className="font-mono text-sm text-foreground/75 leading-[1.8]">
-                {fieldReport}
-                {inView && fieldReport.length < FIELD_REPORT.length && (
-                  <span className="animate-blink ml-1 text-wez-cyan">|</span>
-                )}
+          <div className="about-dossier-copy relative max-w-[760px]">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="about-folder-icon" aria-hidden="true" />
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.28em] text-red-300/80">
+                Personal Dossier
               </p>
+              <span className="h-px min-w-10 flex-1 bg-gradient-to-r from-red-500/60 via-red-500/18 to-transparent" aria-hidden="true" />
+              <span className="about-eyebrow-chevrons hidden md:inline-block" aria-hidden="true" />
             </div>
 
-            <div>
-              <div className="font-mono text-sm text-wez-cyan/60 tracking-[0.18em] uppercase mb-3">
-                -- SIGNATURE SKILLS --
-              </div>
-              <div className="flex flex-wrap gap-2.5">
-                {SIGNATURE_SKILLS.map((skill, i) => (
-                  <motion.span
-                    key={skill}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 2.2 + i * 0.08, type: "spring", stiffness: 300 }}
-                    className="font-mono text-xs tracking-[0.18em] uppercase px-3.5 py-2 border border-wez-cyan/25 text-wez-cyan/75 bg-wez-cyan/[0.04]"
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+            <h2
+              id="about-kung-title"
+              data-text="ABOUT KUNG"
+              className="about-title-scan font-display text-[44px] font-black uppercase leading-[0.98] tracking-[0.03em] sm:text-[58px] md:text-[68px] lg:text-[78px] xl:text-[92px]"
+            >
+              About Kung
+            </h2>
 
-          <motion.div variants={rightColVariants} className="relative flex justify-center items-start">
-            <div className="relative w-full max-w-[310px] xl:max-w-[330px]">
-              <div
-                className="absolute -inset-5 z-0"
-                style={{
-                  background: "radial-gradient(ellipse at center, rgba(0,245,255,0.1) 0%, transparent 70%)",
-                  filter: "blur(20px)",
-                }}
-              />
+            <div className="about-title-marks mt-7" aria-hidden="true" />
 
-              <div className="relative z-[1] overflow-hidden aspect-[3/4] group">
-                <img
-                  src={profile}
-                  alt="Kung"
-                  loading="lazy"
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ filter: "contrast(1.1) brightness(0.9)" }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40 pointer-events-none" />
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+            <p className="mt-6 max-w-[700px] font-sans text-base leading-8 text-slate-300 md:text-lg md:leading-9">
+              {introParts.map((part, index) =>
+                typeof part === "string" ? (
+                  part
+                ) : (
+                  <span key={`${part.text}-${index}`} className="font-semibold text-red-300">
+                    {part.text}
+                  </span>
+                )
+              )}
+            </p>
+
+            <div className="about-hud-divider mt-9" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+
+      <div className="about-next-divider" aria-hidden="true">
+        <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center gap-3 bg-[#06070a]/85 px-5">
+            <span className="h-1.5 w-1.5 bg-red-400/70" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.28em]">Work Highlights</span>
+            <span className="h-1.5 w-1.5 bg-red-400/45" />
+          </div>
+        </div>
+        <div className="mt-2 text-center font-mono text-[12px] text-red-300/55">v</div>
       </div>
     </section>
   );
