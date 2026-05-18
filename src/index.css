@@ -8,7 +8,7 @@
   :root {
     --bg-abyss: #050505;
     --bg-panel: #0A0A0A;
-    --fixed-header-space: 116px;
+    --fixed-header-space: 86px;
     --crimson: #D63A4A;
     --blood: #A82836;
     --dark-red: #5A1118;
@@ -132,10 +132,28 @@
   .border-panel { border-color: var(--panel-border); }
 
   .content-section {
-    min-height: calc(100svh - var(--fixed-header-space));
     scroll-margin-top: var(--fixed-header-space);
-    padding-top: clamp(2rem, 4.5vh, 3.5rem);
-    padding-bottom: clamp(2rem, 4.5vh, 3.5rem);
+    padding-top: clamp(4rem, 8vh, 6rem);
+    padding-bottom: clamp(4rem, 8vh, 6rem);
+  }
+
+  .section-title {
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .section-title::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: var(--neon-cyan);
+    opacity: 0;
+    text-shadow: 0 0 14px rgba(0, 245, 255, 0.55);
+    clip-path: inset(0 100% 0 0);
+    pointer-events: none;
+    animation: title-scan 4.8s ease-in-out infinite;
   }
 
   /* ── Glow Effects ── */
@@ -368,4 +386,27 @@
   20% { opacity: 1; transform: translateX(-1px); }
   30% { opacity: 0.8; }
   100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes title-scan {
+  0%, 68%, 100% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(0);
+  }
+  72% {
+    opacity: 0.45;
+    clip-path: inset(0 55% 0 0);
+    transform: translateX(1px);
+  }
+  78% {
+    opacity: 0.24;
+    clip-path: inset(0 0 0 58%);
+    transform: translateX(-1px);
+  }
+  84% {
+    opacity: 0;
+    clip-path: inset(0 0 0 100%);
+    transform: translateX(0);
+  }
 }

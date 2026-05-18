@@ -254,7 +254,7 @@ export const AbilitySection = () => {
     <section
       id="skills"
       ref={ref}
-      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
+      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
@@ -268,8 +268,8 @@ export const AbilitySection = () => {
           transition={{ duration: 0.5 }}
           className="mb-8 xl:mb-10"
         >
-          <h2 className="font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
-            Skills
+          <h2 className="section-title font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="SKILLS">
+            SKILLS
           </h2>
 
           <div className="mt-4 font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex items-center gap-4 flex-wrap">
@@ -366,15 +366,16 @@ export const AbilitySection = () => {
           </div>
 
           {/* RIGHT — Intelligence report */}
-          <AnimatePresence mode="wait">
-            {selectedSkill ? (
+          <div className="hidden lg:block h-[250px] xl:h-[250px]">
+            <AnimatePresence mode="wait" initial={false}>
+              {selectedSkill ? (
               <motion.div
                 key={selectedSkill.name}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="border backdrop-blur-sm p-5 relative overflow-hidden hidden lg:block"
+                className="relative h-full overflow-y-auto border p-5 backdrop-blur-sm"
                 style={{
                   borderColor: `${colors.accent}66`,
                   background: "rgba(10,10,18,0.75)",
@@ -387,7 +388,7 @@ export const AbilitySection = () => {
 
                 <p className="font-mono text-xs tracking-[0.2em] mb-5 uppercase" style={{ color: `${colors.accent}99` }}>Skill details</p>
 
-                <div className="space-y-4">
+                <div className="space-y-3.5">
                   <div>
                     <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>SKILL:</p>
                     <p className="font-display text-base tracking-wide font-bold" style={{ color: colors.accent }}>{selectedSkill.name}</p>
@@ -420,11 +421,11 @@ export const AbilitySection = () => {
                   </div>
                 </div>
               </motion.div>
-            ) : (
+              ) : (
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="border h-[200px] hidden lg:flex items-center justify-center"
+                className="flex h-full items-center justify-center border"
                 style={{
                   borderColor: `${colors.accent}14`,
                   background: "rgba(10,10,18,0.5)",
@@ -432,8 +433,9 @@ export const AbilitySection = () => {
               >
                 <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: `${colors.accent}66` }}>SELECT A SKILL</span>
               </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

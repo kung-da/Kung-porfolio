@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
-  { label: "About me", id: "about" },
-  { label: "Skills", id: "skills" },
-  { label: "Projects", id: "projects" },
-  { label: "Experience", id: "experience" },
-  { label: "Contact", id: "contact" },
+  { label: "ABOUT ME", id: "about" },
+  { label: "SKILLS", id: "skills" },
+  { label: "PROJECTS", id: "projects" },
+  { label: "EXPERIENCE", id: "experience" },
+  { label: "CONTACT", id: "contact" },
 ];
 
 export const Navigation = () => {
@@ -94,7 +94,7 @@ export const Navigation = () => {
     setActive(id);
     isScrollingRef.current = true;
 
-    const offset = 116; // fixed HP bar + sticky nav
+    const offset = 86; // fixed HP bar + compact nav
     const bodyRect = document.body.getBoundingClientRect().top;
     const elementRect = el.getBoundingClientRect().top;
     const elementPosition = elementRect - bodyRect;
@@ -133,7 +133,7 @@ export const Navigation = () => {
       <header
         id="site-header"
         className={cn(
-          "fixed left-0 right-0 top-9 z-[85]",
+          "fixed left-0 right-0 top-7 z-[85]",
           "border-b transition-[background-color,border-color,box-shadow,backdrop-filter,opacity,visibility] duration-300 ease-out",
           // Cyan bottom border line
           "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:transition-all after:duration-500",
@@ -153,7 +153,7 @@ export const Navigation = () => {
                 ]
         )}
       >
-        <div className="mx-auto grid h-14 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-16 md:px-6">
+        <div className="mx-auto grid h-11 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-12 md:px-6">
           {/* ── LEFT: Logo ─── */}
           <div className="flex items-center justify-start">
             <a
@@ -162,7 +162,7 @@ export const Navigation = () => {
               onClick={(e) => { e.preventDefault(); scrollTo("home"); }}
               onMouseEnter={() => triggerGlitch(logoRef.current)}
               className={cn(
-                "group inline-flex items-center gap-3 py-2",
+                "group inline-flex items-center gap-2 py-1",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 "ring-offset-background"
               )}
@@ -170,21 +170,21 @@ export const Navigation = () => {
             >
               <span
                 className={cn(
-                  "relative grid size-9 place-items-center",
+                  "relative grid size-7 place-items-center",
                   "border border-border/60 bg-background/30 backdrop-blur-md",
                   "transition-colors",
                   isScrolled && "border-wez-cyan/30 shadow-[0_0_4px_rgba(0,245,255,0.1)]"
                 )}
               >
-                <CircuitBoard className="size-4 text-wez-cyan" aria-hidden="true" />
+                <CircuitBoard className="size-3.5 text-wez-cyan" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 shadow-cyan-glow-sm opacity-0 transition-opacity group-hover:opacity-100" />
               </span>
 
               <span className="flex flex-col leading-none">
-                <span className="font-display text-[11px] font-semibold tracking-[0.22em] text-foreground uppercase md:text-[12px] group-hover:text-wez-cyan transition-colors">
+                <span className="font-display text-[10px] font-semibold tracking-[0.2em] text-foreground uppercase md:text-[11px] group-hover:text-wez-cyan transition-colors">
                   Data Wanderer
                 </span>
-                <span className="font-jp text-[10px] tracking-[0.18em] text-muted-foreground group-hover:text-wez-cyan/80 transition-colors">
+                <span className="font-jp text-[9px] tracking-[0.16em] text-muted-foreground group-hover:text-wez-cyan/80 transition-colors">
                   データ
                 </span>
               </span>
@@ -203,8 +203,8 @@ export const Navigation = () => {
                     onClick={(e) => { e.preventDefault(); scrollTo(l.id); }}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "group relative px-4 py-2",
-                      "font-display text-[12px] tracking-[0.12em]",
+                      "group relative px-3 py-1.5",
+                      "font-display text-[11px] tracking-[0.12em]",
                       "text-muted-foreground transition-all duration-200",
                       "hover:text-wez-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       "ring-offset-background",
@@ -214,7 +214,7 @@ export const Navigation = () => {
                     <span className="transition-colors">{l.label}</span>
                     <span
                       className={cn(
-                        "pointer-events-none absolute inset-x-4 -bottom-0.5 h-[2px] transition-all duration-300",
+                        "pointer-events-none absolute inset-x-3 -bottom-0.5 h-[2px] transition-all duration-300",
                         "opacity-0 group-hover:opacity-100 group-hover:bg-wez-cyan/40 group-hover:shadow-[0_0_4px_rgba(0,245,255,0.2)]",
                         isActive && "opacity-100 bg-wez-cyan shadow-[0_0_6px_rgba(0,245,255,0.4)]"
                       )}
@@ -231,10 +231,10 @@ export const Navigation = () => {
               animate={{ opacity: [1, 0.4, 1] }}
               transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               className="hidden sm:block"
-              style={{ width: 6, height: 6, borderRadius: "50%", background: "#00FF88", boxShadow: "0 0 6px rgba(0,255,136,0.4)" }}
+              style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", boxShadow: "0 0 6px rgba(0,255,136,0.4)" }}
             />
             <span
-              className="hidden sm:inline font-mono text-[9px] tracking-[0.2em] uppercase"
+              className="hidden sm:inline font-mono text-[8px] tracking-[0.18em] uppercase"
               style={{ color: "#00FF88", textShadow: "0 0 4px rgba(0,255,136,0.25)" }}
             >
               SYS: ONLINE

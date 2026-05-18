@@ -11,25 +11,25 @@ export const BossHPBar = memo(() => {
       className="fixed top-0 left-0 right-0"
       style={{
         zIndex: 90,
-        height: 36,
+        height: 28,
         background: "#050505",
         borderBottom: `2px solid ${critical ? "#D63A4A" : "#1a1a2e"}`,
         display: "flex",
         alignItems: "center",
-        gap: 12,
-        padding: "0 16px",
+        gap: 10,
+        padding: "0 14px",
         clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)",
       }}
     >
       {/* Boss Name */}
-      <span className="font-display text-[9px] tracking-[0.3em] text-crimson shrink-0 hidden sm:inline">
+      <span className="font-display text-[8px] tracking-[0.28em] text-crimson shrink-0 hidden sm:inline">
         ⚔ WEZAEMON
       </span>
 
       {/* Threat Level Flash */}
       {critical && (
         <span
-          className="font-mono-ui text-[9px] tracking-widest"
+          className="font-mono-ui text-[8px] tracking-widest"
           style={{ color: "#D63A4A", animation: "blink 0.4s step-end infinite" }}
         >
           !! CRITICAL
@@ -37,11 +37,11 @@ export const BossHPBar = memo(() => {
       )}
 
       {/* HP Label */}
-      <span className="font-mono-ui text-[9px] text-dim hidden sm:inline">HP</span>
+      <span className="font-mono-ui text-[8px] text-dim hidden sm:inline">HP</span>
 
       {/* HP Bar */}
       <div
-        className="flex-1 h-[6px] relative overflow-hidden"
+        className="flex-1 h-[5px] relative overflow-hidden"
         style={{
           background: "rgba(255,255,255,0.04)",
           border: `1px solid ${critical ? "rgba(214,58,74,0.5)" : "rgba(0,245,255,0.2)"}`,
@@ -66,7 +66,7 @@ export const BossHPBar = memo(() => {
 
       {/* HP Percentage */}
       <span
-        className="font-mono-ui text-[10px] tabular-nums shrink-0"
+        className="font-mono-ui text-[9px] tabular-nums shrink-0"
         style={{ color: critical ? "#D63A4A" : "#00F5FF" }}
       >
         {Math.round(hp)}%

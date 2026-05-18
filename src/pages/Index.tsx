@@ -22,7 +22,7 @@ const SectionFallback = () => (
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(
-    typeof window !== "undefined" && !sessionStorage.getItem("booted")
+    typeof window !== "undefined" && (import.meta.env.DEV || !sessionStorage.getItem("booted"))
   );
   useEnragedMode();
 

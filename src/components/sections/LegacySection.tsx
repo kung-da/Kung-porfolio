@@ -17,7 +17,7 @@ export const LegacySection = () => {
   return (
     <section
       id="experience"
-      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
+      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
@@ -31,8 +31,8 @@ export const LegacySection = () => {
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           className="mb-8 xl:mb-10"
         >
-          <h2 className="font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
-            Experience
+          <h2 className="section-title font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="EXPERIENCE">
+            EXPERIENCE
           </h2>
         </motion.div>
 

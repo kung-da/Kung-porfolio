@@ -62,7 +62,7 @@ export const ScrollIndicator = () => {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const offset = id === "home" ? 0 : 116;
+    const offset = id === "home" ? 0 : 86;
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
   };
 

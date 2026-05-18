@@ -35,12 +35,12 @@ export const EASING = {
 } as const;
 
 export const SECTIONS = [
-  { id: "home", label: "Home", mission: "Home", num: "00" },
-  { id: "about", label: "About me", mission: "About me", num: "01" },
-  { id: "skills", label: "Skills", mission: "Skills", num: "02" },
-  { id: "projects", label: "Projects", mission: "Projects", num: "03" },
-  { id: "experience", label: "Experience", mission: "Experience", num: "04" },
-  { id: "contact", label: "Contact", mission: "Contact", num: "05" },
+  { id: "home", label: "HOME", mission: "HOME", num: "00" },
+  { id: "about", label: "ABOUT ME", mission: "ABOUT ME", num: "01" },
+  { id: "skills", label: "SKILLS", mission: "SKILLS", num: "02" },
+  { id: "projects", label: "PROJECTS", mission: "PROJECTS", num: "03" },
+  { id: "experience", label: "EXPERIENCE", mission: "EXPERIENCE", num: "04" },
+  { id: "contact", label: "CONTACT", mission: "CONTACT", num: "05" },
 ] as const;
 
 export type SectionId = typeof SECTIONS[number]["id"];

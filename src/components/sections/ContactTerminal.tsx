@@ -126,7 +126,7 @@ export const ContactTerminal = () => {
         )}
       </AnimatePresence>
 
-      <section id="contact" ref={ref} className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
+      <section id="contact" ref={ref} className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
         style={{ background: "transparent" }}
       >
         <div className="absolute inset-0 section-vignette pointer-events-none" />
@@ -141,8 +141,8 @@ export const ContactTerminal = () => {
             transition={{ duration: 0.5 }}
             className="mb-8 xl:mb-10"
           >
-            <h2 className="mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
-              Contact
+            <h2 className="section-title mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="CONTACT">
+              CONTACT
             </h2>
 
             <div className="font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex gap-4 md:gap-6 flex-wrap items-center">

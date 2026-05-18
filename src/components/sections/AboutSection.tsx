@@ -99,7 +99,7 @@ export const AboutSection = () => {
     <section
       id="about"
       ref={ref}
-      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
+      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       {/* Single lightweight BG overlay */}
@@ -114,7 +114,7 @@ export const AboutSection = () => {
           transition={{ duration: 0.4 }}
           className="mb-8 xl:mb-10"
         >
-          <h2 className="font-display text-3xl font-bold uppercase leading-tight tracking-tight md:text-4xl lg:text-5xl">
+          <h2 className="section-title font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="ABOUT ME">
             About <span className="text-wez-cyan">me</span>
           </h2>
         </motion.div>
