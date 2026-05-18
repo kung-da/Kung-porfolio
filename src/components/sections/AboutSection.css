@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: clamp(3rem, 6vh, 5rem) 1.5rem clamp(4rem, 8vh, 6rem);
+  padding: clamp(7rem, 13vh, 10rem) 1.5rem clamp(4rem, 8vh, 6rem);
   background: #080808;
 }
 
@@ -34,13 +34,28 @@
   pointer-events: none;
 }
 
+.about-kung-section::before {
+  background-position: 0 36px;
+}
+
+.about-kung-section > .about-kung-glow::before {
+  content: "";
+  position: absolute;
+  left: -20vw;
+  right: -120vw;
+  top: -72px;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(5, 8, 12, 0.98), rgba(5, 8, 12, 0));
+  pointer-events: none;
+}
+
 .about-kung-glow {
   position: absolute;
   z-index: -2;
   top: max(-80px, -8vh);
   left: max(60px, 6vw);
-  width: 320px;
-  height: 320px;
+  width: 460px;
+  height: 460px;
   border-radius: 999px;
   background: radial-gradient(circle, rgba(239, 68, 68, 0.07) 0%, transparent 70%);
   pointer-events: none;
@@ -73,33 +88,98 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: clamp(3rem, 6vw, 5.5rem);
+  gap: clamp(3rem, 5.5vw, 5.25rem);
   width: 100%;
-  max-width: 1180px;
-  transform: translateY(clamp(-56px, -5vh, -28px));
+  max-width: 1120px;
+  transform: translateY(clamp(8px, 2vh, 28px));
 }
 
 .about-kung-card {
   position: relative;
   flex-shrink: 0;
-  width: clamp(280px, 18vw, 330px);
+  width: clamp(320px, 23vw, 390px);
   margin: 0;
   overflow: hidden;
-  border: 1px solid rgba(239, 68, 68, 0.38);
-  border-radius: 3px;
-  background: linear-gradient(145deg, #0f0f0f 0%, #140808 100%);
+  border: 1px solid rgba(160, 180, 190, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(15, 23, 30, 0.9) 0%, rgba(5, 8, 12, 0.96) 48%, rgba(20, 8, 8, 0.88) 100%);
   box-shadow:
-    0 0 0 1px rgba(239, 68, 68, 0.07),
-    0 0 28px rgba(239, 68, 68, 0.09),
-    inset 0 0 30px rgba(239, 68, 68, 0.03);
+    0 26px 80px rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(255, 45, 45, 0.1),
+    0 0 34px rgba(255, 45, 45, 0.1),
+    inset 0 0 42px rgba(148, 163, 184, 0.035);
+  clip-path: polygon(7% 0, 96% 0, 100% 4%, 100% 44%, 97% 49%, 100% 54%, 100% 96%, 96% 100%, 7% 100%, 0 93%, 0 7%);
+  transition: transform 450ms ease, border-color 450ms ease, box-shadow 450ms ease;
+}
+
+.about-kung-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(160, 180, 190, 0.34);
+  box-shadow:
+    0 32px 92px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 45, 45, 0.16),
+    0 0 42px rgba(255, 45, 45, 0.16),
+    inset 0 0 48px rgba(148, 163, 184, 0.045);
+}
+
+.about-kung-card::before,
+.about-kung-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.about-kung-card::before {
+  z-index: 9;
+  border: 1px solid rgba(229, 231, 235, 0.08);
+  clip-path: polygon(7% 0, 96% 0, 100% 4%, 100% 28%, 97% 32%, 97% 54%, 100% 58%, 100% 96%, 96% 100%, 7% 100%, 0 93%, 0 7%);
+}
+
+.about-kung-card::after {
+  z-index: 10;
+  background:
+    linear-gradient(90deg, rgba(255, 45, 45, 0.35), transparent 26%) top left / 44% 1px no-repeat,
+    linear-gradient(180deg, rgba(255, 45, 45, 0.38), transparent 36%) bottom left / 1px 36% no-repeat,
+    linear-gradient(180deg, transparent, rgba(255, 45, 45, 0.5), transparent) right 18% / 1px 56% no-repeat;
+}
+
+.about-kung-card__edge {
+  position: absolute;
+  z-index: 11;
+  pointer-events: none;
+}
+
+.about-kung-card__edge--top {
+  top: 0;
+  left: 8%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(229, 231, 235, 0.55), rgba(255, 45, 45, 0.26), transparent);
+}
+
+.about-kung-card__edge--right {
+  right: 0;
+  top: 21%;
+  bottom: 12%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(255, 45, 45, 0.8), rgba(255, 45, 45, 0.26), transparent);
+  box-shadow: 0 0 18px rgba(255, 45, 45, 0.24);
 }
 
 .about-kung-card__header {
+  position: relative;
+  z-index: 6;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 13px;
-  border-bottom: 1px solid rgba(239, 68, 68, 0.18);
+  gap: 14px;
+  min-height: 58px;
+  padding: 0 22px;
+  border-bottom: 1px solid rgba(160, 180, 190, 0.12);
+  background: rgba(5, 8, 12, 0.36);
+  backdrop-filter: blur(12px);
 }
 
 .about-kung-card__header-left {
@@ -109,33 +189,43 @@
 }
 
 .about-kung-card__dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
-  background: #ef4444;
+  background: #ff3b3b;
+  box-shadow: 0 0 12px rgba(255, 45, 45, 0.55);
   animation: about-kung-blink 1.4s ease-in-out infinite;
 }
 
 .about-kung-card__label {
   font-family: "Share Tech Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  color: #f87171;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: #e5e7eb;
   text-transform: uppercase;
+}
+
+.about-kung-card__header-line {
+  height: 1px;
+  flex: 1;
+  min-width: 42px;
+  background: linear-gradient(90deg, rgba(255, 45, 45, 0.65), transparent);
 }
 
 .about-kung-card__dots {
   font-family: monospace;
   font-size: 10px;
   letter-spacing: 2px;
-  color: rgba(127, 29, 29, 0.5);
+  color: rgba(255, 45, 45, 0.45);
 }
 
 .about-kung-card__image-area {
   position: relative;
-  aspect-ratio: 3 / 4;
+  height: clamp(390px, 30vw, 500px);
   overflow: hidden;
-  background: #0d0404;
+  background:
+    radial-gradient(circle at 70% 38%, rgba(255, 45, 45, 0.08), transparent 26%),
+    linear-gradient(160deg, #0b1117 0%, #05080c 58%, #0c0505 100%);
 }
 
 .about-kung-card__image {
@@ -144,54 +234,73 @@
   object-fit: cover;
   object-position: center;
   opacity: 0.84;
-  filter: contrast(1.04) brightness(0.78) saturate(0.86);
+  filter: contrast(1.06) brightness(0.86) saturate(0.9);
   transition: opacity 400ms ease, filter 400ms ease;
 }
 
 .about-kung-card:hover .about-kung-card__image {
-  opacity: 0.96;
-  filter: contrast(1.04) brightness(0.86) saturate(0.9);
+  opacity: 0.98;
+  filter: contrast(1.07) brightness(0.92) saturate(0.94);
 }
 
 .about-kung-card__corner {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  z-index: 5;
+  width: 30px;
+  height: 30px;
   pointer-events: none;
 }
 
 .about-kung-card__corner--tl {
-  top: 6px;
-  left: 6px;
-  border-top: 1.5px solid #ef4444;
-  border-left: 1.5px solid #ef4444;
+  top: 32px;
+  left: 34px;
+  border-top: 1px solid rgba(229, 231, 235, 0.72);
+  border-left: 1px solid rgba(229, 231, 235, 0.72);
 }
 
 .about-kung-card__corner--tr {
-  top: 6px;
-  right: 6px;
-  border-top: 1.5px solid #ef4444;
-  border-right: 1.5px solid #ef4444;
+  top: 32px;
+  right: 34px;
+  border-top: 1px solid rgba(229, 231, 235, 0.72);
+  border-right: 1px solid rgba(229, 231, 235, 0.72);
+}
+
+.about-kung-card__corner--bl {
+  bottom: 40px;
+  left: 34px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.48);
+  border-left: 1px solid rgba(229, 231, 235, 0.48);
 }
 
 .about-kung-card__corner--br {
-  right: 6px;
-  bottom: 6px;
-  border-right: 1.5px solid rgba(239, 68, 68, 0.6);
-  border-bottom: 1.5px solid rgba(239, 68, 68, 0.6);
+  right: 34px;
+  bottom: 40px;
+  border-right: 1px solid rgba(229, 231, 235, 0.48);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.48);
 }
 
 .about-kung-card__side-text {
   position: absolute;
-  right: 5px;
+  left: 26px;
   top: 50%;
   transform: translateY(-50%) rotate(180deg);
   writing-mode: vertical-rl;
   font-family: "Share Tech Mono", monospace;
-  font-size: 8px;
-  letter-spacing: 0.1em;
-  color: rgba(153, 27, 27, 0.5);
+  z-index: 5;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(160, 180, 190, 0.38);
   pointer-events: none;
+}
+
+.about-kung-card__side-rail {
+  position: absolute;
+  left: 20px;
+  top: 27%;
+  bottom: 26%;
+  z-index: 4;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(160, 180, 190, 0.18), transparent);
 }
 
 .about-kung-card__red-bar {
@@ -200,20 +309,80 @@
   top: 16px;
   bottom: 16px;
   width: 2px;
-  background: linear-gradient(to bottom, transparent, #ef4444 30%, #ef4444 70%, transparent);
-  opacity: 0.55;
+  background: linear-gradient(to bottom, transparent, #ff2d2d 30%, rgba(255, 45, 45, 0.7) 70%, transparent);
+  opacity: 0.6;
   pointer-events: none;
+}
+
+.about-kung-card__city-glow,
+.about-kung-card__grid,
+.about-kung-card__grain,
+.about-kung-card__data-dots {
+  position: absolute;
+  pointer-events: none;
+}
+
+.about-kung-card__city-glow {
+  right: 0;
+  top: 12%;
+  bottom: 10%;
+  z-index: 2;
+  width: 34%;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 18px, rgba(255, 45, 45, 0.16) 18px 20px, transparent 20px 38px),
+    linear-gradient(90deg, transparent, rgba(255, 45, 45, 0.13));
+  opacity: 0.42;
+  filter: blur(0.2px);
+}
+
+.about-kung-card__grid {
+  inset: 0;
+  z-index: 3;
+  background-image:
+    linear-gradient(rgba(160, 180, 190, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160, 180, 190, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.75;
+}
+
+.about-kung-card__data-dots {
+  z-index: 5;
+  width: 3px;
+  height: 32px;
+  background: repeating-linear-gradient(180deg, rgba(255, 45, 45, 0.7) 0 2px, transparent 2px 6px);
+  animation: about-kung-data-pulse 2.8s ease-in-out infinite;
+}
+
+.about-kung-card__data-dots--left {
+  left: 14px;
+  top: 27%;
+}
+
+.about-kung-card__data-dots--right {
+  right: 22px;
+  top: 10%;
+  width: 42px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, rgba(255, 45, 45, 0.62) 0 2px, transparent 2px 7px);
 }
 
 .about-kung-card__vignette {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 52% 18%, rgba(255, 255, 255, 0.08), transparent 28%),
-    radial-gradient(circle at 85% 45%, rgba(239, 68, 68, 0.1), transparent 24%),
-    radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.65) 100%),
-    linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.72));
+    radial-gradient(circle at 52% 18%, rgba(229, 231, 235, 0.08), transparent 28%),
+    radial-gradient(circle at 85% 45%, rgba(255, 45, 45, 0.12), transparent 24%),
+    radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.62) 100%),
+    linear-gradient(180deg, rgba(5, 8, 12, 0.12), transparent 58%, rgba(5, 8, 12, 0.76));
   pointer-events: none;
+  z-index: 4;
+}
+
+.about-kung-card__grain {
+  inset: 0;
+  z-index: 6;
+  opacity: 0.13;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
 .about-kung-card__scanline {
@@ -221,21 +390,30 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.15), transparent);
-  animation: about-kung-scan 4s linear infinite;
+  z-index: 7;
+  background: linear-gradient(90deg, transparent, rgba(229, 231, 235, 0.2), rgba(255, 45, 45, 0.18), transparent);
+  animation: about-kung-scan 5.8s linear infinite;
   pointer-events: none;
 }
 
 .about-kung-card__footer {
-  padding: 10px 13px 8px;
-  border-top: 1px solid rgba(239, 68, 68, 0.18);
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 14px;
+  align-items: end;
+  padding: 16px 20px 14px;
+  border-top: 1px solid rgba(160, 180, 190, 0.12);
+  background: rgba(5, 8, 12, 0.58);
+  backdrop-filter: blur(12px);
 }
 
 .about-kung-card__footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: 0;
 }
 
 .about-kung-card__footer-label {
@@ -243,23 +421,26 @@
   align-items: center;
   gap: 5px;
   font-family: "Share Tech Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: #f87171;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #e5e7eb;
   text-transform: uppercase;
 }
 
 .about-kung-card__bar {
   display: flex;
   align-items: center;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
   gap: 2px;
 }
 
 .about-kung-card__bar span {
   display: inline-block;
-  width: 2.5px;
-  height: 10px;
-  background: #ef4444;
+  width: 2px;
+  height: 18px;
+  background: rgba(160, 180, 190, 0.72);
 }
 
 .about-kung-card__bar span:nth-child(n+1):nth-child(-n+3) { opacity: 0.7; }
@@ -278,17 +459,18 @@
 }
 
 .about-kung-card__status {
-  margin-top: 2px;
+  grid-column: 2;
+  margin-top: 0;
   text-align: right;
   font-family: "Share Tech Mono", monospace;
-  font-size: 9px;
+  font-size: 8px;
   letter-spacing: 0.12em;
   color: rgba(127, 29, 29, 0.6);
   text-transform: uppercase;
 }
 
 .about-kung-card__status span {
-  color: #4ade80;
+  color: #ff3b3b;
   font-weight: 600;
 }
 
@@ -329,7 +511,7 @@
 .about-kung-heading {
   margin-bottom: 14px;
   font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
-  font-size: clamp(64px, 6vw, 104px);
+  font-size: clamp(56px, 5.2vw, 88px);
   line-height: 0.95;
   letter-spacing: 0.04em;
   color: #fff;
@@ -358,7 +540,7 @@
   max-width: 640px;
   margin-bottom: 32px;
   font-family: Barlow, Inter, system-ui, sans-serif;
-  font-size: clamp(16px, 1.05vw, 19px);
+  font-size: clamp(15px, 0.96vw, 17px);
   line-height: 1.75;
   color: rgba(209, 213, 219, 0.88);
 }
@@ -408,6 +590,11 @@
   100% { top: 100%; }
 }
 
+@keyframes about-kung-data-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+
 @media (max-width: 760px) {
   .about-kung-section {
     padding-inline: 1rem;
@@ -424,8 +611,22 @@
   }
 
   .about-kung-card {
-    width: min(100%, 260px);
+    width: min(100%, 320px);
     margin-inline: auto;
+  }
+
+  .about-kung-card__image-area {
+    height: 390px;
+  }
+
+  .about-kung-card__footer {
+    grid-template-columns: 1fr;
+  }
+
+  .about-kung-card__bar,
+  .about-kung-card__status {
+    grid-column: 1;
+    justify-self: start;
   }
 
   .about-kung-dossier-row span {
@@ -441,21 +642,26 @@
   .about-kung-inner {
     max-width: 920px;
     gap: clamp(2.25rem, 5vw, 4rem);
-    transform: translateY(-1.5rem);
+    transform: translateY(0.75rem);
   }
 
   .about-kung-card {
-    width: clamp(250px, 28vw, 300px);
+    width: clamp(280px, 30vw, 340px);
+  }
+
+  .about-kung-card__image-area {
+    height: clamp(360px, 42vw, 450px);
   }
 
   .about-kung-heading {
-    font-size: clamp(58px, 7vw, 82px);
+    font-size: clamp(52px, 6vw, 72px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .about-kung-card__dot,
-  .about-kung-card__scanline {
+  .about-kung-card__scanline,
+  .about-kung-card__data-dots {
     animation: none;
   }
 }
