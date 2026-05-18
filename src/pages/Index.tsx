@@ -20,6 +20,10 @@ const SectionFallback = () => (
   <div className="relative w-full min-h-screen bg-[#050505]" aria-busy="true" />
 );
 
+const LazySection = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<SectionFallback />}>{children}</Suspense>
+);
+
 const Index = () => {
   const [isLoading, setIsLoading] = useState(
     typeof window !== "undefined" && (import.meta.env.DEV || !sessionStorage.getItem("booted"))
@@ -50,25 +54,25 @@ const Index = () => {
         >
           <HeroSection />
 
-          <Suspense fallback={<SectionFallback />}>
+          <LazySection>
             <AboutSection />
-          </Suspense>
+          </LazySection>
 
-          <Suspense fallback={<SectionFallback />}>
+          <LazySection>
             <AbilitySection />
-          </Suspense>
+          </LazySection>
 
-          <Suspense fallback={<SectionFallback />}>
+          <LazySection>
             <RaidArchives />
-          </Suspense>
+          </LazySection>
 
-          <Suspense fallback={<SectionFallback />}>
+          <LazySection>
             <LegacySection />
-          </Suspense>
+          </LazySection>
 
-          <Suspense fallback={<SectionFallback />}>
+          <LazySection>
             <ContactTerminal />
-          </Suspense>
+          </LazySection>
 
           <Footer />
         </motion.main>

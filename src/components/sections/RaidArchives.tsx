@@ -159,7 +159,7 @@ export const RaidArchives = () => {
       style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(214,58,74,0.035) 0%, transparent 55%)" }} />
+      <div className="absolute inset-0 section-floor pointer-events-none" />
 
       <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
         {/* ── Header ── */}

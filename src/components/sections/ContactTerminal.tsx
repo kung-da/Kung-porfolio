@@ -130,7 +130,7 @@ export const ContactTerminal = () => {
         style={{ background: "transparent" }}
       >
         <div className="absolute inset-0 section-vignette pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(214,58,74,0.04) 0%, transparent 50%)" }} />
+        <div className="absolute inset-0 section-floor pointer-events-none" />
         <ParticleField />
 
         <div className="container relative z-10 mx-auto w-full max-w-[1280px]">
