@@ -13,7 +13,7 @@ export const BossHPBar = memo(() => {
         zIndex: 90,
         height: 36,
         background: "#050505",
-        borderBottom: `2px solid ${critical ? "#FF003C" : "#1a1a2e"}`,
+        borderBottom: `2px solid ${critical ? "#D63A4A" : "#1a1a2e"}`,
         display: "flex",
         alignItems: "center",
         gap: 12,
@@ -30,7 +30,7 @@ export const BossHPBar = memo(() => {
       {critical && (
         <span
           className="font-mono-ui text-[9px] tracking-widest"
-          style={{ color: "#FF003C", animation: "blink 0.4s step-end infinite" }}
+          style={{ color: "#D63A4A", animation: "blink 0.4s step-end infinite" }}
         >
           !! CRITICAL
         </span>
@@ -44,7 +44,7 @@ export const BossHPBar = memo(() => {
         className="flex-1 h-[6px] relative overflow-hidden"
         style={{
           background: "rgba(255,255,255,0.04)",
-          border: `1px solid ${critical ? "rgba(255,0,60,0.5)" : "rgba(0,245,255,0.2)"}`,
+          border: `1px solid ${critical ? "rgba(214,58,74,0.5)" : "rgba(0,245,255,0.2)"}`,
           clipPath: "polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))",
         }}
       >
@@ -53,10 +53,10 @@ export const BossHPBar = memo(() => {
             width: `${hp}%`,
             height: "100%",
             background: critical
-              ? "linear-gradient(90deg, #FF003C, #8B0000)"
+              ? "linear-gradient(90deg, #D63A4A, #5A1118)"
               : "linear-gradient(90deg, #00F5FF, #0088aa)",
             boxShadow: critical
-              ? "0 0 12px #FF003C"
+              ? "0 0 12px #D63A4A"
               : "0 0 8px rgba(0,245,255,0.5)",
             transition: "width 0.15s linear",
             willChange: "width",
@@ -67,7 +67,7 @@ export const BossHPBar = memo(() => {
       {/* HP Percentage */}
       <span
         className="font-mono-ui text-[10px] tabular-nums shrink-0"
-        style={{ color: critical ? "#FF003C" : "#00F5FF" }}
+        style={{ color: critical ? "#D63A4A" : "#00F5FF" }}
       >
         {Math.round(hp)}%
       </span>

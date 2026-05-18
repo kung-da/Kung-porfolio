@@ -6,9 +6,9 @@
 export const COLORS = {
   black:      "#050508",
   void:       "#0a0a0f",
-  crimson:    "#8b0000",
-  blood:      "#c0392b",
-  ember:      "#e74c3c",
+  crimson:    "#D63A4A",
+  blood:      "#A82836",
+  ember:      "#EF5A63",
   cyan:       "#00e5ff",
   cyanDim:    "#00b8cc",
   cyanGhost:  "rgba(0, 229, 255, 0.06)",
@@ -35,12 +35,12 @@ export const EASING = {
 } as const;
 
 export const SECTIONS = [
-  { id: "home",       label: "ENCOUNTER", mission: "HERO",    num: "00" },
-  { id: "about",      label: "ORIGIN",    mission: "ORIGIN",  num: "01" },
-  { id: "skills",     label: "ARSENAL",   mission: "ARSENAL", num: "02" },
-  { id: "projects",   label: "ARCHIVE",   mission: "ARCHIVE", num: "03" },
-  { id: "experience", label: "RECORD",    mission: "RECORD",  num: "04" },
-  { id: "contact",    label: "SIGNAL",    mission: "SIGNAL",  num: "05" },
+  { id: "home", label: "Home", mission: "Home", num: "00" },
+  { id: "about", label: "About me", mission: "About me", num: "01" },
+  { id: "skills", label: "Skills", mission: "Skills", num: "02" },
+  { id: "projects", label: "Projects", mission: "Projects", num: "03" },
+  { id: "experience", label: "Experience", mission: "Experience", num: "04" },
+  { id: "contact", label: "Contact", mission: "Contact", num: "05" },
 ] as const;
 
 export type SectionId = typeof SECTIONS[number]["id"];

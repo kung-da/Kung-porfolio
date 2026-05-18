@@ -62,7 +62,7 @@ export const ScrollIndicator = () => {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const offset = id === "home" ? 0 : 100;
+    const offset = id === "home" ? 0 : 116;
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
   };
 
@@ -132,17 +132,17 @@ export const ScrollIndicator = () => {
               animate={{
                 width: isActive ? 14 : isHovered ? 11 : 9,
                 height: isActive ? 14 : isHovered ? 11 : 9,
-                backgroundColor: isActive ? "#00e5ff" : isHovered ? "#8b0000" : "rgba(139,0,0,0.5)",
+                backgroundColor: isActive ? "#00e5ff" : isHovered ? "#D63A4A" : "rgba(214,58,74,0.42)",
                 boxShadow: isActive
                   ? "0 0 10px rgba(0,229,255,0.8), 0 0 24px rgba(0,229,255,0.35)"
                   : isHovered
-                    ? "0 0 8px rgba(139,0,0,0.5)"
-                    : "0 0 4px rgba(139,0,0,0.2)",
+                    ? "0 0 8px rgba(214,58,74,0.5)"
+                    : "0 0 4px rgba(214,58,74,0.2)",
                 borderColor: isActive
                   ? "rgba(0,229,255,0.6)"
                   : isHovered
-                    ? "rgba(139,0,0,0.6)"
-                    : "rgba(139,0,0,0.25)",
+                    ? "rgba(214,58,74,0.6)"
+                    : "rgba(214,58,74,0.25)",
                 borderWidth: isActive ? 2 : 1,
               }}
               transition={{ duration: 0.2 }}

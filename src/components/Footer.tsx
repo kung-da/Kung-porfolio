@@ -20,15 +20,15 @@ export const Footer = () => {
   return (
     <footer className="relative pt-16 pb-8 bg-[#030305] overflow-hidden flex flex-col items-center">
       {/* Top Border */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#FF003C33]" />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#FF003C] opacity-40 shadow-[0_0_8px_#FF003C44]" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#D63A4A33]" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#D63A4A] opacity-40 shadow-[0_0_8px_#D63A4A44]" />
 
       {/* Logo */}
       <div className="text-center mb-10 mt-4">
         <h2
           className="font-display text-[24px] md:text-[28px] tracking-[0.3em] leading-none glitch-hover"
           data-text="WEZAEMON"
-          style={{ color: "#FF003C" }}
+          style={{ color: "#D63A4A" }}
         >
           WEZAEMON
         </h2>
@@ -49,7 +49,7 @@ export const Footer = () => {
             href={l.href}
             target="_blank"
             rel="noreferrer"
-            className="border border-[#1a1a2e] text-muted-ui font-mono-ui text-[10px] px-3 py-1.5 transition-all duration-100 hover:border-[#FF003C] hover:text-crimson hover:shadow-[0_0_10px_rgba(255,0,60,0.2)]"
+            className="border border-[#1a1a2e] text-muted-ui font-mono-ui text-[10px] px-3 py-1.5 transition-all duration-100 hover:border-[#D63A4A] hover:text-crimson hover:shadow-[0_0_10px_rgba(214,58,74,0.22)]"
             style={{ clipPath: "polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px)" }}
           >
             [ {l.label} ]
@@ -75,7 +75,7 @@ export const Footer = () => {
         onClick={scrollToTop}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="font-mono-ui text-[10px] text-crimson border border-[#FF003C33] px-5 py-2 transition-all duration-100 hover:border-[#FF003C] hover:shadow-[0_0_15px_rgba(255,0,60,0.3)]"
+        className="font-mono-ui text-[10px] text-crimson border border-[#D63A4A33] px-5 py-2 transition-all duration-100 hover:border-[#D63A4A] hover:shadow-[0_0_15px_rgba(214,58,74,0.3)]"
         style={{ clipPath: "polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)" }}
       >
         [ ↑ REINITIALIZE ]

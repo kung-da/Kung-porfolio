@@ -1,7 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// CONTACT · "SIGNAL" — Secure Transmission Interface
-// Typography: improved for readability on dark bg
-// ─────────────────────────────────────────────────────────────────────────────
+// Contact section
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
@@ -63,7 +60,7 @@ const TermInput = ({ label, fieldId, placeholder, type = "text", value, onChange
   const borderColor = focused ? "border-wez-cyan" : "border-crimson/40";
   return (
     <div className="relative">
-      <label htmlFor={fieldId} className={`block font-mono text-sm tracking-[0.2em] uppercase mb-2 transition-colors ${focused ? "text-wez-cyan/80" : "text-crimson/60"}`}>
+      <label htmlFor={fieldId} className={`block font-mono text-sm tracking-[0.12em] mb-2 transition-colors ${focused ? "text-wez-cyan/80" : "text-crimson/60"}`}>
         {label}:
       </label>
       <div className="relative">
@@ -129,35 +126,31 @@ export const ContactTerminal = () => {
         )}
       </AnimatePresence>
 
-      <section id="contact" ref={ref} className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      <section id="contact" ref={ref} className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
         style={{ background: "transparent" }}
       >
         <div className="absolute inset-0 section-vignette pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.05) 0%, transparent 50%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(214,58,74,0.04) 0%, transparent 50%)" }} />
         <ParticleField />
 
-        <div className="container mx-auto max-w-5xl relative z-10">
+        <div className="container relative z-10 mx-auto w-full max-w-[1280px]">
           {/* ── Header ── */}
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
-            className="mb-12 md:mb-16"
+            className="mb-8 xl:mb-10"
           >
-            <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
-              // 05 — SIGNAL
-            </p>
-            <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
-            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight mb-6">
-              Open <span className="text-wez-cyan">Transmission</span>
+            <h2 className="mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
+              Contact
             </h2>
 
             <div className="font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex gap-4 md:gap-6 flex-wrap items-center">
-              <span>─── WINDOW OPEN ────────</span>
-              <span className="text-crimson/50">ENCRYPTION: AES-256</span>
-              <span className="text-crimson/50">LATENCY: 12ms</span>
+              <span>Available for contact</span>
+              <span className="text-crimson/50">Response under 24h</span>
+              <span className="text-crimson/50">ICT (UTC+7)</span>
               <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} className="text-status-active">
-                ● UPLINK: ACTIVE
+                Online
               </motion.span>
             </div>
           </motion.div>
@@ -179,18 +172,18 @@ export const ContactTerminal = () => {
                     className="border border-wez-cyan/35 bg-[rgba(0,229,255,0.05)] p-12 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.06),0_4px_16px_rgba(0,0,0,0.3)]"
                   >
                     <p className="font-display text-lg font-bold text-wez-cyan tracking-[0.2em] mb-4">
-                      SIGNAL RECEIVED
+                      Message sent
                     </p>
                     <p className="font-mono text-sm text-foreground/70 leading-relaxed">
-                      WEZAEMON WILL RESPOND.
+                      I will respond soon.
                     </p>
                     <p className="font-mono text-xs text-wez-cyan/50 mt-5">TX_ID: [{txId}]</p>
                   </motion.div>
                 ) : (
                   <motion.form key="form" onSubmit={submit} className="flex flex-col gap-7">
                     {[
-                      { label: "SENDER_ID", key: "name" as const, placeholder: "ENTER DESIGNATION...", type: "text" },
-                      { label: "SUBJECT_LINE", key: "email" as const, placeholder: "RELAY ADDRESS...", type: "email" },
+                      { label: "Name", key: "name" as const, placeholder: "Your name", type: "text" },
+                      { label: "Email", key: "email" as const, placeholder: "you@example.com", type: "email" },
                     ].map((f, i) => (
                       <motion.div key={f.key} custom={i} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
                         <TermInput fieldId={`contact-${f.key}`} label={f.label} placeholder={f.placeholder} type={f.type}
@@ -198,7 +191,7 @@ export const ContactTerminal = () => {
                       </motion.div>
                     ))}
                     <motion.div custom={2} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-                      <TermInput fieldId="contact-message" label="MESSAGE_BODY" placeholder="INITIATE TRANSMISSION..."
+                      <TermInput fieldId="contact-message" label="Message" placeholder="Write your message..."
                         value={form.message} onChange={set("message")} multiline rows={5} required />
                     </motion.div>
 
@@ -208,18 +201,18 @@ export const ContactTerminal = () => {
                         disabled={sending}
                         whileHover={!sending ? { x: 4 } : {}}
                         whileTap={!sending ? { scale: 0.98 } : {}}
-                        className={`w-full py-3.5 px-6 font-mono text-sm tracking-[0.25em] uppercase border transition-all relative overflow-hidden flex items-center justify-center gap-3 ${error
+                        className={`w-full py-3.5 px-6 font-mono text-sm tracking-[0.14em] border transition-all relative overflow-hidden flex items-center justify-center gap-3 ${error
                             ? "border-enrage text-enrage bg-enrage/[0.06]"
                             : sending
                               ? "border-border/50 text-muted-foreground"
-                              : "border-crimson/50 text-foreground bg-crimson/[0.06] hover:bg-crimson/10 shadow-[0_0_20px_rgba(139,0,0,0.1)]"
+                              : "border-crimson/50 text-foreground bg-crimson/[0.06] hover:bg-crimson/10 shadow-[0_0_20px_rgba(214,58,74,0.12)]"
                           }`}
                       >
                         {sending && (
                           <motion.div animate={{ width: ["0%", "100%"] }} transition={{ duration: 1.4, ease: "linear" }}
                             className="absolute bottom-0 left-0 h-px bg-wez-cyan" style={{ boxShadow: "0 0 6px rgba(0,229,255,0.8)" }} />
                         )}
-                        {error ? "⚡ UPLINK FAILED. RETRY." : sending ? "TRANSMITTING..." : "◈ TRANSMIT ──────────▶"}
+                        {error ? "Send failed. Retry" : sending ? "Sending..." : "Send message"}
                       </motion.button>
                     </motion.div>
                   </motion.form>
@@ -231,7 +224,7 @@ export const ContactTerminal = () => {
             <motion.div variants={rightPanelVariants} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-6">
               <div>
                 <p className="font-mono text-sm text-wez-cyan/50 tracking-[0.18em] uppercase mb-3">
-                  AVAILABLE COMM CHANNELS
+                  Contact channels
                 </p>
                 <div className="h-px bg-border/30 mb-5" />
                 {COMM_LINKS.map((l, i) => (
@@ -260,7 +253,7 @@ export const ContactTerminal = () => {
 
               {/* Location */}
               <div>
-                <p className="font-mono text-sm text-crimson/60 tracking-[0.18em] uppercase mb-3">LOCATION NODE:</p>
+                <p className="font-mono text-sm text-crimson/60 tracking-[0.18em] mb-3">Location:</p>
                 <div className="flex items-center gap-3">
                   <motion.div
                     animate={{ opacity: [1, 0.2, 1], scale: [1, 1.3, 1] }}
@@ -269,7 +262,7 @@ export const ContactTerminal = () => {
                     style={{ boxShadow: "0 0 10px rgba(0,255,136,0.5)" }}
                   />
                   <div>
-                    <p className="font-mono text-sm text-foreground/80 tracking-[0.12em]">Vietnam — South Sector</p>
+                    <p className="font-mono text-sm text-foreground/80 tracking-[0.12em]">Vietnam</p>
                     <p className="font-mono text-xs text-wez-cyan/45 tracking-[0.12em] mt-0.5">ICT (UTC+7) · Response &lt; 24H</p>
                   </div>
                 </div>

@@ -46,10 +46,10 @@ export const CustomCursor = () => {
         #custom-cursor-ring.cursor-hover {
           width: 40px !important;
           height: 40px !important;
-          border-color: #8b0000 !important;
+          border-color: #D63A4A !important;
           margin-top: -8px;
           margin-left: -8px;
-          box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+          box-shadow: 0 0 10px rgba(214, 58, 74, 0.36);
         }
         @media (pointer: coarse) {
           #custom-cursor, #custom-cursor-ring { display: none !important; }

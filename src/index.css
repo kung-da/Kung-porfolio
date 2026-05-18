@@ -8,9 +8,10 @@
   :root {
     --bg-abyss: #050505;
     --bg-panel: #0A0A0A;
-    --crimson: #FF003C;
-    --blood: #C8102E;
-    --dark-red: #8B0000;
+    --fixed-header-space: 116px;
+    --crimson: #D63A4A;
+    --blood: #A82836;
+    --dark-red: #5A1118;
     --neon-cyan: #00F5FF;
     --sakura-pink: #FFB7C5;
     --deep-sakura: #FF91A4;
@@ -28,7 +29,7 @@
     --card-foreground: 0 0% 88%;
     --popover: 0 0% 4%;
     --popover-foreground: 0 0% 88%;
-    --primary: 348 100% 50%;
+    --primary: 354 66% 53%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 6%;
     --secondary-foreground: 0 0% 88%;
@@ -36,7 +37,7 @@
     --muted-foreground: 0 0% 45%;
     --accent: 186 100% 50%;
     --accent-foreground: 0 0% 4%;
-    --destructive: 348 100% 50%;
+    --destructive: 354 66% 53%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 10% 10%;
     --input: 240 10% 10%;
@@ -50,7 +51,7 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 112px;
+    scroll-padding-top: var(--fixed-header-space);
     background: var(--bg-abyss);
   }
 
@@ -130,15 +131,22 @@
   .border-cyan { border-color: var(--neon-cyan); }
   .border-panel { border-color: var(--panel-border); }
 
+  .content-section {
+    min-height: calc(100svh - var(--fixed-header-space));
+    scroll-margin-top: var(--fixed-header-space);
+    padding-top: clamp(2rem, 4.5vh, 3.5rem);
+    padding-bottom: clamp(2rem, 4.5vh, 3.5rem);
+  }
+
   /* ── Glow Effects ── */
   .glow-crimson {
-    box-shadow: 0 0 15px rgba(255, 0, 60, 0.4), inset 0 0 15px rgba(255, 0, 60, 0.1);
+    box-shadow: 0 0 15px rgba(214, 58, 74, 0.36), inset 0 0 15px rgba(214, 58, 74, 0.1);
   }
   .glow-cyan {
     box-shadow: 0 0 15px rgba(0, 245, 255, 0.3), inset 0 0 15px rgba(0, 245, 255, 0.05);
   }
   .text-glow-crimson {
-    text-shadow: 0 0 8px rgba(255, 0, 60, 0.6), 0 0 20px rgba(255, 0, 60, 0.3);
+    text-shadow: 0 0 8px rgba(214, 58, 74, 0.55), 0 0 20px rgba(214, 58, 74, 0.25);
   }
   .text-glow-cyan {
     text-shadow: 0 0 8px rgba(0, 245, 255, 0.6), 0 0 20px rgba(0, 245, 255, 0.3);
@@ -189,7 +197,7 @@
   /* ── Section panel floor — subtle gradient that lifts cards ── */
   .section-floor {
     background:
-      radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(214,58,74,0.035) 0%, transparent 50%),
       radial-gradient(ellipse at 20% 30%, rgba(0,229,255,0.015) 0%, transparent 40%);
     pointer-events: none;
   }
@@ -246,9 +254,9 @@
     background: linear-gradient(
       110deg,
       transparent 30%,
-      rgba(255, 0, 60, 0.15) 45%,
-      rgba(255, 0, 60, 0.4) 50%,
-      rgba(255, 0, 60, 0.15) 55%,
+      rgba(214, 58, 74, 0.15) 45%,
+      rgba(214, 58, 74, 0.4) 50%,
+      rgba(214, 58, 74, 0.15) 55%,
       transparent 70%
     );
     transition: left 0.15s ease-out;

@@ -1,7 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// SKILLS · "ARSENAL" — Weapon Loadout Interface
-// Each domain has its own unique accent color for visual distinction
-// ─────────────────────────────────────────────────────────────────────────────
+// Skills section
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
@@ -212,7 +209,7 @@ const SkillCard = ({ skill, index, isSelected, onSelect, colors }: {
     onClick={onSelect}
     role="button"
     tabIndex={0}
-    aria-label={`Select ${skill.name}`}
+    aria-label={`Select skill ${skill.name}`}
     onKeyDown={(e) => e.key === "Enter" && onSelect()}
     className="p-4 border transition-all duration-200 relative overflow-hidden"
     style={{
@@ -257,36 +254,32 @@ export const AbilitySection = () => {
     <section
       id="skills"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
       <div className="absolute inset-0 section-floor pointer-events-none" />
 
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
         {/* ── Header ── */}
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-12 md:mb-16"
+          className="mb-8 xl:mb-10"
         >
-          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
-            // 02 — ARSENAL
-          </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
-          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
-            Active <span className="text-wez-cyan">Armor</span> Systems
+          <h2 className="font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
+            Skills
           </h2>
 
           <div className="mt-4 font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex items-center gap-4 flex-wrap">
-            <span>── ARSENAL SCAN ──</span>
-            <span className="text-crimson/50">SYS: LOADING COMBAT MODULES...</span>
+            <span>Skill overview</span>
+            <span className="text-crimson/50">Core modules loaded</span>
             <div className="flex gap-[2px]">
               {Array.from({ length: 10 }).map((_, i) => (
                 <div
                   key={i}
-                  style={{ width: 8, height: 8, background: i < 9 ? "#8b0000" : "rgba(139,0,0,0.15)" }}
+                  style={{ width: 8, height: 8, background: i < 9 ? "var(--crimson)" : "rgba(214,58,74,0.16)" }}
                 />
               ))}
             </div>
@@ -295,13 +288,13 @@ export const AbilitySection = () => {
         </motion.div>
 
         {/* ── Three-panel layout ── */}
-        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr_280px] gap-5 items-start">
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[220px_1fr_300px] xl:grid-cols-[240px_1fr_320px]">
           {/* LEFT — Domain list */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="hidden md:flex flex-col gap-1"
+            className="hidden lg:flex flex-col gap-1"
           >
             {DOMAINS.map((d) => {
               const isActive = activeDomain === d.id;
@@ -328,7 +321,7 @@ export const AbilitySection = () => {
           {/* CENTER — Skill grid */}
           <div>
             {/* Mobile domain tabs */}
-            <div className="flex md:hidden overflow-x-auto gap-2 mb-6 pb-2" style={{ scrollbarWidth: "none" }}>
+            <div className="flex lg:hidden overflow-x-auto gap-2 mb-6 pb-2" style={{ scrollbarWidth: "none" }}>
               {DOMAINS.map((d) => {
                 const isActive = activeDomain === d.id;
                 const c = DOMAIN_COLORS[d.id];
@@ -381,7 +374,7 @@ export const AbilitySection = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="border backdrop-blur-sm p-5 relative overflow-hidden hidden md:block"
+                className="border backdrop-blur-sm p-5 relative overflow-hidden hidden lg:block"
                 style={{
                   borderColor: `${colors.accent}66`,
                   background: "rgba(10,10,18,0.75)",
@@ -392,15 +385,15 @@ export const AbilitySection = () => {
                   background: `linear-gradient(to right, ${colors.accent}, ${colors.barMid}, transparent)`,
                 }} />
 
-                <p className="font-mono text-xs tracking-[0.2em] mb-5 uppercase" style={{ color: `${colors.accent}99` }}>── WEAPON INTEL ──</p>
+                <p className="font-mono text-xs tracking-[0.2em] mb-5 uppercase" style={{ color: `${colors.accent}99` }}>Skill details</p>
 
                 <div className="space-y-4">
                   <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>WEAPON:</p>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>SKILL:</p>
                     <p className="font-display text-base tracking-wide font-bold" style={{ color: colors.accent }}>{selectedSkill.name}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>CLASS:</p>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>CATEGORY:</p>
                     <p className="font-mono text-sm text-foreground/80">{currentDomain.label}</p>
                   </div>
                   <div>
@@ -408,7 +401,7 @@ export const AbilitySection = () => {
                     <ProficiencyBar lvl={selectedSkill.lvl} active={true} colors={colors} />
                   </div>
                   <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-2" style={{ color: `${colors.accent}B3` }}>FIELD NOTES:</p>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-2" style={{ color: `${colors.accent}B3` }}>NOTES:</p>
                     <p className="font-mono text-sm text-foreground/75 leading-relaxed">{selectedSkill.notes}</p>
                   </div>
                   <div>
@@ -431,13 +424,13 @@ export const AbilitySection = () => {
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="border h-[200px] hidden md:flex items-center justify-center"
+                className="border h-[200px] hidden lg:flex items-center justify-center"
                 style={{
                   borderColor: `${colors.accent}14`,
                   background: "rgba(10,10,18,0.5)",
                 }}
               >
-                <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: `${colors.accent}66` }}>SELECT A WEAPON</span>
+                <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: `${colors.accent}66` }}>SELECT A SKILL</span>
               </motion.div>
             )}
           </AnimatePresence>

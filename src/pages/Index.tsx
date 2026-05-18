@@ -5,7 +5,6 @@ import { BossHPBar } from "@/components/BossHPBar";
 import { Navigation } from "@/components/Navigation";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { Footer } from "@/components/Footer";
-import { SectionDivider } from "@/components/SectionDivider";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { useEnragedMode } from "@/hooks/useEnragedMode";
 
@@ -51,27 +50,22 @@ const Index = () => {
         >
           <HeroSection />
 
-          <SectionDivider num="01" label="ORIGIN" />
           <Suspense fallback={<SectionFallback />}>
             <AboutSection />
           </Suspense>
 
-          <SectionDivider num="02" label="ARSENAL" />
           <Suspense fallback={<SectionFallback />}>
             <AbilitySection />
           </Suspense>
 
-          <SectionDivider num="03" label="ARCHIVE" />
           <Suspense fallback={<SectionFallback />}>
             <RaidArchives />
           </Suspense>
 
-          <SectionDivider num="04" label="RECORD" />
           <Suspense fallback={<SectionFallback />}>
             <LegacySection />
           </Suspense>
 
-          <SectionDivider num="05" label="SIGNAL" />
           <Suspense fallback={<SectionFallback />}>
             <ContactTerminal />
           </Suspense>

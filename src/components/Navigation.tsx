@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
-  { label: "ORIGIN",  id: "about"      },
-  { label: "ARSENAL", id: "skills"     },
-  { label: "ARCHIVE", id: "projects"   },
-  { label: "RECORD",  id: "experience" },
-  { label: "SIGNAL",  id: "contact"    },
+  { label: "About me", id: "about" },
+  { label: "Skills", id: "skills" },
+  { label: "Projects", id: "projects" },
+  { label: "Experience", id: "experience" },
+  { label: "Contact", id: "contact" },
 ];
 
 export const Navigation = () => {
@@ -94,7 +94,7 @@ export const Navigation = () => {
     setActive(id);
     isScrollingRef.current = true;
 
-    const offset = 64; // height of the sticky nav
+    const offset = 116; // fixed HP bar + sticky nav
     const bodyRect = document.body.getBoundingClientRect().top;
     const elementRect = el.getBoundingClientRect().top;
     const elementPosition = elementRect - bodyRect;
@@ -204,7 +204,7 @@ export const Navigation = () => {
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "group relative px-4 py-2",
-                      "font-display text-[11px] uppercase tracking-[0.22em]",
+                      "font-display text-[12px] tracking-[0.12em]",
                       "text-muted-foreground transition-all duration-200",
                       "hover:text-wez-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       "ring-offset-background",
@@ -280,7 +280,7 @@ export const Navigation = () => {
             >
               <div className="space-y-1 px-6 pb-6">
                 <div className="font-display text-base tracking-[0.18em] uppercase">Navigation</div>
-                <p className="font-mono text-xs tracking-[0.24em] text-muted-foreground uppercase">// data_wanderer</p>
+                <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground">Portfolio sections</p>
               </div>
 
               <div className="mt-6 flex flex-col">
@@ -297,7 +297,7 @@ export const Navigation = () => {
                       onClick={() => scrollTo(l.id)}
                       className={cn(
                         "w-full px-4 py-3 text-left",
-                        "font-display text-sm uppercase tracking-[0.22em]",
+                        "font-display text-sm tracking-[0.12em]",
                         "transition-colors",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                         isActive

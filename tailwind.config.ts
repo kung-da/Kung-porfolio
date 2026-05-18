@@ -96,8 +96,8 @@ export default {
         "wez-cyan":     "#8FEFFF",
         "sakura-l":     "#F6D7E3",
         "sakura-d":     "#E8A5C0",
-        crimson:        "#6A1B1B",
-        enrage:         "#C0392B",
+        crimson:        "#D63A4A",
+        enrage:         "#EF5A63",
         "status-active":"#00FF88",
         "warn-yellow":  "#FCEE0A",
 

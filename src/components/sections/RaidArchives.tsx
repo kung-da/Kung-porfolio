@@ -1,7 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// PROJECTS · "ARCHIVE" — Mission Terminal
-// Typography: improved for readability on dark bg
-// ─────────────────────────────────────────────────────────────────────────────
+// Projects section
 import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useProjects } from "@/hooks/useProjects";
@@ -79,20 +76,20 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
     <div className={`${isFeatured ? "p-6 md:p-7" : "p-5"} flex-1 flex flex-col gap-3`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-mono text-sm text-wez-cyan/60 tracking-[0.2em] uppercase mb-1">
-            ── OP // {p.name.toUpperCase()} ──
+          <p className="font-display text-lg font-bold leading-snug tracking-wide text-foreground">
+            {p.name}
           </p>
-          <p className="font-mono text-xs text-crimson/60 tracking-[0.15em] uppercase">
-            CATEGORY: {p.category}
+          <p className="font-mono text-xs text-crimson/60 tracking-[0.12em]">
+            Category: {p.category}
           </p>
         </div>
         {p.featured ? (
           <span className="font-mono text-[11px] tracking-wider border border-crimson/50 text-enrage px-2 py-0.5 bg-crimson/10 whitespace-nowrap flex-shrink-0">
-            {isFeatured ? "⚑ PRIORITY" : "██ ACTIVE"}
+            Featured
           </span>
         ) : (
           <span className="font-mono text-[11px] tracking-wider border border-border/30 text-muted-foreground px-2 py-0.5 whitespace-nowrap flex-shrink-0">
-            ✓ SEALED
+            Available
           </span>
         )}
       </div>
@@ -115,9 +112,9 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
             href={p.githubLink}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 text-center font-mono text-xs tracking-[0.2em] uppercase border border-wez-cyan/30 text-wez-cyan/80 py-2.5 no-underline transition-colors hover:bg-wez-cyan/10 hover:text-wez-cyan"
+            className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-wez-cyan/30 text-wez-cyan/80 py-2.5 no-underline transition-colors hover:bg-wez-cyan/10 hover:text-wez-cyan"
           >
-            → MISSION BRIEF
+            GitHub
           </a>
         )}
         {p.demoLink && (
@@ -125,9 +122,9 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
             href={p.demoLink}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 text-center font-mono text-xs tracking-[0.2em] uppercase border border-crimson/40 text-enrage/80 py-2.5 no-underline transition-colors hover:bg-crimson/10 hover:text-enrage"
+            className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-crimson/40 text-enrage/80 py-2.5 no-underline transition-colors hover:bg-crimson/10 hover:text-enrage"
           >
-            ◈ LIVE SYSTEM
+            Live demo
           </a>
         )}
       </div>
@@ -158,38 +155,34 @@ export const RaidArchives = () => {
     <section
       id="projects"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       <div className="absolute inset-0 section-vignette pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(139,0,0,0.04) 0%, transparent 55%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 60%, rgba(214,58,74,0.035) 0%, transparent 55%)" }} />
 
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
         {/* ── Header ── */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="mb-12 md:mb-16"
+          className="mb-8 xl:mb-10"
         >
-          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
-            // 03 — ARCHIVE
-          </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
-          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight mb-6">
-            Classified <span className="text-wez-cyan">Operations</span>
+          <h2 className="mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
+            Projects
           </h2>
 
           {/* Stats row */}
           <div className="border border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.6)] p-4 flex items-center justify-between flex-wrap gap-3 shadow-[inset_0_1px_0_rgba(143,239,255,0.03)]">
             <span className="font-mono text-xs text-wez-cyan/70 tracking-[0.2em]">
-              ── CLASSIFIED ARCHIVE ────────────
+              Project archive
             </span>
             <div className="flex gap-5">
               {[
-                { label: "TOTAL OPS", value: total, cls: "text-wez-cyan/70" },
-                { label: "ACTIVE", value: active, cls: "text-enrage" },
-                { label: "SEALED", value: sealed, cls: "text-muted-foreground" },
+                { label: "Total", value: total, cls: "text-wez-cyan/70" },
+                { label: "Featured", value: active, cls: "text-enrage" },
+                { label: "Other", value: sealed, cls: "text-muted-foreground" },
               ].map((s) => (
                 <span key={s.label} className={`font-mono text-xs tracking-wider ${s.cls}`}>
                   {s.label}: [{s.value}]
@@ -229,13 +222,13 @@ export const RaidArchives = () => {
             {[0, 1, 2].map((i) => <SkeletonCard key={i} i={i} />)}
             <div className="col-span-full text-center font-mono text-xs tracking-widest text-wez-cyan/60 mt-4">
               <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
-                DECRYPTING ARCHIVE...
+                Loading projects...
               </motion.span>
             </div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 font-mono text-sm tracking-[0.25em] text-crimson/50 uppercase relative">
-            NO OPS FOUND IN THIS CATEGORY
+            No projects found in this category
           </div>
         ) : (
           <AnimatePresence mode="popLayout">

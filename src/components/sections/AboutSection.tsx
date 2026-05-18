@@ -1,7 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// ABOUT · "ORIGIN" — Dossier Interface
-// Typography: improved size/contrast for readability on dark bg
-// ─────────────────────────────────────────────────────────────────────────────
+// About section
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import profile from "@/assets/profile-picture.jpg";
@@ -73,15 +70,15 @@ const ThreatMeter = ({ active }: { active: boolean }) => {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex-1 h-[5px] border border-crimson/40 overflow-hidden" style={{ background: "rgba(139,0,0,0.12)" }}>
+      <div className="flex-1 h-[5px] border border-crimson/40 overflow-hidden" style={{ background: "rgba(214,58,74,0.1)" }}>
         <motion.div
           animate={{ width: `${fill}%` }}
           initial={{ width: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{ height: "100%", background: "linear-gradient(to right, #8b0000, #e74c3c)", boxShadow: "0 0 8px rgba(231,76,60,0.6)" }}
+          style={{ height: "100%", background: "linear-gradient(to right, #A82836, #EF5A63)", boxShadow: "0 0 8px rgba(214,58,74,0.48)" }}
         />
       </div>
-      <span className="font-mono text-xs tracking-wider" style={{ color: "#e74c3c" }}>
+      <span className="font-mono text-xs tracking-wider" style={{ color: "#EF5A63" }}>
         {fill > 0 ? "████████░░ CRITICAL" : "░░░░░░░░░░"}
       </span>
     </div>
@@ -89,7 +86,7 @@ const ThreatMeter = ({ active }: { active: boolean }) => {
 };
 
 // ── Data ──────────────────────────────────────────────────────────────────────
-const FIELD_REPORT = "Specialist in forging unyielding data pipelines and embedding machine intelligence into legacy combat systems. Known for rapid deployment under pressure, zero-downtime architecture, and unbreakable defensive stance in distributed infrastructure. Current threat classification: CRITICAL.";
+const FIELD_REPORT = "I build reliable data pipelines, analytics systems, and AI-enabled products with a focus on clear architecture, dependable delivery, and practical business value.";
 const SIGNATURE_SKILLS = ["DATA PIPELINE", "LLM / AGENTS", "SYSTEM DESIGN", "CLOUD INFRA"];
 
 export const AboutSection = () => {
@@ -102,27 +99,23 @@ export const AboutSection = () => {
     <section
       id="about"
       ref={ref}
-      className="relative min-h-screen py-24 px-6 md:px-12 overflow-hidden"
+      className="content-section relative flex items-center overflow-hidden px-6 md:px-10 xl:px-16"
       style={{ background: "transparent" }}
     >
       {/* Single lightweight BG overlay */}
       <div className="absolute inset-0 section-vignette z-0" />
       <div className="absolute inset-0 section-floor z-0" />
 
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
         {/* ── Section Header ─── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4 }}
-          className="mb-12 md:mb-16"
+          className="mb-8 xl:mb-10"
         >
-          <p className="font-mono text-xs text-crimson/80 mb-2 tracking-[0.25em] uppercase">
-            // 01 — ORIGIN
-          </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-crimson to-transparent mb-6" />
-          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight uppercase leading-tight">
-            About <span className="text-wez-cyan">The Warden</span>
+          <h2 className="font-display text-3xl font-bold uppercase leading-tight tracking-tight md:text-4xl lg:text-5xl">
+            About <span className="text-wez-cyan">me</span>
           </h2>
         </motion.div>
 
@@ -131,12 +124,12 @@ export const AboutSection = () => {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12 items-start"
+          className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1.25fr_0.75fr] xl:gap-14"
         >
           {/* LEFT — Dossier */}
-          <motion.div variants={leftColVariants} className="flex flex-col gap-8">
+          <motion.div variants={leftColVariants} className="flex flex-col gap-6">
             {/* File header panel */}
-            <div className="border border-crimson/40 bg-[rgba(139,0,0,0.06)] p-5 md:p-6 relative overflow-hidden shadow-[inset_0_1px_0_rgba(139,0,0,0.08),0_4px_16px_rgba(0,0,0,0.3)]">
+            <div className="border border-crimson/35 bg-crimson/[0.035] p-4 md:p-5 relative overflow-hidden shadow-[inset_0_1px_0_rgba(214,58,74,0.08),0_4px_16px_rgba(0,0,0,0.3)]">
               {/* Top accent */}
               <motion.div
                 initial={{ scaleX: 0 }}
@@ -148,7 +141,7 @@ export const AboutSection = () => {
 
               <div className="flex justify-between items-start mb-6">
                 <span className="font-mono text-sm text-wez-cyan tracking-[0.22em] uppercase font-semibold">
-                  [DOSSIER]
+                  PROFILE
                 </span>
                 <span className="font-mono text-xs text-wez-cyan/40 tracking-[0.2em]">
                   FILE #0042
@@ -157,15 +150,15 @@ export const AboutSection = () => {
 
               {/* Fields */}
               {[
-                { label: "DESIGNATION", value: designation || "▋" },
-                { label: "CLASSIFICATION", value: "ARCHITECT" },
+                { label: "NAME", value: designation || "..." },
+                { label: "ROLE", value: "ARCHITECT" },
                 { label: "STATUS", value: "ACTIVE", valueColor: "#00FF88" },
               ].map((f, i) => (
                 <motion.div
                   key={f.label}
                   custom={i}
                   variants={fieldVariants}
-                  className="flex justify-between items-center py-3 border-b border-crimson/20"
+                  className="flex justify-between items-center py-2.5 border-b border-crimson/20"
                 >
                   <span className="font-mono text-sm text-wez-cyan/70 tracking-[0.18em] uppercase">
                     {f.label}:
@@ -179,7 +172,7 @@ export const AboutSection = () => {
               {/* Threat level */}
               <div className="mt-4">
                 <div className="font-mono text-sm text-wez-cyan/70 tracking-[0.18em] uppercase mb-3">
-                  THREAT LEVEL:
+                  FOCUS:
                 </div>
                 <ThreatMeter active={inView} />
               </div>
@@ -190,7 +183,7 @@ export const AboutSection = () => {
               <div className="font-mono text-sm text-crimson/90 tracking-[0.18em] uppercase mb-3">
                 ── FIELD REPORT ──
               </div>
-              <p className="font-mono text-sm text-foreground/75 leading-[2]">
+              <p className="font-mono text-sm text-foreground/75 leading-[1.8]">
                 {fieldReport}
                 {inView && fieldReport.length < FIELD_REPORT.length && (
                   <span className="animate-blink ml-1 text-wez-cyan">█</span>
@@ -221,9 +214,9 @@ export const AboutSection = () => {
 
           {/* RIGHT — Avatar */}
           <motion.div variants={rightColVariants} className="relative flex justify-center items-start">
-            <div className="relative w-full max-w-[340px]">
+            <div className="relative w-full max-w-[310px] xl:max-w-[330px]">
               {/* Crimson bloom */}
-              <div className="absolute -inset-5 z-0" style={{ background: "radial-gradient(ellipse at center, rgba(139,0,0,0.15) 0%, transparent 70%)", filter: "blur(20px)" }} />
+              <div className="absolute -inset-5 z-0" style={{ background: "radial-gradient(ellipse at center, rgba(214,58,74,0.12) 0%, transparent 70%)", filter: "blur(20px)" }} />
 
               {/* Image */}
               <div className="relative z-[1] border border-crimson/40 overflow-hidden aspect-[3/4] group">
@@ -234,7 +227,7 @@ export const AboutSection = () => {
                   { bottom: 8, left: 8, top: "auto", right: "auto" },
                   { bottom: 8, right: 8, top: "auto", left: "auto" },
                 ].map((pos, i) => (
-                  <div key={i} style={{ position: "absolute", ...pos, width: 16, height: 16, zIndex: 2, borderTop: i < 2 ? "1px solid #e74c3c" : "none", borderBottom: i >= 2 ? "1px solid #e74c3c" : "none", borderLeft: (i === 0 || i === 2) ? "1px solid #e74c3c" : "none", borderRight: (i === 1 || i === 3) ? "1px solid #e74c3c" : "none" }} />
+                  <div key={i} style={{ position: "absolute", ...pos, width: 16, height: 16, zIndex: 2, borderTop: i < 2 ? "1px solid #EF5A63" : "none", borderBottom: i >= 2 ? "1px solid #EF5A63" : "none", borderLeft: (i === 0 || i === 2) ? "1px solid #EF5A63" : "none", borderRight: (i === 1 || i === 3) ? "1px solid #EF5A63" : "none" }} />
                 ))}
 
                 <img
@@ -248,17 +241,6 @@ export const AboutSection = () => {
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-wez-cyan/50 to-transparent" />
               </div>
 
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.5 }}
-                className="mt-4 border border-[rgba(143,239,255,0.15)] bg-[rgba(10,10,18,0.7)] backdrop-blur-md px-4 py-3 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.04)]"
-              >
-                <span className="font-mono text-xs text-wez-cyan tracking-widest uppercase">
-                  Senior Data Engineer
-                </span>
-              </motion.div>
             </div>
           </motion.div>
         </motion.div>
