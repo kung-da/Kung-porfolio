@@ -1,6 +1,7 @@
 // Projects section
 import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useProjects } from "@/hooks/useProjects";
 
 const FILTERS = ["ALL", "Pipeline", "Dashboard", "Analytics", "Other"] as const;
@@ -33,28 +34,43 @@ const SkeletonCard = ({ i }: { i: number }) => (
 interface CardProps {
   project: {
     id: string; name: string; description: string; techStack: string[];
-    category: string; featured: boolean; githubLink?: string; demoLink?: string; coverImage?: string;
+    category: string; featured: boolean; slug: string; githubLink?: string; demoLink?: string; coverImage?: string | null;
   };
   index: number;
   isFeatured?: boolean;
 }
 
-const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
-  <motion.article
-    layout
-    custom={index}
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    className={`
-      group relative border transition-all duration-300 overflow-hidden flex flex-col
-      border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.7)] backdrop-blur-sm
-      shadow-[inset_0_1px_0_rgba(143,239,255,0.04),0_2px_8px_rgba(0,0,0,0.3)]
-      hover:border-wez-cyan/40 hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_24px_rgba(143,239,255,0.1),inset_0_1px_0_rgba(143,239,255,0.06),0_12px_24px_rgba(0,0,0,0.4)]
-      ${isFeatured ? "col-span-full" : ""}
-    `}
-  >
+const MissionCard = ({ project: p, index, isFeatured }: CardProps) => {
+  const navigate = useNavigate();
+  const openDetail = () => navigate(`/projects/${p.slug}`);
+
+  return (
+    <motion.article
+      layout
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      role="button"
+      tabIndex={0}
+      aria-label={`Open project details for ${p.name}`}
+      onClick={openDetail}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openDetail();
+        }
+      }}
+      className={`
+        group relative border transition-all duration-300 overflow-hidden flex flex-col cursor-pointer
+        border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.7)] backdrop-blur-sm
+        shadow-[inset_0_1px_0_rgba(143,239,255,0.04),0_2px_8px_rgba(0,0,0,0.3)]
+        hover:border-wez-cyan/40 hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_24px_rgba(143,239,255,0.1),inset_0_1px_0_rgba(143,239,255,0.06),0_12px_24px_rgba(0,0,0,0.4)]
+        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wez-cyan
+        ${isFeatured ? "col-span-full" : ""}
+      `}
+    >
     {/* Top accent */}
     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-crimson/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -112,6 +128,7 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
             href={p.githubLink}
             target="_blank"
             rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
             className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-wez-cyan/30 text-wez-cyan/80 py-2.5 no-underline transition-colors hover:bg-wez-cyan/10 hover:text-wez-cyan"
           >
             GitHub
@@ -122,6 +139,7 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
             href={p.demoLink}
             target="_blank"
             rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
             className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-crimson/40 text-enrage/80 py-2.5 no-underline transition-colors hover:bg-crimson/10 hover:text-enrage"
           >
             Live demo
@@ -129,8 +147,9 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => (
         )}
       </div>
     </div>
-  </motion.article>
-);
+    </motion.article>
+  );
+};
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 export const RaidArchives = () => {

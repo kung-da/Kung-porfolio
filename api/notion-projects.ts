@@ -39,18 +39,9 @@ async function notionFetch(path: string, body?: object): Promise<Response> {
 }
 
 // ─── Query published projects from Notion ────────────────────────
-async function queryPublishedProjects(slugFilter?: string): Promise<NotionProjectRaw[]> {
-  const filter: object = slugFilter
-    ? {
-        and: [
-          { property: "Published", checkbox: { equals: true } },
-          { property: "Slug", rich_text: { equals: slugFilter } },
-        ],
-      }
-    : { property: "Published", checkbox: { equals: true } };
-
+async function queryPublishedProjects(): Promise<NotionProjectRaw[]> {
   const res = await notionFetch(`/databases/${NOTION_DATABASE_ID}/query`, {
-    filter,
+    filter: { property: "Published", checkbox: { equals: true } },
     sorts: [
       { property: "Featured", direction: "descending" },
       { timestamp: "created_time", direction: "descending" },
@@ -149,14 +140,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const raws = await queryPublishedProjects(slug);
+    const raws = await queryPublishedProjects();
 
     // ── Single project by slug ─────────────────────────────────────
     if (slug) {
-      if (raws.length === 0) {
+      const raw = raws.find((item) => mapToProjectCard(item).slug === slug);
+
+      if (!raw) {
         return res.status(200).json({ project: null, fromCache: false });
       }
-      const detail: ProjectDetail = mapToProjectDetail(raws[0]);
+
+      const detail: ProjectDetail = mapToProjectDetail(raw);
       return res.status(200).json({ project: detail, fromCache: false });
     }
 
