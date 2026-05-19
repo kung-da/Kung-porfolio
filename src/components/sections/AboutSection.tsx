@@ -51,7 +51,8 @@ export const AboutSection = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="about-kung-heading"
+            className="about-kung-heading section-title"
+            data-text="About Kung"
           >
             About Kung
           </motion.h2>
@@ -63,6 +64,9 @@ export const AboutSection = () => {
             className="about-kung-red-dashes"
             aria-hidden="true"
           >
+            <span />
+            <span />
+            <span />
             <span />
             <span />
             <span />
