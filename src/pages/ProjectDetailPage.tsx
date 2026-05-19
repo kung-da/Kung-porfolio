@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   CalendarClock,
+  CheckCircle2,
   ExternalLink,
   Github,
   Layers3,
@@ -27,6 +28,35 @@ const STATUS_COLOR: Record<string, string> = {
   "In Progress": "#FCEE0A",
   Archived: "#A1A1AA",
 };
+
+function DossierPanel({
+  title,
+  icon: Icon = Terminal,
+  children,
+  accent = "cyan",
+  className = "",
+}: {
+  title: string;
+  icon?: typeof Terminal;
+  children: React.ReactNode;
+  accent?: "cyan" | "crimson";
+  className?: string;
+}) {
+  const tone = accent === "cyan" ? "text-wez-cyan/85" : "text-crimson/85";
+
+  return (
+    <section className={`relative overflow-hidden border border-white/[0.08] bg-[rgba(5,11,17,0.72)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_38px_rgba(0,0,0,0.26)] ${className}`}>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-wez-cyan/45 to-transparent" />
+      <div className="border-b border-white/[0.08] px-5 py-4">
+        <div className={`flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em] ${tone}`}>
+          <Icon size={15} strokeWidth={1.7} />
+          {title}
+        </div>
+      </div>
+      <div className="p-5 sm:p-6">{children}</div>
+    </section>
+  );
+}
 
 function ProjectDetailSkeleton() {
   return (
@@ -119,16 +149,12 @@ function HtmlPanel({ title, html }: { title: string; html: string }) {
   if (!html) return null;
 
   return (
-    <section className="border border-white/[0.08] bg-[rgba(5,11,17,0.72)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_14px_34px_rgba(0,0,0,0.24)]">
-      <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.16em] text-wez-cyan/80">
-        <Terminal size={15} strokeWidth={1.7} />
-        {title}
-      </div>
+    <DossierPanel title={title}>
       <div
-        className="project-dossier-copy font-mono text-sm leading-7 text-zinc-300 [&_a]:text-wez-cyan [&_a]:underline [&_a]:underline-offset-4 [&_code]:bg-white/[0.06] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-wez-cyan [&_strong]:text-zinc-50"
+        className="project-dossier-copy max-w-none font-mono text-[15px] leading-8 text-zinc-300 [&_a]:text-wez-cyan [&_a]:underline [&_a]:underline-offset-4 [&_code]:bg-white/[0.06] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-wez-cyan [&_li]:mb-2 [&_p+p]:mt-4 [&_strong]:text-zinc-50"
         dangerouslySetInnerHTML={{ __html: html }}
       />
-    </section>
+    </DossierPanel>
   );
 }
 
@@ -251,9 +277,9 @@ export default function ProjectDetailPage() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]"
+          className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]"
         >
-          <div>
+          <div className="flex min-h-[330px] flex-col justify-center border border-white/[0.08] bg-[linear-gradient(135deg,rgba(214,58,74,0.07),rgba(5,11,17,0.62)_42%,rgba(143,239,255,0.045))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_70px_rgba(0,0,0,0.32)] sm:p-8 lg:p-10">
             <div className="mb-5 flex max-w-[760px] items-center gap-4">
               <Layers3 size={17} className="text-crimson" strokeWidth={1.6} />
               <span className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-crimson">
@@ -265,15 +291,30 @@ export default function ProjectDetailPage() {
             <h1 className="font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.28)] sm:text-5xl lg:text-6xl">
               {project.name}
             </h1>
-            <p className="mt-5 max-w-3xl font-mono text-sm leading-7 text-zinc-400">
+            <p className="mt-6 max-w-3xl font-mono text-base leading-8 text-zinc-300">
               {project.description}
             </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <span className="border px-3 py-2 font-mono text-xs uppercase tracking-[0.16em]" style={{ borderColor: `${category.color}55`, color: category.color }}>
+                {project.category}
+              </span>
+              <span className="border px-3 py-2 font-mono text-xs uppercase tracking-[0.16em]" style={{ borderColor: `${statusColor}66`, color: statusColor }}>
+                {project.status}
+              </span>
+              {project.timeline && (
+                <span className="inline-flex items-center gap-2 border border-white/[0.08] bg-white/[0.025] px-3 py-2 font-mono text-xs uppercase tracking-[0.16em] text-zinc-300">
+                  <CalendarClock size={13} strokeWidth={1.7} className="text-crimson" />
+                  {project.timeline}
+                </span>
+              )}
+            </div>
           </div>
 
-          <aside className="border border-white/[0.08] bg-[rgba(5,11,17,0.74)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+          <aside className="border border-white/[0.08] bg-[rgba(5,11,17,0.78)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_52px_rgba(0,0,0,0.28)]">
             <div className="flex items-center justify-between gap-4">
               <span
-                className="flex h-12 w-12 items-center justify-center border bg-black/20 font-mono text-xs font-semibold"
+                className="flex h-14 w-14 items-center justify-center border bg-black/20 font-mono text-sm font-semibold"
                 style={{ borderColor: `${category.color}55`, color: category.color }}
               >
                 {category.code}
@@ -283,15 +324,15 @@ export default function ProjectDetailPage() {
               </span>
             </div>
 
-            <div className="mt-5 space-y-3 border-t border-white/[0.08] pt-5 font-mono text-xs uppercase tracking-[0.13em] text-zinc-500">
-              <p><span className="text-wez-cyan">//</span> Category: <span className="text-zinc-300">{project.category}</span></p>
-              {project.timeline && (
-                <p className="flex items-center gap-2">
-                  <CalendarClock size={13} strokeWidth={1.7} className="text-crimson" />
-                  <span className="text-zinc-300">{project.timeline}</span>
-                </p>
-              )}
-              {project.featured && <p><span className="text-crimson">//</span> Featured archive</p>}
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-white/[0.08] pt-5">
+              <div className="border border-white/[0.08] bg-white/[0.025] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">Category</p>
+                <p className="mt-2 font-mono text-sm uppercase tracking-[0.12em] text-zinc-100">{project.category}</p>
+              </div>
+              <div className="border border-white/[0.08] bg-white/[0.025] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">Featured</p>
+                <p className="mt-2 font-mono text-sm uppercase tracking-[0.12em] text-zinc-100">{project.featured ? "Yes" : "No"}</p>
+              </div>
             </div>
 
             <div className="mt-5 flex gap-2">
@@ -318,6 +359,19 @@ export default function ProjectDetailPage() {
                 </a>
               )}
             </div>
+
+            {project.techStack.length > 0 && (
+              <div className="mt-6 border-t border-white/[0.08] pt-5">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-wez-cyan/80">Primary stack</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.techStack.slice(0, 5).map((tech) => (
+                    <span key={tech} className="border border-wez-cyan/20 bg-wez-cyan/[0.04] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-wez-cyan/75">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </aside>
         </motion.header>
 
@@ -340,20 +394,17 @@ export default function ProjectDetailPage() {
           </motion.div>
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="space-y-6">
             <HtmlPanel title="Project overview" html={project.longDescription} />
             {project.youtubeEmbed && <YouTubeEmbed url={project.youtubeEmbed} />}
           </div>
 
-          <aside className="space-y-6">
+          <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
             <HtmlPanel title="Highlights" html={project.highlights} />
 
             {project.techStack.length > 0 && (
-              <section className="border border-white/[0.08] bg-[rgba(5,11,17,0.72)] p-5">
-                <div className="mb-4 font-mono text-xs uppercase tracking-[0.16em] text-wez-cyan/80">
-                  Tech stack
-                </div>
+              <DossierPanel title="Tech stack" icon={CheckCircle2}>
                 <div className="flex flex-wrap gap-2">
                   {project.techStack.map((tech) => (
                     <span key={tech} className="border border-wez-cyan/20 bg-wez-cyan/[0.04] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-wez-cyan/70">
@@ -361,14 +412,11 @@ export default function ProjectDetailPage() {
                     </span>
                   ))}
                 </div>
-              </section>
+              </DossierPanel>
             )}
 
             {project.tags.length > 0 && (
-              <section className="border border-white/[0.08] bg-[rgba(5,11,17,0.72)] p-5">
-                <div className="mb-4 font-mono text-xs uppercase tracking-[0.16em] text-crimson/80">
-                  Tags
-                </div>
+              <DossierPanel title="Tags" icon={Radio} accent="crimson">
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span key={tag} className="border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-400">
@@ -376,7 +424,7 @@ export default function ProjectDetailPage() {
                     </span>
                   ))}
                 </div>
-              </section>
+              </DossierPanel>
             )}
           </aside>
         </div>
