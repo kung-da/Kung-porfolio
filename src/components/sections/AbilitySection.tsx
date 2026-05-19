@@ -1,11 +1,21 @@
 // Skills section
-import { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+import type { ElementType, ReactNode } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import {
+  Box,
+  Brain,
+  Cloud,
+  Code2,
+  Database,
+  Folder,
+  Globe2,
+  ServerCog,
+} from "lucide-react";
 
-// ── Color themes per domain ──────────────────────────────────────────────────
 const DOMAIN_COLORS = {
   pipeline: {
-    accent: "#00F5FF",      // Neon cyan
+    accent: "#00F5FF",
     accentDim: "#00F5FF",
     glow: "rgba(0,245,255,0.5)",
     glowSoft: "rgba(0,245,255,0.12)",
@@ -21,7 +31,7 @@ const DOMAIN_COLORS = {
     textAccent: "#00F5FF",
   },
   ai: {
-    accent: "#A855F7",      // Electric purple
+    accent: "#A855F7",
     accentDim: "#A855F7",
     glow: "rgba(168,85,247,0.5)",
     glowSoft: "rgba(168,85,247,0.12)",
@@ -37,7 +47,7 @@ const DOMAIN_COLORS = {
     textAccent: "#C084FC",
   },
   backend: {
-    accent: "#F97316",      // Ember orange
+    accent: "#F97316",
     accentDim: "#F97316",
     glow: "rgba(249,115,22,0.5)",
     glowSoft: "rgba(249,115,22,0.12)",
@@ -53,7 +63,7 @@ const DOMAIN_COLORS = {
     textAccent: "#FB923C",
   },
   cloud: {
-    accent: "#EF4444",      // Crimson red
+    accent: "#EF4444",
     accentDim: "#EF4444",
     glow: "rgba(239,68,68,0.5)",
     glowSoft: "rgba(239,68,68,0.12)",
@@ -69,7 +79,7 @@ const DOMAIN_COLORS = {
     textAccent: "#F87171",
   },
   frontend: {
-    accent: "#22D3EE",      // Sky cyan
+    accent: "#22D3EE",
     accentDim: "#22D3EE",
     glow: "rgba(34,211,238,0.5)",
     glowSoft: "rgba(34,211,238,0.12)",
@@ -85,7 +95,7 @@ const DOMAIN_COLORS = {
     textAccent: "#67E8F9",
   },
   tools: {
-    accent: "#10B981",      // Emerald green
+    accent: "#10B981",
     accentDim: "#10B981",
     glow: "rgba(16,185,129,0.5)",
     glowSoft: "rgba(16,185,129,0.12)",
@@ -104,10 +114,9 @@ const DOMAIN_COLORS = {
 
 type ColorTheme = typeof DOMAIN_COLORS[keyof typeof DOMAIN_COLORS];
 
-// ── Domain data ───────────────────────────────────────────────────────────────
 const DOMAINS = [
   {
-    id: "pipeline", label: "DATA ENGINEERING", icon: "⌬",
+    id: "pipeline", label: "DATA ENGINEERING", icon: Box,
     skills: [
       { name: "Apache Spark", lvl: 90, notes: "Used in 3 production pipelines, processing 10M+ events/day.", related: ["PySpark", "Databricks"] },
       { name: "Apache Airflow", lvl: 88, notes: "Orchestration for complex DAG-based ETL pipelines.", related: ["Luigi", "Prefect"] },
@@ -118,7 +127,7 @@ const DOMAINS = [
     ],
   },
   {
-    id: "ai", label: "AI / LLM", icon: "◈",
+    id: "ai", label: "AI / LLM", icon: Brain,
     skills: [
       { name: "LangChain", lvl: 85, notes: "LLM orchestration for RAG and agent systems.", related: ["LangGraph", "LlamaIndex"] },
       { name: "OpenAI API", lvl: 90, notes: "GPT-4/o integrations across multiple production systems.", related: ["Anthropic", "Gemini"] },
@@ -128,7 +137,7 @@ const DOMAINS = [
     ],
   },
   {
-    id: "backend", label: "BACKEND SYSTEMS", icon: "⚙",
+    id: "backend", label: "BACKEND SYSTEMS", icon: ServerCog,
     skills: [
       { name: "FastAPI", lvl: 90, notes: "High-performance async APIs for ML and data services.", related: ["Pydantic", "Uvicorn"] },
       { name: "Django", lvl: 82, notes: "Full-featured backend for complex web applications.", related: ["DRF", "Celery"] },
@@ -138,17 +147,17 @@ const DOMAINS = [
     ],
   },
   {
-    id: "cloud", label: "CLOUD & INFRA", icon: "☁",
+    id: "cloud", label: "CLOUD & INFRA", icon: Cloud,
     skills: [
-      { name: "AWS", lvl: 85, notes: "EC2, S3, Lambda, RDS, ECS — full production deployments.", related: ["GCP", "Azure"] },
+      { name: "AWS", lvl: 85, notes: "EC2, S3, Lambda, RDS, ECS - full production deployments.", related: ["GCP", "Azure"] },
       { name: "Docker", lvl: 92, notes: "Containerization for all deployment environments.", related: ["Podman", "Buildah"] },
       { name: "Kubernetes", lvl: 78, notes: "Container orchestration for auto-scaling workloads.", related: ["Helm", "ArgoCD"] },
       { name: "Terraform", lvl: 80, notes: "Infrastructure as code for repeatable deployments.", related: ["Pulumi", "CDK"] },
-      { name: "CI/CD", lvl: 87, notes: "GitHub Actions, GitLab CI — automated pipelines.", related: ["ArgoCD", "Tekton"] },
+      { name: "CI/CD", lvl: 87, notes: "GitHub Actions, GitLab CI - automated pipelines.", related: ["ArgoCD", "Tekton"] },
     ],
   },
   {
-    id: "frontend", label: "FRONTEND CRAFT", icon: "⬡",
+    id: "frontend", label: "FRONTEND CRAFT", icon: Code2,
     skills: [
       { name: "React", lvl: 93, notes: "Primary frontend weapon. Complex state, performance.", related: ["Next.js", "Remix"] },
       { name: "TypeScript", lvl: 90, notes: "Type-safe development across all frontend projects.", related: ["Zod", "ts-pattern"] },
@@ -157,7 +166,7 @@ const DOMAINS = [
     ],
   },
   {
-    id: "tools", label: "WORKFLOW & TOOLS", icon: "⊕",
+    id: "tools", label: "WORKFLOW & TOOLS", icon: Globe2,
     skills: [
       { name: "Git / GitHub", lvl: 95, notes: "Version control, PR reviews, GitHub Actions.", related: ["GitLab", "Bitbucket"] },
       { name: "Notion", lvl: 88, notes: "Project management and documentation system.", related: ["Linear", "Jira"] },
@@ -168,276 +177,433 @@ const DOMAINS = [
 ] as const;
 
 type DomainId = typeof DOMAINS[number]["id"];
+type Domain = typeof DOMAINS[number];
 type Skill = typeof DOMAINS[number]["skills"][number];
 
-// ── Proficiency bar (color-themed) ──────────────────────────────────────────
-const ProficiencyBar = ({ lvl, active, colors }: { lvl: number; active: boolean; colors: ColorTheme }) => {
-  const blocks = 10;
-  const filled = Math.round((lvl / 100) * blocks);
+const HudCorner = () => (
+  <>
+    <span className="pointer-events-none absolute left-4 top-4 h-5 w-5 border-l border-t border-wez-cyan/60" />
+    <span className="pointer-events-none absolute right-4 top-4 h-5 w-5 border-r border-t border-wez-cyan/60" />
+    <span className="pointer-events-none absolute bottom-4 left-4 h-5 w-5 border-b border-l border-wez-cyan/60" />
+    <span className="pointer-events-none absolute bottom-4 right-4 h-5 w-5 border-b border-r border-wez-cyan/60" />
+  </>
+);
+
+const SegmentedBar = ({
+  value,
+  colors,
+  compact = false,
+  segments = 10,
+}: {
+  value: number;
+  colors: ColorTheme;
+  compact?: boolean;
+  segments?: number;
+}) => {
+  const active = Math.round((value / 100) * segments);
+
   return (
-    <div className="flex gap-[3px] items-end">
-      {Array.from({ length: blocks }).map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{ scaleY: 0 }}
-          animate={active ? { scaleY: 1 } : { scaleY: 0 }}
-          transition={{ delay: i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            width: 7, height: i < filled ? 16 : 9,
-            background: i < filled
-              ? (i >= blocks * 0.8 ? colors.barFull : i >= blocks * 0.6 ? colors.barMid : colors.barBase)
-              : colors.barEmpty,
-            transformOrigin: "bottom",
-            boxShadow: i < filled ? `0 0 4px ${colors.barGlow}` : "none",
-          }}
-        />
-      ))}
-      <span className="font-mono text-xs ml-2 tabular-nums font-semibold" style={{ color: colors.accent }}>{lvl}</span>
+    <div className={`flex items-end gap-[3px] ${compact ? "gap-[2px]" : ""}`}>
+      {Array.from({ length: segments }).map((_, index) => {
+        const isActive = index < active;
+        return (
+          <motion.span
+            key={index}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: index * 0.025, duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className={`${compact ? "h-3 w-1.5" : "h-4 w-1.5 md:h-[18px] md:w-2"} shrink-0 rounded-[1px]`}
+            style={{
+              transformOrigin: "bottom",
+              background: isActive ? colors.barFull : colors.barEmpty,
+              border: isActive ? "none" : `1px solid ${colors.border}`,
+              boxShadow: isActive ? `0 0 10px ${colors.barGlow}` : "none",
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
 
-// ── Skill card (color-themed) ───────────────────────────────────────────────
-const SkillCard = ({ skill, index, isSelected, onSelect, colors }: {
-  skill: Skill; index: number; isSelected: boolean; onSelect: () => void; colors: ColorTheme;
+const CategoryNav = ({
+  activeDomain,
+  onSelect,
+}: {
+  activeDomain: DomainId;
+  onSelect: (domain: Domain) => void;
 }) => (
-  <motion.div
-    custom={index}
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1, transition: { delay: index * 0.06, type: "spring", stiffness: 320, damping: 18 } }}
-    exit={{ opacity: 0, scale: 0.8 }}
-    onClick={onSelect}
-    role="button"
-    tabIndex={0}
-    aria-label={`Select skill ${skill.name}`}
-    onKeyDown={(e) => e.key === "Enter" && onSelect()}
-    className="p-4 border transition-all duration-200 relative overflow-hidden"
-    style={{
-      cursor: "pointer",
-      borderColor: isSelected ? colors.borderActive : colors.border,
-      background: isSelected
-        ? colors.bgActive
-        : "rgba(10,10,18,0.7)",
-      boxShadow: isSelected
-        ? `0 0 20px ${colors.glowSoft}`
-        : `inset 0 1px 0 ${colors.barEmpty}, 0 2px 8px rgba(0,0,0,0.3)`,
-    }}
-    whileHover={{
-      borderColor: colors.borderActive,
-      background: "rgba(10,10,18,0.85)",
-      boxShadow: `0 0 20px ${colors.glowSoft}, inset 0 1px 0 ${colors.barEmpty}`,
-    }}
-  >
-    {isSelected && (
-      <motion.div layoutId="selected-skill" className="absolute top-0 left-0 right-0 h-px" style={{ background: colors.accent }} />
-    )}
-    <div
-      className="font-mono text-sm mb-2 tracking-wide"
-      style={{ color: isSelected ? colors.accent : "#E0E0E0", fontWeight: isSelected ? 600 : 400 }}
-    >
-      {skill.name}
+  <aside className="relative overflow-hidden border border-wez-cyan/15 bg-[#061017]/65 shadow-[0_0_45px_rgba(0,0,0,0.45)] backdrop-blur-md [clip-path:polygon(4%_0,100%_0,100%_92%,93%_100%,0_100%,0_4%)]">
+    <div className="absolute inset-0 bg-gradient-to-br from-wez-cyan/[0.06] via-transparent to-crimson/[0.035]" />
+    <div className="relative p-1">
+      {DOMAINS.map((domain) => {
+        const Icon = domain.icon as ElementType;
+        const active = domain.id === activeDomain;
+        const colors = DOMAIN_COLORS[domain.id];
+
+        return (
+          <button
+            key={domain.id}
+            onClick={() => onSelect(domain)}
+            className={[
+              "group relative flex w-full items-center gap-3 border-b border-white/[0.055] px-4 py-4 text-left transition-all duration-300",
+              "hover:bg-white/[0.035]",
+              active ? "text-wez-cyan shadow-[inset_3px_0_0_var(--domain-accent)]" : "text-zinc-300/80",
+            ].join(" ")}
+            style={{
+              "--domain-accent": colors.accent,
+              background: active ? colors.bgActive : undefined,
+            } as React.CSSProperties}
+          >
+            <span
+              className="grid h-8 w-8 place-items-center border transition-all duration-300"
+              style={{
+                borderColor: active ? colors.borderActive : "rgba(255,255,255,0.22)",
+                color: active ? colors.accent : "rgba(228,228,231,0.78)",
+                boxShadow: active ? `0 0 18px ${colors.glowSoft}` : "none",
+              }}
+            >
+              <Icon size={16} strokeWidth={1.65} />
+            </span>
+            <span className="text-xs font-medium uppercase tracking-[0.12em] md:text-sm">
+              {domain.label}
+            </span>
+            {active && (
+              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-crimson shadow-[0_0_10px_rgba(214,58,74,0.7)]" />
+            )}
+          </button>
+        );
+      })}
     </div>
-    <ProficiencyBar lvl={skill.lvl} active={true} colors={colors} />
-  </motion.div>
+    <div className="pointer-events-none absolute bottom-4 left-5 right-5 h-px bg-gradient-to-r from-transparent via-wez-cyan/25 to-transparent" />
+  </aside>
 );
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+const SkillCard = ({
+  skill,
+  index,
+  selected,
+  onSelect,
+  colors,
+}: {
+  skill: Skill;
+  index: number;
+  selected: boolean;
+  onSelect: () => void;
+  colors: ColorTheme;
+}) => (
+  <motion.button
+    type="button"
+    onClick={onSelect}
+    initial={{ opacity: 0, scale: 0.98 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.98 }}
+    transition={{ delay: index * 0.045, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    whileHover={{ y: -4 }}
+    className={[
+      "group relative h-full overflow-hidden p-4 text-left transition-colors duration-300 md:p-5",
+      "border bg-[#050b11]/72 backdrop-blur-md",
+      "[clip-path:polygon(6%_0,100%_0,100%_88%,94%_100%,0_100%,0_8%)]",
+    ].join(" ")}
+    style={{
+      borderColor: selected ? colors.borderActive : "rgba(255,255,255,0.13)",
+      boxShadow: selected
+        ? `0 0 28px ${colors.glowSoft}, inset 0 0 26px ${colors.bg}`
+        : "0 0 30px rgba(0,0,0,0.32)",
+    }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.025] via-transparent to-wez-cyan/[0.025]" />
+    {selected && (
+      <>
+        <motion.span
+          layoutId="selected-skill-edge"
+          className="absolute right-0 top-0 h-16 w-px"
+          style={{ background: colors.accent, boxShadow: `0 0 14px ${colors.glow}` }}
+        />
+        <span className="absolute right-5 top-5 h-4 w-4 border-r border-t border-crimson/85" />
+      </>
+    )}
+    <span className="absolute right-4 top-4 h-4 w-4 border-r border-t border-white/35 transition-colors group-hover:border-wez-cyan/50" />
+
+    <div className="relative flex items-center gap-2">
+      <span className="h-1.5 w-1.5 rounded-full bg-crimson shadow-[0_0_8px_rgba(214,58,74,0.7)]" />
+      <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-400">
+        Core module
+      </span>
+    </div>
+
+    <div className="relative mt-6">
+      <h3 className="font-title text-lg font-semibold tracking-wide text-zinc-100 md:text-xl">
+        {skill.name}
+      </h3>
+      <div className="mt-4 flex min-w-0 items-center justify-between gap-3">
+        <SegmentedBar value={skill.lvl} colors={colors} />
+        <span
+          className="shrink-0 font-mono text-base font-semibold tabular-nums md:text-lg"
+          style={{ color: colors.accent, textShadow: `0 0 10px ${colors.glowSoft}` }}
+        >
+          {skill.lvl}
+        </span>
+      </div>
+    </div>
+
+    <div className="relative mt-5 flex items-center justify-between">
+      <div className="flex flex-1 items-center gap-3">
+        <span className="text-[10px] uppercase tracking-[0.15em] text-zinc-500">Proficiency</span>
+        <span className="h-px flex-1 bg-white/[0.08]" />
+      </div>
+      <div className="ml-4 flex gap-1">
+        {Array.from({ length: 4 }).map((_, dot) => (
+          <span key={dot} className="h-1 w-1 rounded-full bg-crimson/90" />
+        ))}
+      </div>
+    </div>
+  </motion.button>
+);
+
+const DossierField = ({ label, children }: { label: string; children: ReactNode }) => (
+  <div className="border-b border-white/[0.08] pb-5">
+    <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-500">
+      {label}:
+    </p>
+    {children}
+  </div>
+);
+
+const SkillDossier = ({
+  domain,
+  skill,
+  colors,
+}: {
+  domain: Domain;
+  skill: Skill;
+  colors: ColorTheme;
+}) => (
+  <motion.aside
+    key={skill.name}
+    initial={{ opacity: 0, x: 24 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: 24 }}
+    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    className="relative min-h-[420px] overflow-hidden border border-white/[0.16] bg-[#050b11]/78 p-5 shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-md [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-crimson/[0.035]" />
+    <div className="relative flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div className="flex items-center gap-3">
+        <Folder size={17} className="text-zinc-200" strokeWidth={1.5} />
+        <h3 className="font-title text-sm font-semibold uppercase tracking-[0.14em] text-zinc-100">
+          Skill Dossier
+        </h3>
+      </div>
+      <div className="flex gap-1.5">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <span key={index} className="h-1 w-1 rounded-full bg-crimson" />
+        ))}
+      </div>
+    </div>
+
+    <div className="relative mt-6 space-y-5">
+      <DossierField label="Skill">
+        <span className="font-title text-2xl font-semibold" style={{ color: colors.accent }}>
+          {skill.name}
+        </span>
+      </DossierField>
+
+      <DossierField label="Category">
+        <span className="font-mono text-sm font-medium uppercase tracking-[0.08em] text-zinc-100">
+          {domain.label}
+        </span>
+      </DossierField>
+
+      <DossierField label="Proficiency">
+        <div className="flex flex-wrap items-center gap-6">
+          <span className="font-mono text-2xl font-light text-zinc-100">
+            <span className="font-semibold" style={{ color: colors.accent }}>{skill.lvl}</span>
+            <span className="text-zinc-200"> / 100</span>
+          </span>
+          <SegmentedBar value={skill.lvl} colors={colors} compact />
+        </div>
+      </DossierField>
+
+      <DossierField label="Related">
+        <div className="flex flex-wrap gap-2">
+          {skill.related.map((item) => (
+            <span
+              key={item}
+              className="border px-2.5 py-1 font-mono text-xs"
+              style={{ borderColor: `${colors.accent}40`, color: `${colors.accent}B3` }}
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </DossierField>
+    </div>
+
+    <div className="relative mt-6 border-t border-white/[0.08] pt-4">
+      <div className="flex items-end justify-between gap-5">
+        <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
+          {Array.from({ length: 18 }).map((_, index) => (
+            <span
+              key={index}
+              className="w-[2px] bg-zinc-200/75"
+              style={{ height: `${14 + ((index * 7) % 22)}px` }}
+            />
+          ))}
+        </div>
+        <div className="text-right">
+          <p className="text-[9px] uppercase tracking-[0.16em] text-zinc-500">
+            Module ID: {domain.id.toUpperCase()}-{String(skill.lvl).padStart(3, "0")}
+          </p>
+          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: colors.accent }}>
+            Ver. 2.1.0
+          </p>
+        </div>
+      </div>
+    </div>
+  </motion.aside>
+);
+
 export const AbilitySection = () => {
   const [activeDomain, setActiveDomain] = useState<DomainId>("pipeline");
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(
+    DOMAINS[0].skills.find((skill) => skill.name === "dbt") ?? DOMAINS[0].skills[0]
+  );
   const ref = useRef<HTMLElement>(null!);
   const inView = useInView(ref, { once: true, margin: "-10%" as any });
-  const currentDomain = DOMAINS.find((d) => d.id === activeDomain)!;
+  const currentDomain = DOMAINS.find((domain) => domain.id === activeDomain)!;
   const colors = DOMAIN_COLORS[activeDomain];
+  const activeSkill = selectedSkill && currentDomain.skills.some((skill) => skill.name === selectedSkill.name)
+    ? selectedSkill
+    : currentDomain.skills[0];
+  const overviewScore = useMemo(() => {
+    const allSkills = DOMAINS.flatMap((domain) => domain.skills);
+    return Math.round(allSkills.reduce((sum, skill) => sum + skill.lvl, 0) / allSkills.length);
+  }, []);
+
+  const selectDomain = (domain: Domain) => {
+    setActiveDomain(domain.id);
+    setSelectedSkill(domain.skills[0]);
+  };
 
   return (
     <section
       id="skills"
       ref={ref}
-      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
+      className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
       style={{ background: "transparent" }}
     >
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_15%_8%,rgba(214,58,74,0.08),transparent_26%),radial-gradient(circle_at_70%_40%,rgba(143,239,255,0.055),transparent_30%)]" />
+      <div className="absolute inset-0 -z-10 opacity-[0.2] [background-image:linear-gradient(rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.055)_1px,transparent_1px)] [background-size:42px_42px]" />
       <div className="absolute inset-0 section-vignette pointer-events-none" />
       <div className="absolute inset-0 section-floor pointer-events-none" />
+      <HudCorner />
 
-      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
-        {/* ── Header ── */}
-        <motion.div
+      <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
+        <motion.header
           initial={{ opacity: 0, y: -16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-8 xl:mb-10"
+          className="mb-8 md:mb-9"
         >
-          <h2 className="section-title font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="SKILLS">
-            SKILLS
-          </h2>
-
-          <div className="mt-4 font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex items-center gap-4 flex-wrap">
-            <span>Skill overview</span>
-            <span className="text-crimson/50">Core modules loaded</span>
-            <div className="flex gap-[2px]">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{ width: 8, height: 8, background: i < 9 ? "var(--crimson)" : "rgba(214,58,74,0.16)" }}
-                />
+          <div className="flex max-w-[720px] items-center gap-4">
+            <Database size={17} className="text-crimson" strokeWidth={1.6} />
+            <span className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-crimson sm:text-sm">
+              Capability Matrix
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-r from-crimson/70 via-crimson/20 to-transparent" />
+            <div className="flex gap-1.5">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <span key={index} className="h-1 w-1 rounded-full bg-crimson" />
               ))}
             </div>
-            <span className="text-crimson font-semibold">94%</span>
           </div>
-        </motion.div>
 
-        {/* ── Three-panel layout ── */}
-        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[220px_1fr_300px] xl:grid-cols-[240px_1fr_320px]">
-          {/* LEFT — Domain list */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="hidden lg:flex flex-col gap-1"
+          <h2
+            className="section-title mt-5 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl xl:text-7xl"
+            data-text="TECHNICAL SKILLS"
           >
-            {DOMAINS.map((d) => {
-              const isActive = activeDomain === d.id;
-              const c = DOMAIN_COLORS[d.id];
-              return (
-                <button
-                  key={d.id}
-                  onClick={() => { setActiveDomain(d.id); setSelectedSkill(null); }}
-                  className="flex items-center gap-3 px-4 py-3 text-left font-mono text-xs tracking-[0.15em] uppercase transition-all duration-150 border-l-2"
-                  style={{
-                    borderLeftColor: isActive ? c.accent : "transparent",
-                    background: isActive ? c.bg : "transparent",
-                    color: isActive ? c.accent : "rgba(224,224,224,0.5)",
-                    fontWeight: isActive ? 600 : 400,
-                  }}
-                >
-                  <span style={{ color: isActive ? c.accent : `${c.accent}66`, fontSize: "1rem" }}>{d.icon}</span>
-                  {d.label}
-                </button>
-              );
-            })}
+            Technical Skills
+          </h2>
+
+          <div className="mt-5 flex flex-wrap items-center gap-4">
+            <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-zinc-400 sm:text-sm">
+              Core modules loaded
+            </span>
+            <SegmentedBar value={overviewScore} colors={DOMAIN_COLORS.pipeline} compact />
+            <span className="font-mono text-sm font-medium text-wez-cyan">{overviewScore}%</span>
+          </div>
+        </motion.header>
+
+        <div className="grid gap-6 lg:grid-cols-[270px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_340px] 2xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:block"
+          >
+            <CategoryNav activeDomain={activeDomain} onSelect={selectDomain} />
           </motion.div>
 
-          {/* CENTER — Skill grid */}
-          <div>
-            {/* Mobile domain tabs */}
-            <div className="flex lg:hidden overflow-x-auto gap-2 mb-6 pb-2" style={{ scrollbarWidth: "none" }}>
-              {DOMAINS.map((d) => {
-                const isActive = activeDomain === d.id;
-                const c = DOMAIN_COLORS[d.id];
+          <div className="lg:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+              {DOMAINS.map((domain) => {
+                const active = activeDomain === domain.id;
+                const Icon = domain.icon as ElementType;
+                const domainColors = DOMAIN_COLORS[domain.id];
+
                 return (
                   <button
-                    key={d.id}
-                    onClick={() => { setActiveDomain(d.id); setSelectedSkill(null); }}
-                    className="flex-shrink-0 px-3 py-1.5 font-mono text-xs tracking-wider uppercase border transition-colors"
+                    key={domain.id}
+                    onClick={() => selectDomain(domain)}
+                    className="flex shrink-0 items-center gap-2 border px-3 py-2 font-mono text-xs uppercase tracking-wider"
                     style={{
-                      borderColor: isActive ? c.accent : "rgba(255,255,255,0.1)",
-                      color: isActive ? c.accent : "rgba(224,224,224,0.5)",
-                      background: isActive ? c.bg : "transparent",
+                      borderColor: active ? domainColors.borderActive : "rgba(255,255,255,0.12)",
+                      color: active ? domainColors.accent : "rgba(228,228,231,0.68)",
+                      background: active ? domainColors.bg : "rgba(5,11,17,0.5)",
                     }}
                   >
-                    {d.icon} {d.label}
+                    <Icon size={14} strokeWidth={1.6} />
+                    {domain.label}
                   </button>
                 );
               })}
             </div>
-
-            <AnimatePresence mode="popLayout">
-              <motion.div
-                key={activeDomain}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="grid grid-cols-2 sm:grid-cols-3 gap-3"
-              >
-                {currentDomain.skills.map((skill, i) => (
-                  <SkillCard
-                    key={skill.name}
-                    skill={skill}
-                    index={i}
-                    isSelected={selectedSkill?.name === skill.name}
-                    onSelect={() => setSelectedSkill(selectedSkill?.name === skill.name ? null : skill)}
-                    colors={colors}
-                  />
-                ))}
-              </motion.div>
-            </AnimatePresence>
           </div>
 
-          {/* RIGHT — Intelligence report */}
-          <div className="hidden lg:block h-[250px] xl:h-[250px]">
-            <AnimatePresence mode="wait" initial={false}>
-              {selectedSkill ? (
-              <motion.div
-                key={selectedSkill.name}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="relative h-full overflow-y-auto border p-5 backdrop-blur-sm"
-                style={{
-                  borderColor: `${colors.accent}66`,
-                  background: "rgba(10,10,18,0.75)",
-                  boxShadow: `inset 0 1px 0 ${colors.barEmpty}, 0 4px 16px rgba(0,0,0,0.3)`,
-                }}
-              >
-                <div className="absolute top-0 left-0 right-0 h-px" style={{
-                  background: `linear-gradient(to right, ${colors.accent}, ${colors.barMid}, transparent)`,
-                }} />
+          <motion.main
+            key={activeDomain}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="grid content-start items-start gap-4 self-start sm:grid-cols-2 sm:auto-rows-[170px] 2xl:grid-cols-3 2xl:auto-rows-[184px]"
+          >
+            {currentDomain.skills.map((skill, index) => (
+              <SkillCard
+                key={skill.name}
+                skill={skill}
+                index={index}
+                selected={activeSkill.name === skill.name}
+                onSelect={() => setSelectedSkill(skill)}
+                colors={colors}
+              />
+            ))}
+          </motion.main>
 
-                <p className="font-mono text-xs tracking-[0.2em] mb-5 uppercase" style={{ color: `${colors.accent}99` }}>Skill details</p>
-
-                <div className="space-y-3.5">
-                  <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>SKILL:</p>
-                    <p className="font-display text-base tracking-wide font-bold" style={{ color: colors.accent }}>{selectedSkill.name}</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-1" style={{ color: `${colors.accent}B3` }}>CATEGORY:</p>
-                    <p className="font-mono text-sm text-foreground/80">{currentDomain.label}</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-2" style={{ color: `${colors.accent}B3` }}>PROFICIENCY:</p>
-                    <ProficiencyBar lvl={selectedSkill.lvl} active={true} colors={colors} />
-                  </div>
-                  <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-2" style={{ color: `${colors.accent}B3` }}>NOTES:</p>
-                    <p className="font-mono text-sm text-foreground/75 leading-relaxed">{selectedSkill.notes}</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-xs tracking-[0.18em] uppercase mb-2" style={{ color: `${colors.accent}B3` }}>RELATED:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSkill.related.map((r) => (
-                        <span
-                          key={r}
-                          className="font-mono text-xs px-2.5 py-1 border"
-                          style={{ borderColor: `${colors.accent}40`, color: `${colors.accent}A6` }}
-                        >
-                          {r}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-              ) : (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex h-full items-center justify-center border"
-                style={{
-                  borderColor: `${colors.accent}14`,
-                  background: "rgba(10,10,18,0.5)",
-                }}
-              >
-                <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: `${colors.accent}66` }}>SELECT A SKILL</span>
-              </motion.div>
-              )}
+          <div className="lg:col-span-2 xl:col-span-1">
+            <AnimatePresence mode="wait">
+              <SkillDossier domain={currentDomain} skill={activeSkill} colors={colors} />
             </AnimatePresence>
           </div>
         </div>
+
+        <footer className="mt-8 flex flex-wrap gap-x-12 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+          <span><span className="text-crimson">//</span> User: Kung</span>
+          <span><span className="text-crimson">//</span> Role: Data Engineer</span>
+        </footer>
       </div>
+
+      <span className="absolute bottom-10 right-14 text-2xl font-light text-crimson">+</span>
     </section>
   );
 };
