@@ -41,8 +41,8 @@ export const Footer = () => {
       <div className="flex gap-4 mb-10">
         {[
           { label: "GITHUB", href: "https://github.com/kung-da" },
-          { label: "LINKEDIN", href: "https://linkedin.com/in/cung" },
-          { label: "EMAIL", href: "mailto:hello@cung-master.dev" },
+          { label: "LINKEDIN", href: "https://www.linkedin.com/in/h%C3%A0-sinh-cung-22480637b/" },
+          { label: "EMAIL", href: "mailto:cungpro2@gmail.com" },
         ].map((l) => (
           <a
             key={l.label}

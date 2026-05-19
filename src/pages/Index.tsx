@@ -26,7 +26,7 @@ const LazySection = ({ children }: { children: React.ReactNode }) => (
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(
-    typeof window !== "undefined" && (import.meta.env.DEV || !sessionStorage.getItem("booted"))
+    typeof window !== "undefined" && !sessionStorage.getItem("booted")
   );
   useEnragedMode();
 
@@ -54,25 +54,27 @@ const Index = () => {
         >
           <HeroSection />
 
-          <LazySection>
-            <AboutSection />
-          </LazySection>
+          <div className="section-continuum">
+            <LazySection>
+              <AboutSection />
+            </LazySection>
 
-          <LazySection>
-            <AbilitySection />
-          </LazySection>
+            <LazySection>
+              <AbilitySection />
+            </LazySection>
 
-          <LazySection>
-            <RaidArchives />
-          </LazySection>
+            <LazySection>
+              <RaidArchives />
+            </LazySection>
 
-          <LazySection>
-            <LegacySection />
-          </LazySection>
+            <LazySection>
+              <LegacySection />
+            </LazySection>
 
-          <LazySection>
-            <ContactTerminal />
-          </LazySection>
+            <LazySection>
+              <ContactTerminal />
+            </LazySection>
+          </div>
 
           <Footer />
         </motion.main>

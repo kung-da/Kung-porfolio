@@ -476,7 +476,7 @@ const SakuraBackground: React.FC = () => {
             pointFlower.offset = new Float32Array([0.0, 0.0, 0.0]);
             pointFlower.fader = Vector3.create(0.0, 10.0, 0.0);
             
-            pointFlower.numFlowers = 4000;
+            pointFlower.numFlowers = 2000;
             pointFlower.particles = new Array(pointFlower.numFlowers);
             pointFlower.dataArray = new Float32Array(pointFlower.numFlowers * (3 + 3 + 2));
             pointFlower.positionArrayOffset = 0;

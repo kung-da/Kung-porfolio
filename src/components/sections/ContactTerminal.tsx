@@ -1,276 +1,86 @@
 // Contact section
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Github, Linkedin, Mail, Radio } from "lucide-react";
 
-// ── Animation variants ────────────────────────────────────────────────────────
-const fieldVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
+const CONTACTS = [
+  { label: "GitHub", href: "https://github.com/kung-da", icon: Github },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/h%C3%A0-sinh-cung-22480637b/", icon: Linkedin },
+  { label: "Email", href: "mailto:cungpro2@gmail.com", icon: Mail },
+];
 
-const rightPanelVariants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 260, damping: 22, delay: 0.2 } },
-};
-
-// ── Particle field (canvas) ───────────────────────────────────────────────────
-const ParticleField = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let w = canvas.width = canvas.offsetWidth;
-    let h = canvas.height = canvas.offsetHeight;
-    const particles = Array.from({ length: 25 }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
-      alpha: Math.random() * 0.35 + 0.1, w: Math.random() * 2 + 0.5, h: Math.random() * 1 + 0.5,
-    }));
-    let rafId: number;
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      particles.forEach((p) => {
-        ctx.globalAlpha = p.alpha; ctx.fillStyle = "#00e5ff"; ctx.fillRect(p.x, p.y, p.w, p.h);
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0; if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-      });
-      rafId = requestAnimationFrame(draw);
-    };
-    draw();
-    const onResize = () => { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; };
-    window.addEventListener("resize", onResize);
-    return () => { cancelAnimationFrame(rafId); window.removeEventListener("resize", onResize); };
-  }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-30" />;
-};
-
-// ── Terminal input ──────────────────────────────────────────────────────────
-interface TermInputProps {
-  label: string; fieldId: string; placeholder: string; type?: string;
-  value: string; onChange: (v: string) => void; multiline?: boolean; rows?: number; required?: boolean;
-}
-const TermInput = ({ label, fieldId, placeholder, type = "text", value, onChange, multiline, rows = 4, required }: TermInputProps) => {
-  const [focused, setFocused] = useState(false);
-  const commonCls = "w-full bg-transparent border-0 border-b font-mono text-sm text-foreground py-3 outline-none transition-colors";
-  const borderColor = focused ? "border-wez-cyan" : "border-crimson/40";
-  return (
-    <div className="relative">
-      <label htmlFor={fieldId} className={`block font-mono text-sm tracking-[0.12em] mb-2 transition-colors ${focused ? "text-wez-cyan/80" : "text-crimson/60"}`}>
-        {label}:
-      </label>
-      <div className="relative">
-        {multiline ? (
-          <textarea id={fieldId} required={required} rows={rows} placeholder={placeholder} value={value}
-            onChange={(e) => onChange(e.target.value)} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-            className={`${commonCls} ${borderColor} resize-none`} style={{ caretColor: "#00e5ff" }} />
-        ) : (
-          <input id={fieldId} type={type} required={required} placeholder={placeholder} value={value}
-            onChange={(e) => onChange(e.target.value)} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-            className={`${commonCls} ${borderColor}`} style={{ caretColor: "#00e5ff" }} />
-        )}
-        <motion.div
-          animate={{ scaleX: focused ? 1 : 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute bottom-0 left-0 right-0 h-px bg-wez-cyan origin-left"
-          style={{ boxShadow: "0 0 6px rgba(0,229,255,0.6)" }}
-        />
-      </div>
-    </div>
-  );
-};
-
-// ── Main ─────────────────────────────────────────────────────────────────────
 export const ContactTerminal = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sending, setSending] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
-  const [txId, setTxId] = useState("");
-  const [flash, setFlash] = useState(false);
-
   const ref = useRef<HTMLElement>(null!);
   const inView = useInView(ref, { once: true, margin: "-10%" as any });
-  const set = (key: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [key]: v }));
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true); setError(false);
-    try {
-      await new Promise((r) => setTimeout(r, 1400));
-      const id = Math.random().toString(16).slice(2, 10).toUpperCase();
-      setTxId(id); setFlash(true);
-      setTimeout(() => setFlash(false), 600);
-      setSuccess(true);
-    } catch {
-      setError(true); setTimeout(() => setError(false), 3000);
-    } finally { setSending(false); }
-  };
-
-  const COMM_LINKS = [
-    { label: "GITHUB", href: "https://github.com/kung-da", icon: "⎇" },
-    { label: "LINKEDIN", href: "https://linkedin.com/in/cung", icon: "in" },
-    { label: "EMAIL RELAY", href: "mailto:hello@cung-master.dev", icon: "@" },
-  ];
 
   return (
-    <>
-      <AnimatePresence>
-        {flash && (
-          <motion.div initial={{ opacity: 0.8 }} animate={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}
-            className="fixed inset-0 bg-white z-[9999] pointer-events-none" />
-        )}
-      </AnimatePresence>
+    <section
+      id="contact"
+      ref={ref}
+      className="relative isolate flex min-h-[72svh] items-center overflow-hidden px-5 py-20 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
+      style={{ background: "transparent" }}
+    >
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_8%_42%,rgba(214,58,74,0.06),transparent_28%),radial-gradient(circle_at_92%_38%,rgba(143,239,255,0.055),transparent_30%)]" />
+      <div className="absolute inset-0 section-vignette pointer-events-none" />
 
-      <section id="contact" ref={ref} className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
-        style={{ background: "transparent" }}
-      >
-        <div className="absolute inset-0 section-vignette pointer-events-none" />
-        <div className="absolute inset-0 section-floor pointer-events-none" />
-        <ParticleField />
-
-        <div className="container relative z-10 mx-auto w-full max-w-[1280px]">
-          {/* ── Header ── */}
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-8 xl:mb-10"
-          >
-            <h2 className="section-title mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="CONTACT">
-              CONTACT
-            </h2>
-
-            <div className="font-mono text-xs tracking-[0.15em] text-wez-cyan/50 flex gap-4 md:gap-6 flex-wrap items-center">
-              <span>Available for contact</span>
-              <span className="text-crimson/50">Response under 24h</span>
-              <span className="text-crimson/50">ICT (UTC+7)</span>
-              <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} className="text-status-active">
-                Online
-              </motion.span>
-            </div>
-          </motion.div>
-
-          {/* ── Two-column grid ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* LEFT — Form */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            >
-              <AnimatePresence mode="wait">
-                {success ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="border border-wez-cyan/35 bg-[rgba(0,229,255,0.05)] p-12 text-center shadow-[inset_0_1px_0_rgba(143,239,255,0.06),0_4px_16px_rgba(0,0,0,0.3)]"
-                  >
-                    <p className="font-display text-lg font-bold text-wez-cyan tracking-[0.2em] mb-4">
-                      Message sent
-                    </p>
-                    <p className="font-mono text-sm text-foreground/70 leading-relaxed">
-                      I will respond soon.
-                    </p>
-                    <p className="font-mono text-xs text-wez-cyan/50 mt-5">TX_ID: [{txId}]</p>
-                  </motion.div>
-                ) : (
-                  <motion.form key="form" onSubmit={submit} className="flex flex-col gap-7">
-                    {[
-                      { label: "Name", key: "name" as const, placeholder: "Your name", type: "text" },
-                      { label: "Email", key: "email" as const, placeholder: "you@example.com", type: "email" },
-                    ].map((f, i) => (
-                      <motion.div key={f.key} custom={i} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-                        <TermInput fieldId={`contact-${f.key}`} label={f.label} placeholder={f.placeholder} type={f.type}
-                          value={form[f.key]} onChange={set(f.key)} required />
-                      </motion.div>
-                    ))}
-                    <motion.div custom={2} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-                      <TermInput fieldId="contact-message" label="Message" placeholder="Write your message..."
-                        value={form.message} onChange={set("message")} multiline rows={5} required />
-                    </motion.div>
-
-                    <motion.div custom={3} variants={fieldVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-                      <motion.button
-                        type="submit"
-                        disabled={sending}
-                        whileHover={!sending ? { x: 4 } : {}}
-                        whileTap={!sending ? { scale: 0.98 } : {}}
-                        className={`w-full py-3.5 px-6 font-mono text-sm tracking-[0.14em] border transition-all relative overflow-hidden flex items-center justify-center gap-3 ${error
-                            ? "border-enrage text-enrage bg-enrage/[0.06]"
-                            : sending
-                              ? "border-border/50 text-muted-foreground"
-                              : "border-crimson/50 text-foreground bg-crimson/[0.06] hover:bg-crimson/10 shadow-[0_0_20px_rgba(214,58,74,0.12)]"
-                          }`}
-                      >
-                        {sending && (
-                          <motion.div animate={{ width: ["0%", "100%"] }} transition={{ duration: 1.4, ease: "linear" }}
-                            className="absolute bottom-0 left-0 h-px bg-wez-cyan" style={{ boxShadow: "0 0 6px rgba(0,229,255,0.8)" }} />
-                        )}
-                        {error ? "Send failed. Retry" : sending ? "Sending..." : "Send message"}
-                      </motion.button>
-                    </motion.div>
-                  </motion.form>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* RIGHT — Comm links */}
-            <motion.div variants={rightPanelVariants} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-6">
-              <div>
-                <p className="font-mono text-sm text-wez-cyan/50 tracking-[0.18em] uppercase mb-3">
-                  Contact channels
-                </p>
-                <div className="h-px bg-border/30 mb-5" />
-                {COMM_LINKS.map((l, i) => (
-                  <motion.a
-                    key={l.label}
-                    href={l.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.3 + i * 0.1 }}
-                    whileHover={{ x: 4 }}
-                    className="flex items-center gap-3 py-3 border-b border-border/20 no-underline transition-colors group"
-                  >
-                    <div className="w-2 h-2 bg-crimson/60 rounded-full flex-shrink-0 group-hover:bg-crimson transition-colors" />
-                    <span className="font-mono text-xs text-wez-cyan/50 tracking-[0.15em] w-5 flex-shrink-0">{l.icon}</span>
-                    <span className="font-mono text-sm text-foreground/65 tracking-[0.18em] uppercase group-hover:text-foreground/85 transition-colors">
-                      {l.label}
-                    </span>
-                    <span className="font-mono text-sm text-crimson/40 ml-auto">→</span>
-                  </motion.a>
-                ))}
-              </div>
-
-              <div className="h-px bg-border/20" />
-
-              {/* Location */}
-              <div>
-                <p className="font-mono text-sm text-crimson/60 tracking-[0.18em] mb-3">Location:</p>
-                <div className="flex items-center gap-3">
-                  <motion.div
-                    animate={{ opacity: [1, 0.2, 1], scale: [1, 1.3, 1] }}
-                    transition={{ duration: 1.8, repeat: Infinity }}
-                    className="w-2 h-2 rounded-full bg-status-active flex-shrink-0"
-                    style={{ boxShadow: "0 0 10px rgba(0,255,136,0.5)" }}
-                  />
-                  <div>
-                    <p className="font-mono text-sm text-foreground/80 tracking-[0.12em]">Vietnam</p>
-                    <p className="font-mono text-xs text-wez-cyan/45 tracking-[0.12em] mt-0.5">ICT (UTC+7) · Response &lt; 24H</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+      <div className="container relative z-10 mx-auto w-full max-w-[760px]">
+        <motion.header
+          initial={{ opacity: 0, y: -16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-7 text-center"
+        >
+          <div className="mx-auto flex max-w-[380px] items-center justify-center gap-3">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-crimson/50 to-crimson/20" />
+            <Radio size={17} className="text-crimson" strokeWidth={1.6} />
+            <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-crimson sm:text-xs">
+              Contact
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent via-wez-cyan/45 to-wez-cyan/15" />
           </div>
-        </div>
-      </section>
-    </>
+
+          <h2
+            className="section-title mt-4 font-display text-3xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_16px_rgba(214,58,74,0.28)] sm:text-4xl"
+            data-text="CONTACT"
+          >
+            Contact
+          </h2>
+        </motion.header>
+
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto grid max-w-[520px] grid-cols-3 gap-3 sm:gap-4"
+        >
+          {CONTACTS.map((contact, index) => {
+            const Icon = contact.icon;
+            const isExternal = !contact.href.startsWith("mailto:");
+
+            return (
+              <motion.a
+                key={contact.label}
+                href={contact.href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noreferrer" : undefined}
+                initial={{ opacity: 0, y: 18 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: index * 0.07, duration: 0.35 }}
+                className="group relative flex aspect-square flex-col items-center justify-center overflow-hidden rounded-[8px] border border-white/[0.08] bg-black/45 p-3 no-underline shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_10px_24px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:border-wez-cyan/35 hover:bg-black/70 hover:shadow-[0_0_18px_rgba(143,239,255,0.09),0_14px_30px_rgba(0,0,0,0.28)] sm:p-4"
+                aria-label={`Open ${contact.label}`}
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-wez-cyan/60 to-transparent" />
+                <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-wez-cyan/25 bg-wez-cyan/[0.045] text-wez-cyan transition-colors group-hover:border-wez-cyan group-hover:bg-wez-cyan/10 sm:h-12 sm:w-12">
+                  <Icon size={20} strokeWidth={1.7} />
+                </span>
+                <span className="relative z-10 mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-300 transition-colors group-hover:text-wez-cyan sm:text-xs">
+                  {contact.label}
+                </span>
+              </motion.a>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
   );
 };

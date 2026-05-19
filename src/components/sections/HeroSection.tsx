@@ -80,11 +80,9 @@ export const HeroSection = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.0 }}
           >
-            <ScrambleText text="Full-stack Developer" delay={1.2} />
             <span className="text-[#8B0000] mx-2">|</span>
             <ScrambleText text="Data Engineer" delay={1.33} />
             <span className="text-[#8B0000] mx-2">|</span>
-            <ScrambleText text="Anime Soul" delay={1.47} />
           </motion.div>
           
           <br />

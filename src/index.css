@@ -140,6 +140,41 @@
     padding-bottom: clamp(4rem, 8vh, 6rem);
   }
 
+  .section-continuum {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 0% 32%, rgba(214, 58, 74, 0.12), transparent 24rem),
+      radial-gradient(circle at 100% 36%, rgba(143, 239, 255, 0.095), transparent 26rem),
+      linear-gradient(180deg, #050505 0%, #030303 45%, #050505 100%);
+  }
+
+  .section-continuum::before,
+  .section-continuum::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .section-continuum::before {
+    z-index: -2;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: 0 0;
+    opacity: 0.18;
+  }
+
+  .section-continuum::after {
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(214,58,74,0.1), transparent 24%, transparent 76%, rgba(143,239,255,0.075)),
+      radial-gradient(ellipse at 50% 36%, transparent 0%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.72) 100%);
+  }
+
   .section-title {
     position: relative;
     display: inline-block;
@@ -217,9 +252,7 @@
 
   /* ── Section panel floor — subtle gradient that lifts cards ── */
   .section-floor {
-    background:
-      radial-gradient(ellipse at 50% 100%, rgba(0,245,255,0.028) 0%, transparent 54%),
-      radial-gradient(ellipse at 20% 30%, rgba(0,229,255,0.018) 0%, transparent 40%);
+    background: transparent;
     pointer-events: none;
   }
 

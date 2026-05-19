@@ -1,47 +1,63 @@
 // Projects section
-import { useState, useMemo, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { ArrowUpRight, Database, ExternalLink, Github, Layers3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useProjects } from "@/hooks/useProjects";
 
 const FILTERS = ["ALL", "Pipeline", "Dashboard", "Analytics", "Other"] as const;
 type Filter = typeof FILTERS[number];
 
-const headerVariants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 18 } },
-};
-const cardVariants = {
-  hidden: { opacity: 0, y: 28, scale: 0.97 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] },
-  }),
-  exit: { opacity: 0, y: -12, scale: 0.97, transition: { duration: 0.2 } },
+const CATEGORY_META: Record<string, { code: string; color: string }> = {
+  Pipeline: { code: "PIPE", color: "#8FEFFF" },
+  Dashboard: { code: "DASH", color: "#00FF88" },
+  Analytics: { code: "ANLY", color: "#FCEE0A" },
+  Other: { code: "OTHR", color: "#A1A1AA" },
 };
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
+const headerVariants = {
+  hidden: { opacity: 0, y: -16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24, scale: 0.98 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { delay: i * 0.06, duration: 0.36, ease: [0.16, 1, 0.3, 1] },
+  }),
+  exit: { opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.18 } },
+};
+
 const SkeletonCard = ({ i }: { i: number }) => (
   <motion.div
     initial={{ opacity: 0 }}
-    animate={{ opacity: [0.3, 0.6, 0.3] }}
-    transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2 }}
-    className="bg-[rgba(10,10,18,0.6)] border border-[rgba(143,239,255,0.08)] h-[320px]"
+    animate={{ opacity: [0.28, 0.58, 0.28] }}
+    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.15 }}
+    className="min-h-[340px] border border-white/[0.08] bg-[rgba(5,11,17,0.68)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
   />
 );
 
-// ── Mission Card ──────────────────────────────────────────────────────────────
 interface CardProps {
   project: {
-    id: string; name: string; description: string; techStack: string[];
-    category: string; featured: boolean; slug: string; githubLink?: string; demoLink?: string; coverImage?: string | null;
+    id: string;
+    name: string;
+    description: string;
+    techStack: string[];
+    category: string;
+    featured: boolean;
+    slug: string;
+    githubLink?: string;
+    demoLink?: string;
   };
   index: number;
-  isFeatured?: boolean;
 }
 
-const MissionCard = ({ project: p, index, isFeatured }: CardProps) => {
+const MissionCard = ({ project: p, index }: CardProps) => {
   const navigate = useNavigate();
+  const meta = CATEGORY_META[p.category] ?? CATEGORY_META.Other;
   const openDetail = () => navigate(`/projects/${p.slug}`);
 
   return (
@@ -62,96 +78,100 @@ const MissionCard = ({ project: p, index, isFeatured }: CardProps) => {
           openDetail();
         }
       }}
-      className={`
-        group relative border transition-all duration-300 overflow-hidden flex flex-col cursor-pointer
-        border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.7)] backdrop-blur-sm
-        shadow-[inset_0_1px_0_rgba(143,239,255,0.04),0_2px_8px_rgba(0,0,0,0.3)]
-        hover:border-wez-cyan/40 hover:bg-[rgba(10,10,18,0.85)] hover:shadow-[0_0_24px_rgba(143,239,255,0.1),inset_0_1px_0_rgba(143,239,255,0.06),0_12px_24px_rgba(0,0,0,0.4)]
-        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wez-cyan
-        ${isFeatured ? "col-span-full" : ""}
-      `}
+      className="group relative flex min-h-[340px] cursor-pointer flex-col overflow-hidden border border-white/[0.08] bg-[rgba(5,11,17,0.76)] shadow-[inset_0_1px_0_rgba(255,255,255,0.045),0_18px_44px_rgba(0,0,0,0.26)] transition-all duration-300 hover:-translate-y-1 hover:border-wez-cyan/35 hover:bg-[rgba(8,15,23,0.9)] hover:shadow-[0_0_28px_rgba(143,239,255,0.11),inset_0_1px_0_rgba(143,239,255,0.08),0_24px_54px_rgba(0,0,0,0.34)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wez-cyan"
     >
-    {/* Top accent */}
-    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-crimson/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div
+        className="absolute inset-x-0 top-0 h-px opacity-80"
+        style={{ background: `linear-gradient(90deg, transparent, ${meta.color}AA, transparent)` }}
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(143,239,255,0.08),transparent_34%),radial-gradient(circle_at_90%_18%,rgba(214,58,74,0.08),transparent_30%)] opacity-80" aria-hidden="true" />
+      <div className="absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:32px_32px]" aria-hidden="true" />
 
-    {/* Cover image */}
-    {p.coverImage && (
-      <div className="relative overflow-hidden flex-shrink-0" style={{ height: isFeatured ? 240 : 160 }}>
-        <img
-          src={p.coverImage}
-          alt={p.name}
-          loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-          style={{ filter: "contrast(0.9) brightness(0.7)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
-      </div>
-    )}
+      <div className="relative z-10 flex flex-1 flex-col p-5 sm:p-6">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center border bg-black/20 font-mono text-xs font-semibold"
+              style={{ borderColor: `${meta.color}55`, color: meta.color }}
+              aria-hidden="true"
+            >
+              {meta.code}
+            </span>
+            <div>
+              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500">
+                Module {String(index + 1).padStart(2, "0")}
+              </p>
+              <p className="mt-1 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: meta.color }}>
+                {p.category}
+              </p>
+            </div>
+          </div>
 
-    {/* Content */}
-    <div className={`${isFeatured ? "p-6 md:p-7" : "p-5"} flex-1 flex flex-col gap-3`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-display text-lg font-bold leading-snug tracking-wide text-foreground">
-            {p.name}
-          </p>
-          <p className="font-mono text-xs text-crimson/60 tracking-[0.12em]">
-            Category: {p.category}
-          </p>
+          <span className={`shrink-0 border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] ${p.featured ? "border-crimson/45 bg-crimson/10 text-enrage" : "border-white/10 bg-white/[0.03] text-zinc-500"}`}>
+            {p.featured ? "Featured" : "Archive"}
+          </span>
         </div>
-        {p.featured ? (
-          <span className="font-mono text-[11px] tracking-wider border border-crimson/50 text-enrage px-2 py-0.5 bg-crimson/10 whitespace-nowrap flex-shrink-0">
-            Featured
-          </span>
-        ) : (
-          <span className="font-mono text-[11px] tracking-wider border border-border/30 text-muted-foreground px-2 py-0.5 whitespace-nowrap flex-shrink-0">
-            Available
-          </span>
-        )}
-      </div>
 
-      <p className="font-mono text-sm text-foreground/65 leading-relaxed line-clamp-2">
-        {p.description}
-      </p>
+        <h3 className="font-display text-xl font-bold leading-tight text-zinc-50 transition-colors duration-200 group-hover:text-wez-cyan">
+          {p.name}
+        </h3>
 
-      <div className="flex flex-wrap gap-2">
-        {p.techStack.slice(0, 4).map((t) => (
-          <span key={t} className="font-mono text-xs tracking-[0.12em] border border-wez-cyan/20 text-wez-cyan/65 px-2.5 py-1 uppercase">
-            {t}
+        <p className="mt-4 min-h-[72px] font-mono text-sm leading-relaxed text-zinc-400 line-clamp-3">
+          {p.description}
+        </p>
+
+        <div className="mt-5 flex min-h-[64px] flex-wrap content-start gap-2">
+          {p.techStack.slice(0, 5).map((tech) => (
+            <span
+              key={tech}
+              className="border border-wez-cyan/20 bg-wez-cyan/[0.04] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-wez-cyan/70"
+            >
+              {tech}
+            </span>
+          ))}
+          {p.techStack.length > 5 && (
+            <span className="border border-white/10 px-2.5 py-1 font-mono text-[11px] text-zinc-500">
+              +{p.techStack.length - 5}
+            </span>
+          )}
+        </div>
+
+        <div className="mt-auto flex items-center gap-2 border-t border-white/[0.08] pt-5">
+          <span className="flex flex-1 items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-zinc-400 transition-colors group-hover:text-wez-cyan">
+            Open dossier
+            <ArrowUpRight size={14} strokeWidth={1.7} />
           </span>
-        ))}
+          {p.githubLink && (
+            <a
+              href={p.githubLink}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`View ${p.name} on GitHub`}
+              onClick={(event) => event.stopPropagation()}
+              className="flex h-9 w-9 items-center justify-center border border-wez-cyan/25 text-wez-cyan/70 transition-colors hover:border-wez-cyan hover:bg-wez-cyan/10 hover:text-wez-cyan"
+            >
+              <Github size={15} strokeWidth={1.8} />
+            </a>
+          )}
+          {p.demoLink && (
+            <a
+              href={p.demoLink}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`View live demo of ${p.name}`}
+              onClick={(event) => event.stopPropagation()}
+              className="flex h-9 w-9 items-center justify-center border border-crimson/35 text-enrage/80 transition-colors hover:border-crimson hover:bg-crimson/10 hover:text-enrage"
+            >
+              <ExternalLink size={15} strokeWidth={1.8} />
+            </a>
+          )}
+        </div>
       </div>
-
-      <div className="flex gap-2 mt-auto">
-        {p.githubLink && (
-          <a
-            href={p.githubLink}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(event) => event.stopPropagation()}
-            className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-wez-cyan/30 text-wez-cyan/80 py-2.5 no-underline transition-colors hover:bg-wez-cyan/10 hover:text-wez-cyan"
-          >
-            GitHub
-          </a>
-        )}
-        {p.demoLink && (
-          <a
-            href={p.demoLink}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(event) => event.stopPropagation()}
-            className="flex-1 text-center font-mono text-xs tracking-[0.12em] border border-crimson/40 text-enrage/80 py-2.5 no-underline transition-colors hover:bg-crimson/10 hover:text-enrage"
-          >
-            Live demo
-          </a>
-        )}
-      </div>
-    </div>
     </motion.article>
   );
 };
 
-// ── Main ─────────────────────────────────────────────────────────────────────
 export const RaidArchives = () => {
   const { projects, loading } = useProjects();
   const [filter, setFilter] = useState<Filter>("ALL");
@@ -163,98 +183,92 @@ export const RaidArchives = () => {
     return [...base].sort((a, b) => Number(b.featured) - Number(a.featured));
   }, [projects, filter]);
 
-  const featured = filtered.find((p) => p.featured);
-  const rest = filtered.filter((p) => !p.featured || p !== featured);
-
   const total = projects.length;
-  const active = projects.filter((p) => p.featured).length;
-  const sealed = total - active;
+  const featured = projects.filter((p) => p.featured).length;
+  const other = total - featured;
 
   return (
     <section
       id="projects"
       ref={ref}
-      className="content-section relative overflow-hidden px-6 md:px-10 xl:px-16"
+      className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
       style={{ background: "transparent" }}
     >
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(214,58,74,0.07),transparent_30%),radial-gradient(circle_at_78%_36%,rgba(143,239,255,0.055),transparent_34%)]" />
       <div className="absolute inset-0 section-vignette pointer-events-none" />
       <div className="absolute inset-0 section-floor pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto w-full max-w-[1440px]">
-        {/* ── Header ── */}
-        <motion.div
+      <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
+        <motion.header
           variants={headerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="mb-8 xl:mb-10"
+          className="mb-8 md:mb-9"
         >
-          <h2 className="section-title mb-6 font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl" data-text="PROJECTS">
-            PROJECTS
+          <div className="flex max-w-[760px] items-center gap-4">
+            <Database size={17} className="text-crimson" strokeWidth={1.6} />
+            <span className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-crimson sm:text-sm">
+              Project Archive
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-r from-crimson/70 via-crimson/20 to-transparent" />
+          </div>
+
+          <h2
+            className="section-title mt-5 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl xl:text-7xl"
+            data-text="PROJECTS"
+          >
+            Projects
           </h2>
 
-          {/* Stats row */}
-          <div className="border border-[rgba(143,239,255,0.1)] bg-[rgba(10,10,18,0.6)] p-4 flex items-center justify-between flex-wrap gap-3 shadow-[inset_0_1px_0_rgba(143,239,255,0.03)]">
-            <span className="font-mono text-xs text-wez-cyan/70 tracking-[0.2em]">
-              Project archive
-            </span>
-            <div className="flex gap-5">
-              {[
-                { label: "Total", value: total, cls: "text-wez-cyan/70" },
-                { label: "Featured", value: active, cls: "text-enrage" },
-                { label: "Other", value: sealed, cls: "text-muted-foreground" },
-              ].map((s) => (
-                <span key={s.label} className={`font-mono text-xs tracking-wider ${s.cls}`}>
-                  {s.label}: [{s.value}]
-                </span>
-              ))}
-            </div>
+          <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-xs uppercase tracking-[0.14em] text-zinc-500">
+            <span><span className="text-wez-cyan">//</span> Total: <strong className="font-medium text-wez-cyan">{total}</strong></span>
+            <span><span className="text-crimson">//</span> Featured: <strong className="font-medium text-enrage">{featured}</strong></span>
+            <span><span className="text-zinc-600">//</span> Archive: <strong className="font-medium text-zinc-300">{other}</strong></span>
+          </div>
+        </motion.header>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.12, duration: 0.35 }}
+          className="mb-6 grid gap-4 border border-white/[0.08] bg-[rgba(5,11,17,0.64)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:grid-cols-[minmax(0,1fr)_auto]"
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <Layers3 size={16} className="shrink-0 text-wez-cyan" strokeWidth={1.6} />
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-wez-cyan/80">
+              {filtered.length} visible modules
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((f) => {
+              const isActive = filter === f;
+              return (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] transition-all sm:px-4 ${isActive ? "border-crimson bg-crimson/[0.12] text-enrage shadow-[0_0_18px_rgba(214,58,74,0.14)]" : "border-white/[0.08] bg-white/[0.02] text-zinc-500 hover:border-wez-cyan/30 hover:text-wez-cyan/80"}`}
+                >
+                  {f}
+                </button>
+              );
+            })}
           </div>
         </motion.div>
 
-        {/* ── Filters ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.15 }}
-          className="flex gap-2 mb-8 flex-wrap"
-        >
-          {FILTERS.map((f) => {
-            const isActive = filter === f;
-            return (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`font-mono text-xs tracking-[0.2em] uppercase px-4 py-2 border transition-all relative overflow-hidden ${isActive
-                    ? "border-crimson text-enrage bg-crimson/[0.12]"
-                    : "border-border/40 text-muted-foreground hover:text-foreground/80 hover:border-border/70"
-                  }`}
-              >
-                {f}
-              </button>
-            );
-          })}
-        </motion.div>
-
-        {/* ── Grid ── */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {[0, 1, 2].map((i) => <SkeletonCard key={i} i={i} />)}
-            <div className="col-span-full text-center font-mono text-xs tracking-widest text-wez-cyan/60 mt-4">
-              <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
-                Loading projects...
-              </motion.span>
-            </div>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20 font-mono text-sm tracking-[0.25em] text-crimson/50 uppercase relative">
+          <div className="border border-white/[0.08] bg-[rgba(5,11,17,0.6)] py-16 text-center font-mono text-xs uppercase tracking-[0.2em] text-crimson/70">
             No projects found in this category
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {featured && <MissionCard key={featured.id} project={featured} index={0} isFeatured />}
-              {rest.map((p, i) => (
-                <MissionCard key={p.id} project={p} index={i + (featured ? 1 : 0)} />
+            <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((project, index) => (
+                <MissionCard key={project.id} project={project} index={index} />
               ))}
             </motion.div>
           </AnimatePresence>

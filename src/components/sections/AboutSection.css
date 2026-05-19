@@ -9,8 +9,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: clamp(7rem, 13vh, 10rem) 1.5rem clamp(4rem, 8vh, 6rem);
-  background: #080808;
+  padding: clamp(7rem, 13vh, 10rem) 1.5rem clamp(6rem, 12vh, 9rem);
+  background: transparent;
 }
 
 .about-kung-section::before {
@@ -19,8 +19,8 @@
   inset: 0;
   z-index: -3;
   background-image:
-    linear-gradient(rgba(239, 68, 68, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(239, 68, 68, 0.025) 1px, transparent 1px);
+    linear-gradient(rgba(239, 68, 68, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 68, 68, 0.026) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
 }
@@ -30,7 +30,9 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(ellipse at center, transparent 36%, rgba(0, 0, 0, 0.72) 100%);
+  background:
+    radial-gradient(circle at 24% 30%, rgba(239, 68, 68, 0.055), transparent 34%),
+    radial-gradient(ellipse at center, transparent 36%, rgba(0, 0, 0, 0.56) 100%);
   pointer-events: none;
 }
 
@@ -91,7 +93,7 @@
   gap: clamp(3rem, 5.5vw, 5.25rem);
   width: 100%;
   max-width: 1120px;
-  transform: translateY(clamp(8px, 2vh, 28px));
+  transform: translateY(0);
 }
 
 .about-kung-card {
@@ -659,7 +661,7 @@
   .about-kung-section {
     padding-inline: 1rem;
     min-height: auto;
-    padding-block: 4rem;
+    padding-block: 4rem 5.5rem;
   }
 
   .about-kung-inner {
@@ -702,7 +704,7 @@
   .about-kung-inner {
     max-width: 920px;
     gap: clamp(2.25rem, 5vw, 4rem);
-    transform: translateY(0.75rem);
+    transform: none;
   }
 
   .about-kung-card {
