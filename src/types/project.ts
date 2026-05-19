@@ -110,12 +110,23 @@ export function richTextToHTML(richText: NotionRichText): string {
     .replace(/\n/g, "<br />");
 }
 
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 // ─── Mapper: NotionProjectRaw → ProjectCard ──────────────────────
 export function mapToProjectCard(raw: NotionProjectRaw): ProjectCard {
   const props = raw.properties;
+  const name = richTextToPlain(props.Name.title);
+  const slug = richTextToPlain(props.Slug.rich_text) || slugify(name) || raw.id;
+
   return {
     id:          raw.id,
-    name:        richTextToPlain(props.Name.title),
+    name,
     description: richTextToPlain(props.Description.rich_text),
     category:    props.Category.select?.name ?? "Other",
     techStack:   props.TechStack.multi_select.map((t) => t.name),
@@ -123,7 +134,7 @@ export function mapToProjectCard(raw: NotionProjectRaw): ProjectCard {
     githubLink:  props.GithubLink.url,
     demoLink:    props.DemoLink.url,
     featured:    props.Featured.checkbox,
-    slug:        richTextToPlain(props.Slug.rich_text),
+    slug,
   };
 }
 

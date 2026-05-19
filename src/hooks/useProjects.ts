@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Project } from "@/types/project";
+import type { ProjectCard } from "@/types/project";
 
 export function useProjects() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

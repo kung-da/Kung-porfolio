@@ -20,8 +20,8 @@ import {
 } from "../src/types/project";
 
 // ─── Notion API config ───────────────────────────────────────────
-const NOTION_API_KEY     = process.env.NOTION_API_KEY     ?? process.env.VITE_NOTION_API_KEY;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID ?? process.env.VITE_NOTION_DATABASE_ID;
+const NOTION_API_KEY     = process.env.NOTION_API_KEY;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 const NOTION_VERSION     = "2022-06-28";
 const NOTION_BASE        = "https://api.notion.com/v1";
 
