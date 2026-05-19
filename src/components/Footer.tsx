@@ -27,13 +27,13 @@ export const Footer = () => {
       <div className="text-center mb-10 mt-4">
         <h2
           className="font-display text-[24px] md:text-[28px] tracking-[0.3em] leading-none glitch-hover"
-          data-text="WEZAEMON"
+          data-text="HÀ SINH CUNG"
           style={{ color: "#D63A4A" }}
         >
-          WEZAEMON
+          HÀ SINH CUNG
         </h2>
         <div className="font-mono-ui text-[10px] tracking-[0.5em] mt-2 text-dim uppercase">
-          WARDEN OF THE DIGITAL GRAVE
+          DATA ENGINEER
         </div>
       </div>
 

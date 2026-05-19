@@ -133,11 +133,11 @@
 
   .content-section {
     scroll-margin-top: var(--fixed-header-space);
-    min-height: 100svh;
+    min-height: calc(100svh - var(--fixed-header-space));
     display: flex;
     align-items: center;
-    padding-top: clamp(4rem, 8vh, 6rem);
-    padding-bottom: clamp(4rem, 8vh, 6rem);
+    padding-top: clamp(7rem, 13vh, 10rem);
+    padding-bottom: clamp(6rem, 12vh, 9rem);
   }
 
   .section-continuum {
@@ -361,6 +361,14 @@
   .atmospheric-noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     pointer-events: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .content-section {
+    min-height: auto;
+    padding-top: 4rem;
+    padding-bottom: 5.5rem;
   }
 }
 
