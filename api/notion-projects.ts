@@ -8,16 +8,56 @@
 //   GET /api/notion-projects?slug=xxx → 1 project theo slug (ProjectDetail)
 // ═══════════════════════════════════════════════════════════════════
 
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import type {
-  NotionProjectRaw,
-  ProjectCard,
-  ProjectDetail,
-} from "../src/types/project";
-import {
-  mapToProjectCard,
-  mapToProjectDetail,
-} from "../src/types/project";
+type VercelRequest = {
+  method?: string;
+  query: Record<string, string | string[] | undefined>;
+};
+
+type VercelResponse = {
+  setHeader(name: string, value: string): void;
+  status(code: number): {
+    end(): void;
+    json(body: unknown): void;
+  };
+};
+
+type NotionRichText = Array<{
+  plain_text?: string;
+  annotations?: {
+    bold?: boolean;
+    italic?: boolean;
+    strikethrough?: boolean;
+    code?: boolean;
+  };
+  href?: string | null;
+}>;
+
+type ProjectCard = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  techStack: string[];
+  coverImage: string | null;
+  githubLink: string | null;
+  demoLink: string | null;
+  featured: boolean;
+  slug: string;
+};
+
+type ProjectDetail = ProjectCard & {
+  longDescription: string;
+  highlights: string;
+  timeline: string | null;
+  status: string;
+  tags: string[];
+  youtubeEmbed: string | null;
+};
+
+type NotionProjectRaw = {
+  id: string;
+  properties: Record<string, any>;
+};
 
 // ─── Notion API config ───────────────────────────────────────────
 const NOTION_API_KEY     = process.env.NOTION_API_KEY ?? process.env.VITE_NOTION_API_KEY;
@@ -55,6 +95,69 @@ async function queryPublishedProjects(): Promise<NotionProjectRaw[]> {
 
   const data = await res.json();
   return data.results as NotionProjectRaw[];
+}
+
+function plain(richText?: NotionRichText): string {
+  return richText?.map((item) => item.plain_text ?? "").join("") ?? "";
+}
+
+function html(richText?: NotionRichText): string {
+  return richText
+    ?.map((item) => {
+      let text = (item.plain_text ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      if (item.annotations?.bold) text = `<strong>${text}</strong>`;
+      if (item.annotations?.italic) text = `<em>${text}</em>`;
+      if (item.annotations?.code) text = `<code>${text}</code>`;
+      if (item.annotations?.strikethrough) text = `<del>${text}</del>`;
+      if (item.href) text = `<a href="${item.href}" target="_blank" rel="noopener">${text}</a>`;
+      return text;
+    })
+    .join("")
+    .replace(/\n/g, "<br />") ?? "";
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function mapToProjectCard(raw: NotionProjectRaw): ProjectCard {
+  const props = raw.properties;
+  const name = plain(props.Name?.title);
+
+  return {
+    id: raw.id,
+    name,
+    description: plain(props.Description?.rich_text),
+    category: props.Category?.select?.name ?? "Other",
+    techStack: props.TechStack?.multi_select?.map((item: { name: string }) => item.name) ?? [],
+    coverImage: props.CoverImage?.url ?? null,
+    githubLink: props.GithubLink?.url ?? null,
+    demoLink: props.DemoLink?.url ?? null,
+    featured: props.Featured?.checkbox ?? false,
+    slug: plain(props.Slug?.rich_text) || slugify(name) || raw.id,
+  };
+}
+
+function mapToProjectDetail(raw: NotionProjectRaw): ProjectDetail {
+  const props = raw.properties;
+
+  return {
+    ...mapToProjectCard(raw),
+    longDescription: html(props.LongDescription?.rich_text),
+    highlights: html(props.Highlights?.rich_text),
+    timeline: plain(props.Timeline?.rich_text) || null,
+    status: props.Status?.select?.name ?? "Completed",
+    tags: props.Tags?.multi_select?.map((item: { name: string }) => item.name) ?? [],
+    youtubeEmbed: props.YoutubeEmbed?.url ?? null,
+  };
 }
 
 // ─── Demo fallback data ───────────────────────────────────────────

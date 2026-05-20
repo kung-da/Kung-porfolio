@@ -93,7 +93,7 @@ export function richTextToPlain(richText?: NotionRichText): string {
 // Chuyển bold/italic/code sang HTML tags để render trong detail page.
 export function richTextToHTML(richText?: NotionRichText): string {
   return richText
-    .map((block) => {
+    ?.map((block) => {
       let text = block.plain_text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
