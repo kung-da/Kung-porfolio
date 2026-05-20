@@ -198,12 +198,8 @@ export const RaidArchives = () => {
       id="projects"
       ref={ref}
       className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
-      style={{ background: "transparent" }}
+      style={{ background: "#000" }}
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(214,58,74,0.07),transparent_30%),radial-gradient(circle_at_78%_36%,rgba(143,239,255,0.055),transparent_34%)]" />
-      <div className="absolute inset-0 section-vignette pointer-events-none" />
-      <div className="absolute inset-0 section-floor pointer-events-none" />
-
       <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
         <motion.header
           variants={headerVariants}

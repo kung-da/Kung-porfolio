@@ -145,8 +145,8 @@
     isolation: isolate;
     overflow: hidden;
     background:
-      radial-gradient(circle at 0% 32%, rgba(214, 58, 74, 0.12), transparent 24rem),
-      radial-gradient(circle at 100% 36%, rgba(143, 239, 255, 0.095), transparent 26rem),
+      radial-gradient(circle at 0% 50%, rgba(214, 58, 74, 0.12), transparent 24rem),
+      radial-gradient(circle at 100% 50%, rgba(143, 239, 255, 0.095), transparent 26rem),
       linear-gradient(180deg, #050505 0%, #030303 45%, #050505 100%);
   }
 
@@ -172,7 +172,14 @@
     z-index: -1;
     background:
       linear-gradient(90deg, rgba(214,58,74,0.1), transparent 24%, transparent 76%, rgba(143,239,255,0.075)),
-      radial-gradient(ellipse at 50% 36%, transparent 0%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.72) 100%);
+      radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.72) 100%);
+  }
+
+  .pure-black-sections {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #000;
   }
 
   .section-title {

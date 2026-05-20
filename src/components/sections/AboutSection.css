@@ -85,6 +85,17 @@
   font-size: 14px;
 }
 
+.about-kung-section {
+  background: #000;
+}
+
+.about-kung-section::before,
+.about-kung-section::after,
+.about-kung-glow,
+.about-kung-plus {
+  display: none;
+}
+
 .about-kung-inner {
   position: relative;
   z-index: 1;

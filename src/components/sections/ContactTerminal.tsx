@@ -20,7 +20,7 @@ export const ContactTerminal = () => {
       className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
       style={{ background: "transparent" }}
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_8%_42%,rgba(214,58,74,0.06),transparent_28%),radial-gradient(circle_at_92%_38%,rgba(143,239,255,0.055),transparent_30%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_8%_50%,rgba(214,58,74,0.06),transparent_28%),radial-gradient(circle_at_92%_50%,rgba(143,239,255,0.055),transparent_30%)]" />
       <div className="absolute inset-0 section-vignette pointer-events-none" />
 
       <div className="container relative z-10 mx-auto w-full max-w-[760px]">

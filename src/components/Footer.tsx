@@ -18,7 +18,7 @@ export const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative pt-16 pb-8 bg-[#030305] overflow-hidden flex flex-col items-center">
+    <footer className="relative pt-16 pb-8 bg-black overflow-hidden flex flex-col items-center">
       {/* Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#D63A4A33]" />
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#D63A4A] opacity-40 shadow-[0_0_8px_#D63A4A44]" />

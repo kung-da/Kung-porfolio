@@ -54,7 +54,7 @@ const Index = () => {
         >
           <HeroSection />
 
-          <div className="section-continuum">
+          <div className="pure-black-sections">
             <LazySection>
               <AboutSection />
             </LazySection>
@@ -70,7 +70,9 @@ const Index = () => {
             <LazySection>
               <LegacySection />
             </LazySection>
+          </div>
 
+          <div className="section-continuum">
             <LazySection>
               <ContactTerminal />
             </LazySection>

@@ -180,15 +180,6 @@ type DomainId = typeof DOMAINS[number]["id"];
 type Domain = typeof DOMAINS[number];
 type Skill = typeof DOMAINS[number]["skills"][number];
 
-const HudCorner = () => (
-  <>
-    <span className="pointer-events-none absolute left-4 top-4 h-5 w-5 border-l border-t border-wez-cyan/60" />
-    <span className="pointer-events-none absolute right-4 top-4 h-5 w-5 border-r border-t border-wez-cyan/60" />
-    <span className="pointer-events-none absolute bottom-4 left-4 h-5 w-5 border-b border-l border-wez-cyan/60" />
-    <span className="pointer-events-none absolute bottom-4 right-4 h-5 w-5 border-b border-r border-wez-cyan/60" />
-  </>
-);
-
 const SegmentedBar = ({
   value,
   colors,
@@ -491,14 +482,8 @@ export const AbilitySection = () => {
       id="skills"
       ref={ref}
       className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
-      style={{ background: "transparent" }}
+      style={{ background: "#000" }}
     >
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_15%_8%,rgba(214,58,74,0.08),transparent_26%),radial-gradient(circle_at_70%_40%,rgba(143,239,255,0.055),transparent_30%)]" />
-      <div className="absolute inset-0 -z-10 opacity-[0.2] [background-image:linear-gradient(rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.055)_1px,transparent_1px)] [background-size:42px_42px]" />
-      <div className="absolute inset-0 section-vignette pointer-events-none" />
-      <div className="absolute inset-0 section-floor pointer-events-none" />
-      <HudCorner />
-
       <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
         <motion.header
           initial={{ opacity: 0, y: -16 }}
@@ -603,7 +588,6 @@ export const AbilitySection = () => {
         </footer>
       </div>
 
-      <span className="absolute bottom-10 right-14 text-2xl font-light text-crimson">+</span>
     </section>
   );
 };
