@@ -184,15 +184,20 @@
     background: #000;
   }
 
-  .is-wheel-scrolling .backdrop-blur-sm,
-  .is-wheel-scrolling .backdrop-blur-md,
-  .is-wheel-scrolling .backdrop-blur-lg {
+  .is-wheel-scrolling .content-section:not(.skills-section) .backdrop-blur-sm,
+  .is-wheel-scrolling .content-section:not(.skills-section) .backdrop-blur-md,
+  .is-wheel-scrolling .content-section:not(.skills-section) .backdrop-blur-lg {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
 
-  .is-wheel-scrolling .content-section * {
-    transition-duration: 0ms !important;
+  .is-wheel-scrolling .content-section:not(.skills-section) * {
+    transition-duration: 120ms !important;
+  }
+
+  .skills-section {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
   }
 
   .is-wheel-scrolling .noise-overlay {
@@ -206,7 +211,7 @@
   }
 
   .is-wheel-scrolling .sakura-layer {
-    mix-blend-mode: normal !important;
+    mix-blend-mode: screen !important;
   }
 
   #sakura {

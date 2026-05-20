@@ -299,6 +299,7 @@ const SkillCard = memo(({
   hasSelection,
   onSelect,
   colors,
+  reveal,
 }: {
   skill: Skill;
   index: number;
@@ -306,14 +307,15 @@ const SkillCard = memo(({
   hasSelection: boolean;
   onSelect: () => void;
   colors: ColorTheme;
+  reveal: boolean;
 }) => (
   <motion.button
     type="button"
     onClick={onSelect}
     initial={{ opacity: 0, scale: 0.98 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ delay: index * 0.045, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-    whileHover={{ y: -3 }}
+    animate={reveal ? { opacity: selected ? 1 : hasSelection ? 0.68 : 0.95, scale: 1 } : { opacity: 0, scale: 0.98 }}
+    transition={{ delay: index * 0.022, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    whileHover={{ y: -3, opacity: selected ? 1 : 0.95 }}
     className={[
       "group relative h-full overflow-hidden p-4 text-left transition-colors duration-300 md:p-5",
       "border bg-black/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg",
@@ -628,7 +630,7 @@ export const AbilitySection = () => {
     <section
       id="skills"
       ref={ref}
-      className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
+      className="content-section skills-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
       style={{ background: "#000" }}
     >
       <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
@@ -729,6 +731,7 @@ export const AbilitySection = () => {
                 hasSelection={Boolean(activeSkill)}
                 onSelect={() => setSelectedSkill(skill)}
                 colors={colors}
+                reveal={inView}
               />
             ))}
           </motion.main>
