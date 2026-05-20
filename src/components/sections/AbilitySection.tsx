@@ -17,15 +17,15 @@ const DOMAIN_COLORS = {
   pipeline: {
     accent: "#00F5FF",
     accentDim: "#00F5FF",
-    glow: "rgba(0,245,255,0.5)",
-    glowSoft: "rgba(0,245,255,0.12)",
+    glow: "rgba(0,245,255,0.34)",
+    glowSoft: "rgba(0,245,255,0.075)",
     border: "rgba(0,245,255,0.35)",
     borderActive: "rgba(0,245,255,0.55)",
     barFull: "#00D4E0",
     barMid: "#00A8B5",
     barBase: "#007A85",
     barEmpty: "rgba(0,245,255,0.10)",
-    barGlow: "rgba(0,245,255,0.45)",
+    barGlow: "rgba(0,245,255,0.28)",
     bg: "rgba(0,245,255,0.05)",
     bgActive: "rgba(0,245,255,0.08)",
     textAccent: "#00F5FF",
@@ -33,15 +33,15 @@ const DOMAIN_COLORS = {
   ai: {
     accent: "#A855F7",
     accentDim: "#A855F7",
-    glow: "rgba(168,85,247,0.5)",
-    glowSoft: "rgba(168,85,247,0.12)",
+    glow: "rgba(168,85,247,0.34)",
+    glowSoft: "rgba(168,85,247,0.075)",
     border: "rgba(168,85,247,0.35)",
     borderActive: "rgba(168,85,247,0.55)",
     barFull: "#A855F7",
     barMid: "#8B3DD4",
     barBase: "#6D28B0",
     barEmpty: "rgba(168,85,247,0.10)",
-    barGlow: "rgba(168,85,247,0.45)",
+    barGlow: "rgba(168,85,247,0.28)",
     bg: "rgba(168,85,247,0.05)",
     bgActive: "rgba(168,85,247,0.08)",
     textAccent: "#C084FC",
@@ -49,15 +49,15 @@ const DOMAIN_COLORS = {
   backend: {
     accent: "#F97316",
     accentDim: "#F97316",
-    glow: "rgba(249,115,22,0.5)",
-    glowSoft: "rgba(249,115,22,0.12)",
+    glow: "rgba(249,115,22,0.34)",
+    glowSoft: "rgba(249,115,22,0.075)",
     border: "rgba(249,115,22,0.35)",
     borderActive: "rgba(249,115,22,0.55)",
     barFull: "#F97316",
     barMid: "#D4600E",
     barBase: "#A84D0B",
     barEmpty: "rgba(249,115,22,0.10)",
-    barGlow: "rgba(249,115,22,0.45)",
+    barGlow: "rgba(249,115,22,0.28)",
     bg: "rgba(249,115,22,0.05)",
     bgActive: "rgba(249,115,22,0.08)",
     textAccent: "#FB923C",
@@ -65,15 +65,15 @@ const DOMAIN_COLORS = {
   cloud: {
     accent: "#EF4444",
     accentDim: "#EF4444",
-    glow: "rgba(239,68,68,0.5)",
-    glowSoft: "rgba(239,68,68,0.12)",
+    glow: "rgba(239,68,68,0.34)",
+    glowSoft: "rgba(239,68,68,0.075)",
     border: "rgba(239,68,68,0.35)",
     borderActive: "rgba(239,68,68,0.55)",
     barFull: "#EF4444",
     barMid: "#C93030",
     barBase: "#991B1B",
     barEmpty: "rgba(239,68,68,0.10)",
-    barGlow: "rgba(239,68,68,0.45)",
+    barGlow: "rgba(239,68,68,0.28)",
     bg: "rgba(239,68,68,0.05)",
     bgActive: "rgba(239,68,68,0.08)",
     textAccent: "#F87171",
@@ -81,15 +81,15 @@ const DOMAIN_COLORS = {
   frontend: {
     accent: "#22D3EE",
     accentDim: "#22D3EE",
-    glow: "rgba(34,211,238,0.5)",
-    glowSoft: "rgba(34,211,238,0.12)",
+    glow: "rgba(34,211,238,0.34)",
+    glowSoft: "rgba(34,211,238,0.075)",
     border: "rgba(34,211,238,0.35)",
     borderActive: "rgba(34,211,238,0.55)",
     barFull: "#22D3EE",
     barMid: "#0EA5C0",
     barBase: "#0B7A8F",
     barEmpty: "rgba(34,211,238,0.10)",
-    barGlow: "rgba(34,211,238,0.45)",
+    barGlow: "rgba(34,211,238,0.28)",
     bg: "rgba(34,211,238,0.05)",
     bgActive: "rgba(34,211,238,0.08)",
     textAccent: "#67E8F9",
@@ -97,15 +97,15 @@ const DOMAIN_COLORS = {
   tools: {
     accent: "#10B981",
     accentDim: "#10B981",
-    glow: "rgba(16,185,129,0.5)",
-    glowSoft: "rgba(16,185,129,0.12)",
+    glow: "rgba(16,185,129,0.34)",
+    glowSoft: "rgba(16,185,129,0.075)",
     border: "rgba(16,185,129,0.35)",
     borderActive: "rgba(16,185,129,0.55)",
     barFull: "#10B981",
     barMid: "#0D9668",
     barBase: "#087050",
     barEmpty: "rgba(16,185,129,0.10)",
-    barGlow: "rgba(16,185,129,0.45)",
+    barGlow: "rgba(16,185,129,0.28)",
     bg: "rgba(16,185,129,0.05)",
     bgActive: "rgba(16,185,129,0.08)",
     textAccent: "#34D399",
@@ -208,7 +208,7 @@ const SegmentedBar = ({
               transformOrigin: "bottom",
               background: isActive ? colors.barFull : colors.barEmpty,
               border: isActive ? "none" : `1px solid ${colors.border}`,
-              boxShadow: isActive ? `0 0 10px ${colors.barGlow}` : "none",
+              boxShadow: isActive ? `0 0 5px ${colors.barGlow}` : "none",
             }}
           />
         );
@@ -223,63 +223,88 @@ const CategoryNav = ({
 }: {
   activeDomain: DomainId;
   onSelect: (domain: Domain) => void;
-}) => (
-  <aside className="relative overflow-hidden border border-wez-cyan/15 bg-[#061017]/65 shadow-[0_0_45px_rgba(0,0,0,0.45)] backdrop-blur-md [clip-path:polygon(4%_0,100%_0,100%_92%,93%_100%,0_100%,0_4%)]">
-    <div className="absolute inset-0 bg-gradient-to-br from-wez-cyan/[0.06] via-transparent to-crimson/[0.035]" />
-    <div className="relative p-1">
-      {DOMAINS.map((domain) => {
-        const Icon = domain.icon as ElementType;
-        const active = domain.id === activeDomain;
-        const colors = DOMAIN_COLORS[domain.id];
+}) => {
+  const activeColors = DOMAIN_COLORS[activeDomain];
 
-        return (
-          <button
-            key={domain.id}
-            onClick={() => onSelect(domain)}
-            className={[
-              "group relative flex w-full items-center gap-3 border-b border-white/[0.055] px-4 py-4 text-left transition-all duration-300",
-              "hover:bg-white/[0.035]",
-              active ? "text-wez-cyan shadow-[inset_3px_0_0_var(--domain-accent)]" : "text-zinc-300/80",
-            ].join(" ")}
-            style={{
-              "--domain-accent": colors.accent,
-              background: active ? colors.bgActive : undefined,
-            } as React.CSSProperties}
-          >
-            <span
-              className="grid h-8 w-8 place-items-center border transition-all duration-300"
+  return (
+    <aside
+      className="relative overflow-hidden border bg-black/50 shadow-[0_18px_46px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(4%_0,100%_0,100%_92%,93%_100%,0_100%,0_4%)]"
+      style={{
+        borderColor: "rgba(255,255,255,0.115)",
+        boxShadow: "0 18px 46px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.025)",
+      }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, transparent 70%)",
+        }}
+      />
+      <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/38 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 border border-white/[0.035]" />
+      <div className="relative p-1">
+        {DOMAINS.map((domain) => {
+          const Icon = domain.icon as ElementType;
+          const active = domain.id === activeDomain;
+          const colors = DOMAIN_COLORS[domain.id];
+
+          return (
+            <button
+              key={domain.id}
+              onClick={() => onSelect(domain)}
+              className={[
+                "group relative flex w-full items-center gap-3 border-b border-white/[0.05] px-4 py-4 text-left transition-all duration-300",
+                "hover:bg-white/[0.025]",
+                active ? "shadow-[inset_2px_0_0_var(--domain-accent)]" : "text-zinc-300/80",
+              ].join(" ")}
               style={{
-                borderColor: active ? colors.borderActive : "rgba(255,255,255,0.22)",
-                color: active ? colors.accent : "rgba(228,228,231,0.78)",
-                boxShadow: active ? `0 0 18px ${colors.glowSoft}` : "none",
-              }}
+                "--domain-accent": colors.accent,
+                color: active ? colors.accent : undefined,
+                background: active
+                  ? `linear-gradient(90deg, ${colors.bg}, rgba(255,255,255,0.012), transparent)`
+                  : undefined,
+              } as React.CSSProperties}
             >
-              <Icon size={16} strokeWidth={1.65} />
-            </span>
-            <span className="text-xs font-medium uppercase tracking-[0.12em] md:text-sm">
-              {domain.label}
-            </span>
-            {active && (
-              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-crimson shadow-[0_0_10px_rgba(214,58,74,0.7)]" />
-            )}
-          </button>
-        );
-      })}
-    </div>
-    <div className="pointer-events-none absolute bottom-4 left-5 right-5 h-px bg-gradient-to-r from-transparent via-wez-cyan/25 to-transparent" />
-  </aside>
-);
+              <span
+                className="grid h-8 w-8 place-items-center border bg-black/25 transition-all duration-300 backdrop-blur-sm"
+                style={{
+                  borderColor: active ? colors.borderActive : "rgba(255,255,255,0.16)",
+                  color: active ? colors.accent : "rgba(228,228,231,0.78)",
+                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.07)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
+              >
+                <Icon size={16} strokeWidth={1.65} />
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.12em] md:text-sm">
+                {domain.label}
+              </span>
+              {active && (
+                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-crimson/85" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+      <div
+        className="pointer-events-none absolute bottom-4 left-5 right-5 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${activeColors.accent}33, transparent)` }}
+      />
+    </aside>
+  );
+};
 
 const SkillCard = ({
   skill,
   index,
   selected,
+  hasSelection,
   onSelect,
   colors,
 }: {
   skill: Skill;
   index: number;
   selected: boolean;
+  hasSelection: boolean;
   onSelect: () => void;
   colors: ColorTheme;
 }) => (
@@ -293,31 +318,47 @@ const SkillCard = ({
     whileHover={{ y: -4 }}
     className={[
       "group relative h-full overflow-hidden p-4 text-left transition-colors duration-300 md:p-5",
-      "border bg-[#050b11]/72 backdrop-blur-md",
+      "border bg-black/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg",
       "[clip-path:polygon(6%_0,100%_0,100%_88%,94%_100%,0_100%,0_8%)]",
+      selected ? "opacity-100" : hasSelection ? "opacity-[0.68] hover:opacity-95" : "opacity-95 hover:opacity-100",
     ].join(" ")}
     style={{
-      borderColor: selected ? colors.borderActive : "rgba(255,255,255,0.13)",
+      borderColor: selected ? colors.borderActive : "rgba(255,255,255,0.105)",
+      background: selected
+        ? `linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.014) 34%, transparent 72%), linear-gradient(135deg, ${colors.bgActive}, rgba(0,0,0,0.5) 46%, ${colors.bg}), rgba(0,0,0,0.48)`
+        : "linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.008) 34%, transparent 72%), rgba(0,0,0,0.58)",
       boxShadow: selected
-        ? `0 0 28px ${colors.glowSoft}, inset 0 0 26px ${colors.bg}`
-        : "0 0 30px rgba(0,0,0,0.32)",
+        ? `0 18px 42px rgba(0,0,0,0.36), 0 0 24px ${colors.glowSoft}, inset 0 0 18px ${colors.bgActive}, inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(255,255,255,0.03)`
+        : "0 12px 30px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.055), inset 0 -1px 0 rgba(255,255,255,0.02)",
     }}
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.025] via-transparent to-wez-cyan/[0.025]" />
+    <div
+      className="absolute inset-x-4 top-0 h-px"
+      style={{
+        background: `linear-gradient(90deg, transparent, ${selected ? `${colors.accent}AA` : "rgba(255,255,255,0.32)"}, transparent)`,
+      }}
+    />
+    <div className="pointer-events-none absolute inset-0 border border-white/[0.03]" />
     {selected && (
       <>
         <motion.span
           layoutId="selected-skill-edge"
           className="absolute right-0 top-0 h-16 w-px"
-          style={{ background: colors.accent, boxShadow: `0 0 14px ${colors.glow}` }}
+          style={{ background: colors.accent, boxShadow: `0 0 12px ${colors.glow}` }}
         />
-        <span className="absolute right-5 top-5 h-4 w-4 border-r border-t border-crimson/85" />
+        <span
+          className="absolute right-5 top-5 h-4 w-4 border-r border-t"
+          style={{ borderColor: `${colors.accent}CC` }}
+        />
       </>
     )}
-    <span className="absolute right-4 top-4 h-4 w-4 border-r border-t border-white/35 transition-colors group-hover:border-wez-cyan/50" />
+    <span
+      className="absolute right-4 top-4 h-4 w-4 border-r border-t transition-colors"
+      style={{ borderColor: selected ? `${colors.accent}66` : "rgba(255,255,255,0.22)" }}
+    />
 
     <div className="relative flex items-center gap-2">
-      <span className="h-1.5 w-1.5 rounded-full bg-crimson shadow-[0_0_8px_rgba(214,58,74,0.7)]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-crimson/90" />
       <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-400">
         Core module
       </span>
@@ -331,7 +372,7 @@ const SkillCard = ({
         <SegmentedBar value={skill.lvl} colors={colors} />
         <span
           className="shrink-0 font-mono text-base font-semibold tabular-nums md:text-lg"
-          style={{ color: colors.accent, textShadow: `0 0 10px ${colors.glowSoft}` }}
+          style={{ color: colors.accent, textShadow: `0 0 5px ${colors.glowSoft}` }}
         >
           {skill.lvl}
         </span>
@@ -352,8 +393,23 @@ const SkillCard = ({
   </motion.button>
 );
 
-const DossierField = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="border-b border-white/[0.08] pb-5">
+const DossierField = ({
+  label,
+  children,
+  colors,
+}: {
+  label: string;
+  children: ReactNode;
+  colors: ColorTheme;
+}) => (
+  <div
+    className="relative overflow-hidden border px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(255,255,255,0.02)] backdrop-blur-sm"
+    style={{
+      borderColor: `${colors.accent}22`,
+      background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.008) 45%, rgba(0,0,0,0.22)), rgba(0,0,0,0.24)",
+    }}
+  >
+    <div className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
     <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-500">
       {label}:
     </p>
@@ -362,11 +418,9 @@ const DossierField = ({ label, children }: { label: string; children: ReactNode 
 );
 
 const SkillDossier = ({
-  domain,
   skill,
   colors,
 }: {
-  domain: Domain;
   skill: Skill;
   colors: ColorTheme;
 }) => (
@@ -376,9 +430,15 @@ const SkillDossier = ({
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 24 }}
     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-    className="relative min-h-[420px] overflow-hidden border border-white/[0.16] bg-[#050b11]/78 p-5 shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-md [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+    className="relative min-h-[620px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+    style={{
+      borderColor: `${colors.accent}33`,
+      background: "linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, transparent 72%), rgba(0,0,0,0.52)",
+      boxShadow: "0 18px 48px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.025)",
+    }}
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-crimson/[0.035]" />
+    <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/38 to-transparent" />
+    <div className="pointer-events-none absolute inset-0 border border-white/[0.03]" />
     <div className="relative flex items-center justify-between border-b border-white/[0.08] pb-4">
       <div className="flex items-center gap-3">
         <Folder size={17} className="text-zinc-200" strokeWidth={1.5} />
@@ -393,20 +453,14 @@ const SkillDossier = ({
       </div>
     </div>
 
-    <div className="relative mt-6 space-y-5">
-      <DossierField label="Skill">
+    <div className="relative mt-6 space-y-4">
+      <DossierField label="Skill" colors={colors}>
         <span className="font-title text-2xl font-semibold" style={{ color: colors.accent }}>
           {skill.name}
         </span>
       </DossierField>
 
-      <DossierField label="Category">
-        <span className="font-mono text-sm font-medium uppercase tracking-[0.08em] text-zinc-100">
-          {domain.label}
-        </span>
-      </DossierField>
-
-      <DossierField label="Proficiency">
+      <DossierField label="Proficiency" colors={colors}>
         <div className="flex flex-wrap items-center gap-6">
           <span className="font-mono text-2xl font-light text-zinc-100">
             <span className="font-semibold" style={{ color: colors.accent }}>{skill.lvl}</span>
@@ -416,13 +470,17 @@ const SkillDossier = ({
         </div>
       </DossierField>
 
-      <DossierField label="Related">
+      <DossierField label="Related" colors={colors}>
         <div className="flex flex-wrap gap-2">
           {skill.related.map((item) => (
             <span
               key={item}
-              className="border px-2.5 py-1 font-mono text-xs"
-              style={{ borderColor: `${colors.accent}40`, color: `${colors.accent}B3` }}
+              className="border px-2.5 py-1 font-mono text-xs shadow-[inset_0_1px_0_rgba(255,255,255,0.055)] backdrop-blur-sm"
+              style={{
+                borderColor: `${colors.accent}40`,
+                color: `${colors.accent}B3`,
+                background: `linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.24)), ${colors.bg}`,
+              }}
             >
               {item}
             </span>
@@ -444,7 +502,7 @@ const SkillDossier = ({
         </div>
         <div className="text-right">
           <p className="text-[9px] uppercase tracking-[0.16em] text-zinc-500">
-            Module ID: {domain.id.toUpperCase()}-{String(skill.lvl).padStart(3, "0")}
+            Module ID: {skill.name.toUpperCase().replace(/\s+/g, "-")}-{String(skill.lvl).padStart(3, "0")}
           </p>
           <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: colors.accent }}>
             Ver. 2.1.0
@@ -455,18 +513,91 @@ const SkillDossier = ({
   </motion.aside>
 );
 
+const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
+  <aside
+    className="relative min-h-[620px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+    style={{
+      borderColor: `${colors.accent}24`,
+      background: "linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01) 34%, transparent 72%), rgba(0,0,0,0.5)",
+      boxShadow: "0 18px 48px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(255,255,255,0.02)",
+    }}
+  >
+    <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/26 to-transparent" />
+    <div className="pointer-events-none absolute inset-0 border border-white/[0.025]" />
+    <div className="relative flex items-center justify-between border-b border-white/[0.07] pb-4">
+      <div className="flex items-center gap-3">
+        <Folder size={17} className="text-zinc-500" strokeWidth={1.5} />
+        <h3 className="font-title text-sm font-semibold uppercase tracking-[0.14em] text-zinc-500">
+          Skill Dossier
+        </h3>
+      </div>
+      <div className="flex gap-1.5">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <span key={index} className="h-1 w-1 rounded-full bg-crimson/45" />
+        ))}
+      </div>
+    </div>
+
+    <div className="relative mt-6 space-y-4">
+      <div
+        className="min-h-[118px] border px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm"
+        style={{
+          borderColor: `${colors.accent}18`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.028), rgba(0,0,0,0.22)), rgba(0,0,0,0.18)",
+        }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600">
+          Select a core module
+        </p>
+        <p className="mt-3 font-mono text-xs uppercase tracking-[0.14em] text-zinc-500">
+          Dossier data pending
+        </p>
+      </div>
+      <div
+        className="min-h-[118px] border px-4 py-5 opacity-55 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] backdrop-blur-sm"
+        style={{
+          borderColor: `${colors.accent}14`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.022), rgba(0,0,0,0.2)), rgba(0,0,0,0.16)",
+        }}
+      />
+      <div
+        className="min-h-[102px] border px-4 py-5 opacity-45 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-sm"
+        style={{
+          borderColor: `${colors.accent}12`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18)), rgba(0,0,0,0.14)",
+        }}
+      />
+    </div>
+
+    <div className="relative mt-6 border-t border-white/[0.08] pt-4 opacity-45">
+      <div className="flex items-end justify-between gap-5">
+        <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
+          {Array.from({ length: 18 }).map((_, index) => (
+            <span
+              key={index}
+              className="w-[2px] bg-zinc-500/45"
+              style={{ height: `${14 + ((index * 7) % 22)}px` }}
+            />
+          ))}
+        </div>
+        <p className="text-right font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+          Module ID: pending
+        </p>
+      </div>
+    </div>
+  </aside>
+);
+
 export const AbilitySection = () => {
   const [activeDomain, setActiveDomain] = useState<DomainId>("pipeline");
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(
-    DOMAINS[0].skills.find((skill) => skill.name === "dbt") ?? DOMAINS[0].skills[0]
-  );
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const ref = useRef<HTMLElement>(null!);
   const inView = useInView(ref, { once: true, margin: "-10%" as any });
   const currentDomain = DOMAINS.find((domain) => domain.id === activeDomain)!;
   const colors = DOMAIN_COLORS[activeDomain];
   const activeSkill = selectedSkill && currentDomain.skills.some((skill) => skill.name === selectedSkill.name)
     ? selectedSkill
-    : currentDomain.skills[0];
+    : null;
   const overviewScore = useMemo(() => {
     const allSkills = DOMAINS.flatMap((domain) => domain.skills);
     return Math.round(allSkills.reduce((sum, skill) => sum + skill.lvl, 0) / allSkills.length);
@@ -474,7 +605,7 @@ export const AbilitySection = () => {
 
   const selectDomain = (domain: Domain) => {
     setActiveDomain(domain.id);
-    setSelectedSkill(domain.skills[0]);
+    setSelectedSkill(null);
   };
 
   return (
@@ -520,7 +651,12 @@ export const AbilitySection = () => {
           </div>
         </motion.header>
 
-        <div className="grid gap-6 lg:grid-cols-[270px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_340px] 2xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+        <div
+          className={[
+            "grid gap-6 lg:grid-cols-[270px_minmax(0,1fr)]",
+            "xl:grid-cols-[280px_minmax(0,1fr)_340px] 2xl:grid-cols-[300px_minmax(0,1fr)_360px]",
+          ].join(" ")}
+        >
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -541,11 +677,16 @@ export const AbilitySection = () => {
                   <button
                     key={domain.id}
                     onClick={() => selectDomain(domain)}
-                    className="flex shrink-0 items-center gap-2 border px-3 py-2 font-mono text-xs uppercase tracking-wider"
+                  className="flex shrink-0 items-center gap-2 border bg-black/50 px-3 py-2 font-mono text-xs uppercase tracking-wider shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-md transition-colors"
                     style={{
                       borderColor: active ? domainColors.borderActive : "rgba(255,255,255,0.12)",
                       color: active ? domainColors.accent : "rgba(228,228,231,0.68)",
-                      background: active ? domainColors.bg : "rgba(5,11,17,0.5)",
+                      background: active
+                        ? `linear-gradient(180deg, rgba(255,255,255,0.05), ${domainColors.bg} 42%, rgba(0,0,0,0.5))`
+                        : "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.52))",
+                      boxShadow: active
+                        ? "inset 0 1px 0 rgba(255,255,255,0.09)"
+                        : "inset 0 1px 0 rgba(255,255,255,0.06)",
                     }}
                   >
                     <Icon size={14} strokeWidth={1.6} />
@@ -568,18 +709,30 @@ export const AbilitySection = () => {
                 key={skill.name}
                 skill={skill}
                 index={index}
-                selected={activeSkill.name === skill.name}
+                selected={activeSkill?.name === skill.name}
+                hasSelection={Boolean(activeSkill)}
                 onSelect={() => setSelectedSkill(skill)}
                 colors={colors}
               />
             ))}
           </motion.main>
 
-          <div className="lg:col-span-2 xl:col-span-1">
-            <AnimatePresence mode="wait">
-              <SkillDossier domain={currentDomain} skill={activeSkill} colors={colors} />
-            </AnimatePresence>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSkill?.name ?? "empty-dossier"}
+              initial={{ opacity: 0, x: 18 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 18 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-2 xl:col-span-1"
+            >
+              {activeSkill ? (
+                <SkillDossier skill={activeSkill} colors={colors} />
+              ) : (
+                <EmptySkillDossier colors={colors} />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         <footer className="mt-8 flex flex-wrap gap-x-12 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-500">
