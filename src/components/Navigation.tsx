@@ -1,331 +1,304 @@
-import { useEffect, useState, useRef } from "react";
-import { CircuitBoard } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CircuitBoard, Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
-  { label: "ABOUT ME", id: "about" },
-  { label: "SKILLS", id: "skills" },
-  { label: "PROJECTS", id: "projects" },
-  { label: "EXPERIENCE", id: "experience" },
-  { label: "CONTACT", id: "contact" },
+  { label: "ABOUT ME", id: "about", jp: "自己紹介" },
+  { label: "SKILLS", id: "skills", jp: "スキル" },
+  { label: "PROJECTS", id: "projects", jp: "プロジェクト" },
+  { label: "EXPERIENCE", id: "experience", jp: "経験" },
+  { label: "CONTACT", id: "contact", jp: "連絡" },
 ];
+
+const headerShellStyle = {
+  background:
+    "linear-gradient(180deg, rgba(10,10,10,0.92) 0%, rgba(5,5,5,0.82) 100%), linear-gradient(90deg, rgba(143,239,255,0.10), rgba(255,255,255,0.035), rgba(143,239,255,0.08))",
+  clipPath: "polygon(14px 0%, calc(100% - 14px) 0%, 100% 14px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 14px), 0% 10px)",
+  boxShadow:
+    "0 0 0 1px rgba(143,239,255,0.16), 0 0 0 2px rgba(255,255,255,0.025), 0 18px 42px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.05)",
+} satisfies React.CSSProperties;
+
+const cyanPanelStyle = {
+  border: "1px solid rgba(255,255,255,0.06)",
+  background: "rgba(255,255,255,0.025)",
+} satisfies React.CSSProperties;
 
 export const Navigation = () => {
   const [active, setActive] = useState("about");
   const [open, setOpen] = useState(false);
-  const [isScrolled, setScrolled] = useState(false);
-  const [onHero, setOnHero] = useState(true);
-  const [glowTrigger, setGlowTrigger] = useState(false);
-
-  const logoRef = useRef<HTMLAnchorElement>(null);
+  const [isPastHero, setIsPastHero] = useState(false);
   const isScrollingRef = useRef(false);
-  const scrollStateRef = useRef({ isScrolled: false, onHero: true });
 
-  // ── Pulse glow on active page changes ──────────────────────────────────
-  useEffect(() => {
-    if (active && active !== "home" && !onHero) {
-      setGlowTrigger(true);
-      const timer = setTimeout(() => setGlowTrigger(false), 900);
-      return () => clearTimeout(timer);
-    }
-  }, [active, onHero]);
-
-  // ── Glitch effect on Logo ───────────────────────────────────────────────
-  const triggerGlitch = (el: HTMLElement | null) => {
-    if (!el) return;
-    el.classList.add("animate-glitch");
-    setTimeout(() => el.classList.remove("animate-glitch"), 400);
-  };
-
-  // ── Scroll + section detection ──────────────────────────────────────────
   useEffect(() => {
     let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = 0;
-        const nextScrolled = window.scrollY > 12;
-        const nextOnHero = window.scrollY < 300;
 
-        if (scrollStateRef.current.isScrolled !== nextScrolled) {
-          scrollStateRef.current.isScrolled = nextScrolled;
-          setScrolled(nextScrolled);
-        }
-        if (scrollStateRef.current.onHero !== nextOnHero) {
-          scrollStateRef.current.onHero = nextOnHero;
-          setOnHero(nextOnHero);
-        }
-      });
+    const updateVisibility = () => {
+      raf = 0;
+      const hero = document.getElementById("home");
+      const heroBottom = hero ? hero.offsetTop + hero.offsetHeight : window.innerHeight;
+      setIsPastHero(window.scrollY > heroBottom - 120);
     };
+
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(updateVisibility);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    const ratios = new Map<string, number>();
-    const allIds = LINKS.map((l) => l.id);
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (isScrollingRef.current) return;
-
-        entries.forEach((e) => {
-          ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
-        });
-
-        let bestId: string | null = null;
-        let bestRatio = 0;
-        ratios.forEach((r, id) => {
-          if (r > bestRatio) {
-            bestRatio = r;
-            bestId = id;
-          }
-        });
-        if (bestId && bestRatio > 0) {
-          setActive(bestId);
-        }
-      },
-      { rootMargin: "-20% 0px -20% 0px" }
-    );
-
-    allIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) obs.observe(el);
-    });
+    updateVisibility();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.cancelAnimationFrame(raf);
-      obs.disconnect();
+      if (raf) window.cancelAnimationFrame(raf);
     };
   }, []);
+
+  useEffect(() => {
+    const ratios = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isScrollingRef.current) return;
+
+        entries.forEach((entry) => {
+          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let bestId = "";
+        let bestRatio = 0;
+        ratios.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestId = id;
+            bestRatio = ratio;
+          }
+        });
+
+        if (bestId) setActive(bestId);
+      },
+      { rootMargin: "-22% 0px -28% 0px", threshold: [0.1, 0.25, 0.5, 0.75] }
+    );
+
+    LINKS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!isPastHero) setOpen(false);
+  }, [isPastHero]);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
 
-    setActive(id);
+    setActive(id === "home" ? "about" : id);
+    setOpen(false);
     isScrollingRef.current = true;
 
-    const offset = 86; // fixed HP bar + compact nav
-    const bodyRect = document.body.getBoundingClientRect().top;
-    const elementRect = el.getBoundingClientRect().top;
-    const elementPosition = elementRect - bodyRect;
-    const offsetPosition = elementPosition - offset;
+    const offset = id === "home" || window.innerWidth >= 768 ? 0 : 48;
+    const targetTop = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth"
-    });
-    setOpen(false);
-
-    // Re-enable observer updates after smooth scroll completes
-    setTimeout(() => {
+    window.setTimeout(() => {
       isScrollingRef.current = false;
     }, 850);
   };
 
-  // Animation variants for Mobile drawer
-  const drawerVariants = {
-    hidden: { x: "100%", transition: { type: "tween", duration: 0.25, ease: "easeIn" } },
-    visible: { x: 0, transition: { type: "spring", damping: 25, stiffness: 200 } },
-    exit: { x: "100%", transition: { type: "tween", duration: 0.2, ease: "easeIn" } },
-  };
-
-  const drawerLinkVariants = {
-    hidden: { opacity: 0, x: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: 0.1 + i * 0.05, duration: 0.3, ease: "easeOut" }
-    })
-  };
-
   return (
-    <>
-      <header
-        id="site-header"
-        className={cn(
-          "fixed left-0 right-0 top-7 z-[85]",
-          "border-b transition-[background-color,border-color,box-shadow,backdrop-filter,opacity,visibility] duration-300 ease-out",
-          // Cyan bottom border line
-          "after:pointer-events-none after:absolute after:inset-x-6 after:bottom-0 after:h-px after:transition-all after:duration-500",
-          onHero
-            ? "opacity-0 invisible pointer-events-none"
-            : isScrolled
-              ? [
-                  "opacity-100 visible bg-background/70 backdrop-blur-xl border-border/40",
-                  "shadow-[inset_0_1px_0_hsl(var(--foreground)/0.06),0_10px_30px_rgba(0,0,0,0.45),0_1px_6px_rgba(0,245,255,0.08)]",
-                  glowTrigger
-                    ? "after:opacity-100 after:bg-wez-cyan after:shadow-[0_0_12px_rgba(0,245,255,0.7),0_0_3px_rgba(0,245,255,0.4)] after:scale-y-[1.5]"
-                    : "after:opacity-100 after:bg-wez-cyan/35 after:shadow-[0_0_3px_rgba(0,245,255,0.15)] after:scale-y-[1]",
-                ]
-              : [
-                  "opacity-100 visible bg-transparent backdrop-blur-sm border-transparent",
-                  "after:opacity-30 after:bg-gradient-to-r after:from-transparent after:via-wez-cyan/30 after:to-transparent after:scale-y-[1]"
-                ]
-        )}
-      >
-        <div className="mx-auto grid h-11 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-12 md:px-6">
-          {/* ── LEFT: Logo ─── */}
-          <div className="flex items-center justify-start">
+    <header
+      id="site-header"
+      className={cn(
+        "fixed left-0 right-0 top-7 z-[85] px-3 py-2.5 transition-[opacity,transform,visibility] duration-500 ease-out sm:px-4",
+        isPastHero
+          ? "pointer-events-auto visible translate-y-0 opacity-100"
+          : "pointer-events-none invisible -translate-y-4 opacity-0"
+      )}
+    >
+      <div
+        className="pointer-events-none absolute inset-x-[14%] top-2.5 h-px bg-gradient-to-r from-transparent via-wez-cyan/70 to-transparent shadow-[0_0_12px_rgba(143,239,255,0.3)]"
+        aria-hidden="true"
+      />
+
+      <div className="relative mx-auto w-full max-w-5xl">
+        <div className="relative overflow-visible rounded-[6px]" style={headerShellStyle}>
+          <div
+            className="pointer-events-none absolute inset-0 rounded-[6px] bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,0,0,0.18)_3px,rgba(0,0,0,0.18)_4px)]"
+            aria-hidden="true"
+          />
+          <span className="pointer-events-none absolute left-[4px] top-[4px] h-3 w-3 border-l border-t border-wez-cyan/60" />
+          <span className="pointer-events-none absolute bottom-[4px] right-[4px] h-3 w-3 border-b border-r border-wez-cyan/60" />
+          <div className="absolute left-1/2 top-2 flex -translate-x-1/2 gap-1.5" aria-hidden="true">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <span key={index} className="h-0.5 w-2 bg-wez-cyan/45" />
+            ))}
+          </div>
+
+          <div className="relative flex min-h-[58px] items-center justify-between gap-3 px-3.5 py-2.5 sm:px-5">
             <a
-              ref={logoRef}
               href="#home"
-              onClick={(e) => { e.preventDefault(); scrollTo("home"); }}
-              onMouseEnter={() => triggerGlitch(logoRef.current)}
-              className={cn(
-                "group inline-flex items-center gap-2 py-1",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                "ring-offset-background"
-              )}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollTo("home");
+              }}
+              className="group flex shrink-0 items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               aria-label="Go to top"
             >
               <span
-                className={cn(
-                  "relative grid size-7 place-items-center",
-                  "border border-border/60 bg-background/30 backdrop-blur-md",
-                  "transition-colors",
-                  isScrolled && "border-wez-cyan/30 shadow-[0_0_4px_rgba(0,245,255,0.1)]"
-                )}
+                className="relative grid size-9 shrink-0 place-items-center border border-wez-cyan/45 bg-[#080808] transition-all duration-300 group-hover:border-wez-cyan/80 group-hover:shadow-[0_0_18px_rgba(143,239,255,0.24),inset_0_0_18px_rgba(143,239,255,0.08)]"
+                style={{ clipPath: "polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px)" }}
               >
-                <CircuitBoard className="size-3.5 text-wez-cyan" aria-hidden="true" />
-                <span className="pointer-events-none absolute inset-0 shadow-cyan-glow-sm opacity-0 transition-opacity group-hover:opacity-100" />
+                <CircuitBoard className="size-4 text-wez-cyan" strokeWidth={1.5} aria-hidden="true" />
+                <span className="absolute left-0.5 top-0.5 h-1.5 w-1.5 border-l border-t border-wez-cyan/70" />
+                <span className="absolute bottom-0.5 right-0.5 h-1.5 w-1.5 border-b border-r border-wez-cyan/70" />
               </span>
 
-              <span className="flex flex-col leading-none">
-                <span className="font-display text-[10px] font-semibold tracking-[0.2em] text-foreground uppercase md:text-[11px] group-hover:text-wez-cyan transition-colors">
-                  Data Wanderer
+              <span className="hidden sm:block">
+                <span className="block font-display text-xs font-bold leading-tight tracking-[0.22em] text-[#E0E0E0] transition-colors group-hover:text-wez-cyan">
+                  DATA WANDERER
                 </span>
-                <span className="font-jp text-[9px] tracking-[0.16em] text-muted-foreground group-hover:text-wez-cyan/80 transition-colors">
+                <span className="mt-0.5 block font-jp text-[9px] tracking-[0.18em] text-crimson/75">
                   データ
                 </span>
               </span>
             </a>
-          </div>
 
-          {/* ── CENTER: Nav Links ─── */}
-          <nav className="hidden items-center justify-center md:flex" aria-label="Primary">
-            <div className="flex items-center gap-1">
-              {LINKS.map((l) => {
-                const isActive = active === l.id;
-                return (
-                  <a
-                    key={l.id}
-                    href={`#${l.id}`}
-                    onClick={(e) => { e.preventDefault(); scrollTo(l.id); }}
-                    aria-current={isActive ? "page" : undefined}
-                    className={cn(
-                      "group relative px-3 py-1.5",
-                      "font-display text-[11px] tracking-[0.12em]",
-                      "text-muted-foreground transition-all duration-200",
-                      "hover:text-wez-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                      "ring-offset-background",
-                      isActive && "text-wez-cyan drop-shadow-[0_0_6px_rgba(0,245,255,0.35)]"
-                    )}
-                  >
-                    <span className="transition-colors">{l.label}</span>
-                    <span
-                      className={cn(
-                        "pointer-events-none absolute inset-x-3 -bottom-0.5 h-[2px] transition-all duration-300",
-                        "opacity-0 group-hover:opacity-100 group-hover:bg-wez-cyan/40 group-hover:shadow-[0_0_4px_rgba(0,245,255,0.2)]",
-                        isActive && "opacity-100 bg-wez-cyan shadow-[0_0_6px_rgba(0,245,255,0.4)]"
-                      )}
-                    />
-                  </a>
-                );
-              })}
-            </div>
-          </nav>
+            <nav className="hidden flex-1 items-center justify-center md:flex" aria-label="Primary">
+              <div className="flex items-center rounded-[4px] px-2 py-1.5" style={cyanPanelStyle}>
+                {LINKS.map((link, index) => {
+                  const isActive = active === link.id;
 
-          {/* ── RIGHT: Status + Mobile toggle ─── */}
-          <div className="flex items-center justify-end gap-3">
-            <motion.div
-              animate={{ opacity: [1, 0.4, 1] }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-              className="hidden sm:block"
-              style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", boxShadow: "0 0 6px rgba(0,255,136,0.4)" }}
-            />
-            <span
-              className="hidden sm:inline font-mono text-[8px] tracking-[0.18em] uppercase"
-              style={{ color: "#00FF88", textShadow: "0 0 4px rgba(0,255,136,0.25)" }}
-            >
-              SYS: ONLINE
-            </span>
-
-            {/* Mobile toggle — HUD symbol */}
-            <button
-              type="button"
-              aria-label={open ? "Close menu" : "Open menu"}
-              onClick={() => setOpen((v) => !v)}
-              className={cn(
-                "md:hidden border border-border/70 bg-background/30 backdrop-blur-xl",
-                "hover:bg-background/50 transition-colors px-2.5 py-1.5",
-                isScrolled && "border-wez-cyan/30"
-              )}
-            >
-              <span className="font-mono text-sm text-wez-cyan">{open ? "✕" : "⊕"}</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* ── Mobile Drawer ──────────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
-              style={{ position: "fixed", inset: 0, zIndex: 88, background: "rgba(5,5,8,0.7)", backdropFilter: "blur(4px)" }}
-            />
-
-            <motion.nav
-              variants={drawerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              aria-label="Mobile navigation"
-              className="fixed top-0 right-0 bottom-0 z-[89] w-[280px] border-l border-border/60 bg-background/70 backdrop-blur-xl pt-12"
-              style={{ boxShadow: "inset 1px 0 0 hsl(var(--border) / 0.6), -20px 0 60px rgba(0,0,0,0.45)" }}
-            >
-              <div className="space-y-1 px-6 pb-6">
-                <div className="font-display text-base tracking-[0.18em] uppercase">Navigation</div>
-                <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground">Portfolio sections</p>
-              </div>
-
-              <div className="mt-6 flex flex-col">
-                {LINKS.map((l, i) => {
-                  const isActive = active === l.id;
                   return (
-                    <motion.button
-                      key={l.id}
-                      custom={i}
-                      variants={drawerLinkVariants}
-                      initial="hidden"
-                      animate="visible"
-                      type="button"
-                      onClick={() => scrollTo(l.id)}
-                      className={cn(
-                        "w-full px-4 py-3 text-left",
-                        "font-display text-sm tracking-[0.12em]",
-                        "transition-colors",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        isActive
-                          ? "border-l-2 border-wez-cyan bg-wez-cyan/10 text-wez-cyan"
-                          : "border-l-2 border-transparent text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                      )}
-                    >
-                      {l.label}
-                    </motion.button>
+                    <div key={link.id} className="flex items-center">
+                      <a
+                        href={`#${link.id}`}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          scrollTo(link.id);
+                        }}
+                        aria-current={isActive ? "page" : undefined}
+                        className={cn(
+                          "group relative flex min-h-8 items-center px-3 py-1.5 font-display text-[11px] font-semibold tracking-[0.18em] transition-all duration-200 lg:px-4",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                          isActive
+                            ? "text-[#E0E0E0] drop-shadow-[0_0_10px_rgba(143,239,255,0.4)]"
+                            : "text-stone hover:text-wez-cyan"
+                        )}
+                      >
+                        {link.label}
+                        <span
+                          className={cn(
+                            "pointer-events-none absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-opacity duration-200",
+                            isActive
+                              ? "bg-gradient-to-r from-transparent via-wez-cyan to-transparent opacity-100 shadow-[0_0_8px_rgba(143,239,255,0.55)]"
+                              : "bg-wez-cyan opacity-0 shadow-[0_0_6px_rgba(143,239,255,0.45)] group-hover:opacity-70"
+                          )}
+                        />
+                      </a>
+                      {index < LINKS.length - 1 && <span className="mx-0.5 h-4 w-px bg-slate-600/40" aria-hidden="true" />}
+                    </div>
                   );
                 })}
               </div>
+            </nav>
+
+            <div className="flex shrink-0 items-center gap-3">
+              <div
+                className="hidden items-center gap-2 border border-status-active/20 bg-[#050806]/80 px-3 py-1.5 shadow-[inset_0_0_12px_rgba(0,255,136,0.04)] sm:flex"
+                aria-label="System online"
+              >
+                <motion.span
+                  animate={{ opacity: [1, 0.4, 1] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="size-2 rounded-full bg-status-active shadow-[0_0_6px_#00ff88,0_0_14px_rgba(0,255,136,0.6)]"
+                />
+                <span className="whitespace-nowrap font-mono text-[10px] font-medium tracking-[0.15em] text-status-active">
+                  SYS: ONLINE
+                </span>
+              </div>
+
+              <div className="hidden flex-col gap-[3px] lg:flex" aria-hidden="true">
+                {[14, 10, 14].map((width, index) => (
+                  <span key={index} className={cn("h-[3px]", index === 1 ? "bg-white/35" : "bg-wez-cyan/55")} style={{ width }} />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="border border-wez-cyan/30 p-2 text-wez-cyan transition-colors hover:border-wez-cyan/70 hover:text-[#E0E0E0] md:hidden"
+                onClick={() => setOpen((value) => !value)}
+                aria-expanded={open}
+                aria-controls="mobile-navigation"
+                aria-label={open ? "Close menu" : "Open menu"}
+              >
+                {open ? <X className="size-4" /> : <Menu className="size-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div
+            className="pointer-events-none absolute inset-x-[8%] bottom-0 h-px bg-gradient-to-r from-transparent via-wez-cyan/70 to-transparent"
+            aria-hidden="true"
+          />
+        </div>
+
+        <AnimatePresence>
+          {open && (
+            <motion.nav
+              id="mobile-navigation"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="absolute left-0 right-0 top-full mt-2 overflow-hidden border border-wez-cyan/15 bg-[#050505]/95 shadow-[0_8px_40px_rgba(143,239,255,0.08),0_20px_60px_rgba(0,0,0,0.8)] backdrop-blur-xl md:hidden"
+              style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}
+              aria-label="Mobile navigation"
+            >
+              {LINKS.map((link) => {
+                const isActive = active === link.id;
+
+                return (
+                  <button
+                    key={link.id}
+                    type="button"
+                    onClick={() => scrollTo(link.id)}
+                    className={cn(
+                      "flex w-full items-center justify-between border-b border-white/[0.06] px-5 py-3 text-left font-display text-[11px] font-semibold tracking-[0.2em] transition-all duration-200 last:border-0",
+                      isActive
+                        ? "bg-wez-cyan/10 text-[#E0E0E0] drop-shadow-[0_0_10px_rgba(143,239,255,0.42)]"
+                        : "text-stone hover:bg-white/5 hover:text-wez-cyan"
+                    )}
+                  >
+                    <span>{link.label}</span>
+                    <span className="font-jp text-[9px] text-crimson/60">{link.jp}</span>
+                  </button>
+                );
+              })}
+
+              <div className="flex items-center gap-2 border-t border-wez-cyan/10 px-5 py-3">
+                <motion.span
+                  animate={{ opacity: [1, 0.4, 1] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="size-2 rounded-full bg-status-active shadow-[0_0_6px_#00ff88,0_0_14px_rgba(0,255,136,0.6)]"
+                />
+                <span className="font-mono text-[10px] tracking-[0.15em] text-status-active">SYS: ONLINE</span>
+              </div>
             </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+          )}
+        </AnimatePresence>
+      </div>
+    </header>
   );
 };
