@@ -27,7 +27,7 @@ type RenderSpec = {
   resolution: Float32Array;
 };
 
-const PARTICLE_COUNT = 1150;
+const PARTICLE_COUNT = 4000;
 const SORT_EVERY_FRAMES = 5;
 const MAX_DELTA = 0.045;
 const FIELD_HEIGHT = 20;
