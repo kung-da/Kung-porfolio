@@ -59,6 +59,10 @@ type NotionProjectRaw = {
   properties: Record<string, any>;
 };
 
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown Notion request error";
+}
+
 // ─── Notion API config ───────────────────────────────────────────
 const NOTION_API_KEY     = process.env.NOTION_API_KEY ?? process.env.VITE_NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID ?? process.env.VITE_NOTION_DATABASE_ID;
@@ -268,16 +272,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (err) {
     console.error("[notion-projects] Notion fetch failed:", err);
 
-    // Fallback to demo data on error
-    if (slug) {
-      const demo = slug === DEMO_PROJECTS[0].slug ? DEMO_DETAIL : null;
-      return res.status(200).json({ project: demo, fromCache: true });
-    }
-
-    return res.status(200).json({
-      projects:  DEMO_PROJECTS,
-      total:     DEMO_PROJECTS.length,
-      fromCache: true,
+    return res.status(502).json({
+      error: "Notion fetch failed",
+      detail: getErrorMessage(err),
+      fromCache: false,
     });
   }
 }
