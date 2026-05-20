@@ -50,16 +50,18 @@ export const BossHPBar = memo(() => {
       >
         <div
           style={{
-            width: `${hp}%`,
+            width: "100%",
             height: "100%",
+            transform: `scaleX(${hp / 100})`,
+            transformOrigin: "left center",
             background: critical
               ? "linear-gradient(90deg, #D63A4A, #5A1118)"
               : "linear-gradient(90deg, #00F5FF, #0088aa)",
             boxShadow: critical
               ? "0 0 12px #D63A4A"
               : "0 0 8px rgba(0,245,255,0.5)",
-            transition: "width 0.15s linear",
-            willChange: "width",
+            transition: "transform 0.15s linear",
+            willChange: "transform",
           }}
         />
       </div>

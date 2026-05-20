@@ -11,7 +11,7 @@ export function useScrollProgress() {
       const max = scrollHeight - clientHeight;
       const next = max > 0 ? scrollTop / max : 0;
       // Quantize to reduce update spam while preserving smoothness.
-      return Math.round(next * 1000) / 1000;
+      return Math.round(next * 100) / 100;
     };
 
     const update = () => {

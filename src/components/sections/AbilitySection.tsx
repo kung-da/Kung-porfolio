@@ -1,5 +1,5 @@
 // Skills section
-import { useMemo, useRef, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import type { ElementType, ReactNode } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
@@ -179,6 +179,9 @@ const DOMAINS = [
 type DomainId = typeof DOMAINS[number]["id"];
 type Domain = typeof DOMAINS[number];
 type Skill = typeof DOMAINS[number]["skills"][number];
+const BAR_SEGMENTS = Array.from({ length: 10 });
+const DOSSIER_SIGNAL_BARS = Array.from({ length: 18 });
+const STATUS_DOTS = Array.from({ length: 4 });
 
 const SegmentedBar = ({
   value,
@@ -195,17 +198,13 @@ const SegmentedBar = ({
 
   return (
     <div className={`flex items-end gap-[3px] ${compact ? "gap-[2px]" : ""}`}>
-      {Array.from({ length: segments }).map((_, index) => {
+      {(segments === 10 ? BAR_SEGMENTS : Array.from({ length: segments })).map((_, index) => {
         const isActive = index < active;
         return (
-          <motion.span
+          <span
             key={index}
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: index * 0.025, duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className={`${compact ? "h-3 w-1.5" : "h-4 w-1.5 md:h-[18px] md:w-2"} shrink-0 rounded-[1px]`}
+            className={`${compact ? "h-3 w-1.5" : "h-4 w-1.5 md:h-[18px] md:w-2"} shrink-0 rounded-[1px]`}
             style={{
-              transformOrigin: "bottom",
               background: isActive ? colors.barFull : colors.barEmpty,
               border: isActive ? "none" : `1px solid ${colors.border}`,
               boxShadow: isActive ? `0 0 5px ${colors.barGlow}` : "none",
@@ -293,7 +292,7 @@ const CategoryNav = ({
   );
 };
 
-const SkillCard = ({
+const SkillCard = memo(({
   skill,
   index,
   selected,
@@ -313,9 +312,8 @@ const SkillCard = ({
     onClick={onSelect}
     initial={{ opacity: 0, scale: 0.98 }}
     animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.98 }}
     transition={{ delay: index * 0.045, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-    whileHover={{ y: -4 }}
+    whileHover={{ y: -3 }}
     className={[
       "group relative h-full overflow-hidden p-4 text-left transition-colors duration-300 md:p-5",
       "border bg-black/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg",
@@ -342,7 +340,6 @@ const SkillCard = ({
     {selected && (
       <>
         <motion.span
-          layoutId="selected-skill-edge"
           className="absolute right-0 top-0 h-16 w-px"
           style={{ background: colors.accent, boxShadow: `0 0 12px ${colors.glow}` }}
         />
@@ -385,15 +382,17 @@ const SkillCard = ({
         <span className="h-px flex-1 bg-white/[0.08]" />
       </div>
       <div className="ml-4 flex gap-1">
-        {Array.from({ length: 4 }).map((_, dot) => (
+        {STATUS_DOTS.map((_, dot) => (
           <span key={dot} className="h-1 w-1 rounded-full bg-crimson/90" />
         ))}
       </div>
     </div>
   </motion.button>
-);
+));
 
-const DossierField = ({
+SkillCard.displayName = "SkillCard";
+
+const DossierField = memo(({
   label,
   children,
   colors,
@@ -415,9 +414,11 @@ const DossierField = ({
     </p>
     {children}
   </div>
-);
+));
 
-const SkillDossier = ({
+DossierField.displayName = "DossierField";
+
+const SkillDossier = memo(({
   skill,
   colors,
 }: {
@@ -433,11 +434,24 @@ const SkillDossier = ({
     className="relative min-h-[620px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
     style={{
       borderColor: `${colors.accent}33`,
-      background: "linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, transparent 72%), rgba(0,0,0,0.52)",
-      boxShadow: "0 18px 48px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.025)",
+      background: `linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.012) 34%, transparent 72%), linear-gradient(135deg, ${colors.bgActive}, rgba(0,0,0,0.5) 52%, ${colors.bg}), rgba(0,0,0,0.52)`,
+      boxShadow: `0 18px 48px rgba(0,0,0,0.38), 0 0 34px ${colors.glowSoft}, inset 0 0 30px ${colors.bgActive}, inset 0 1px 0 rgba(255,255,255,0.09), inset 0 -1px 0 rgba(255,255,255,0.025)`,
     }}
   >
-    <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/38 to-transparent" />
+    <motion.div
+      key={`dossier-glow-${skill.name}`}
+      className="pointer-events-none absolute inset-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0.08, 0.42, 0.22] }}
+      transition={{ duration: 0.62, ease: "easeOut" }}
+      style={{
+        background: `radial-gradient(circle at 18% 18%, ${colors.glow} 0, transparent 38%), linear-gradient(90deg, transparent, ${colors.bgActive}, transparent)`,
+      }}
+    />
+    <div
+      className="absolute inset-x-8 top-0 h-px"
+      style={{ background: `linear-gradient(90deg, transparent, ${colors.accent}CC, transparent)` }}
+    />
     <div className="pointer-events-none absolute inset-0 border border-white/[0.03]" />
     <div className="relative flex items-center justify-between border-b border-white/[0.08] pb-4">
       <div className="flex items-center gap-3">
@@ -447,7 +461,7 @@ const SkillDossier = ({
         </h3>
       </div>
       <div className="flex gap-1.5">
-        {Array.from({ length: 4 }).map((_, index) => (
+        {STATUS_DOTS.map((_, index) => (
           <span key={index} className="h-1 w-1 rounded-full bg-crimson" />
         ))}
       </div>
@@ -492,7 +506,7 @@ const SkillDossier = ({
     <div className="relative mt-6 border-t border-white/[0.08] pt-4">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
-          {Array.from({ length: 18 }).map((_, index) => (
+          {DOSSIER_SIGNAL_BARS.map((_, index) => (
             <span
               key={index}
               className="w-[2px] bg-zinc-200/75"
@@ -511,7 +525,9 @@ const SkillDossier = ({
       </div>
     </div>
   </motion.aside>
-);
+));
+
+SkillDossier.displayName = "SkillDossier";
 
 const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
   <aside
@@ -532,7 +548,7 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
         </h3>
       </div>
       <div className="flex gap-1.5">
-        {Array.from({ length: 4 }).map((_, index) => (
+        {STATUS_DOTS.map((_, index) => (
           <span key={index} className="h-1 w-1 rounded-full bg-crimson/45" />
         ))}
       </div>
@@ -572,7 +588,7 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
     <div className="relative mt-6 border-t border-white/[0.08] pt-4 opacity-45">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
-          {Array.from({ length: 18 }).map((_, index) => (
+          {DOSSIER_SIGNAL_BARS.map((_, index) => (
             <span
               key={index}
               className="w-[2px] bg-zinc-500/45"
@@ -629,7 +645,7 @@ export const AbilitySection = () => {
             </span>
             <span className="h-px flex-1 bg-gradient-to-r from-crimson/70 via-crimson/20 to-transparent" />
             <div className="flex gap-1.5">
-              {Array.from({ length: 4 }).map((_, index) => (
+              {STATUS_DOTS.map((_, index) => (
                 <span key={index} className="h-1 w-1 rounded-full bg-crimson" />
               ))}
             </div>

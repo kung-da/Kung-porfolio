@@ -20,6 +20,7 @@ export const Navigation = () => {
 
   const logoRef = useRef<HTMLAnchorElement>(null);
   const isScrollingRef = useRef(false);
+  const scrollStateRef = useRef({ isScrolled: false, onHero: true });
 
   // ── Pulse glow on active page changes ──────────────────────────────────
   useEffect(() => {
@@ -41,10 +42,20 @@ export const Navigation = () => {
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
-      window.cancelAnimationFrame(raf);
+      if (raf) return;
       raf = window.requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 12);
-        setOnHero(window.scrollY < 300);
+        raf = 0;
+        const nextScrolled = window.scrollY > 12;
+        const nextOnHero = window.scrollY < 300;
+
+        if (scrollStateRef.current.isScrolled !== nextScrolled) {
+          scrollStateRef.current.isScrolled = nextScrolled;
+          setScrolled(nextScrolled);
+        }
+        if (scrollStateRef.current.onHero !== nextOnHero) {
+          scrollStateRef.current.onHero = nextOnHero;
+          setOnHero(nextOnHero);
+        }
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -83,6 +94,7 @@ export const Navigation = () => {
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.cancelAnimationFrame(raf);
       obs.disconnect();
     };
   }, []);

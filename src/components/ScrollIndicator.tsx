@@ -7,6 +7,7 @@ export const ScrollIndicator = () => {
   const [active, setActive] = useState("home");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const observedIds = useRef<Set<string>>(new Set());
+  const activeRef = useRef("home");
 
   useEffect(() => {
     const ratios = new Map<string, number>();
@@ -21,7 +22,10 @@ export const ScrollIndicator = () => {
         ratios.forEach((ratio, id) => {
           if (ratio > bestRatio) { bestRatio = ratio; bestId = id; }
         });
-        if (bestRatio > 0) setActive(bestId);
+        if (bestRatio > 0 && activeRef.current !== bestId) {
+          activeRef.current = bestId;
+          setActive(bestId);
+        }
       },
       { rootMargin: "-35% 0px -35% 0px" }
     );

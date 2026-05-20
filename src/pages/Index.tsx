@@ -34,6 +34,27 @@ const Index = () => {
     if (!isLoading) sessionStorage.setItem("booted", "true");
   }, [isLoading]);
 
+  useEffect(() => {
+    let wheelTimer = 0;
+    const root = document.documentElement;
+
+    const enableWheelMode = () => {
+      root.classList.add("is-wheel-scrolling");
+      window.clearTimeout(wheelTimer);
+      wheelTimer = window.setTimeout(() => {
+        root.classList.remove("is-wheel-scrolling");
+      }, 180);
+    };
+
+    window.addEventListener("wheel", enableWheelMode, { passive: true });
+
+    return () => {
+      window.clearTimeout(wheelTimer);
+      root.classList.remove("is-wheel-scrolling");
+      window.removeEventListener("wheel", enableWheelMode);
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
       <NoiseOverlay />

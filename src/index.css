@@ -136,6 +136,8 @@
     min-height: calc(100svh - var(--fixed-header-space));
     display: flex;
     align-items: center;
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
     padding-top: clamp(7rem, 13vh, 10rem);
     padding-bottom: clamp(6rem, 12vh, 9rem);
   }
@@ -180,6 +182,22 @@
     isolation: isolate;
     overflow: hidden;
     background: #000;
+  }
+
+  .is-wheel-scrolling .backdrop-blur-sm,
+  .is-wheel-scrolling .backdrop-blur-md,
+  .is-wheel-scrolling .backdrop-blur-lg {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .is-wheel-scrolling .content-section * {
+    transition-duration: 0ms !important;
+  }
+
+  .is-wheel-scrolling .noise-overlay {
+    mix-blend-mode: normal !important;
+    opacity: 0.05 !important;
   }
 
   .section-title {

@@ -149,7 +149,7 @@ void main(void) {
     
     if(r > rstop) discard;
     
-    vec3 col = mix(vec3(0.95, 0.74, 0.82), vec3(1.0, 0.85, 0.9), r);
+    vec3 col = mix(vec3(1.0, 0.78, 0.88), vec3(1.0, 0.9, 0.94), r);
     float grady = mix(0.0, 1.0, pow(coord.y * 0.5 + 0.5, 0.35));
     col *= vec3(1.0, grady, grady);
     col *= mix(0.8, 1.0, pow(abs(coord.x), 0.3));
@@ -158,9 +158,9 @@ void main(void) {
     col = mix(fadeCol, col, distancefade);
     
     float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
-    alpha = smoothstep(0.0, 1.0, alpha) * palpha;
+    alpha = min(1.0, smoothstep(0.0, 1.0, alpha) * palpha * 1.35);
     
-    gl_FragColor = vec4(col * 0.5, alpha);
+    gl_FragColor = vec4(col * 0.78, alpha);
 }
 `;
 
@@ -173,7 +173,7 @@ const SakuraBackground: React.FC = () => {
         if (!canvas) return;
 
         const perf = {
-            sortEvery: 2,
+            sortEvery: 4,
             maxDelta: 0.05
         };
 
@@ -190,16 +190,6 @@ const SakuraBackground: React.FC = () => {
             console.error('WebGL context could not be initialized.');
             return;
         }
-
-        let scrollVelocity = 0;
-        let lastScrollY = window.scrollY;
-
-        const handleScroll = () => {
-            scrollVelocity += Math.abs(window.scrollY - lastScrollY) * 0.05;
-            lastScrollY = window.scrollY;
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
 
         // Utilities
         const Vector3: any = {};
@@ -452,8 +442,7 @@ const SakuraBackground: React.FC = () => {
 
             update(dt: number, et: number) {
                 this.position[0] += this.velocity[0] * dt;
-                // Add scroll momentum to the Y-axis velocity (falling downwards faster)
-                this.position[1] += (this.velocity[1] - scrollVelocity) * dt;
+                this.position[1] += this.velocity[1] * dt;
                 this.position[2] += this.velocity[2] * dt;
                 
                 this.euler[0] += this.rotation[0] * dt;
@@ -476,7 +465,7 @@ const SakuraBackground: React.FC = () => {
             pointFlower.offset = new Float32Array([0.0, 0.0, 0.0]);
             pointFlower.fader = Vector3.create(0.0, 10.0, 0.0);
             
-            pointFlower.numFlowers = 2000;
+            pointFlower.numFlowers = 1500;
             pointFlower.particles = new Array(pointFlower.numFlowers);
             pointFlower.dataArray = new Float32Array(pointFlower.numFlowers * (3 + 3 + 2));
             pointFlower.positionArrayOffset = 0;
@@ -735,8 +724,6 @@ const SakuraBackground: React.FC = () => {
             timeInfo.prev = now;
             frameCount += 1;
             
-            scrollVelocity *= 0.92;
-            
             renderScene();
         }
 
@@ -747,7 +734,6 @@ const SakuraBackground: React.FC = () => {
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
             window.removeEventListener('resize', onResize);
-            window.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
@@ -762,7 +748,9 @@ const SakuraBackground: React.FC = () => {
                 width: '100%',
                 height: '100%',
                 zIndex: -1,
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                transform: 'translateZ(0)',
+                willChange: 'transform'
             }}
         />
     );
