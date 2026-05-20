@@ -54,9 +54,18 @@ type ProjectDetail = ProjectCard & {
   youtubeEmbed: string | null;
 };
 
+type NotionProperty = {
+  title?: NotionRichText;
+  rich_text?: NotionRichText;
+  select?: { name?: string } | null;
+  multi_select?: Array<{ name: string }>;
+  url?: string | null;
+  checkbox?: boolean;
+};
+
 type NotionProjectRaw = {
   id: string;
-  properties: Record<string, any>;
+  properties: Record<string, NotionProperty | undefined>;
 };
 
 function getErrorMessage(error: unknown): string {

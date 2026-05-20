@@ -182,7 +182,7 @@ export const RaidArchives = () => {
   const { projects, loading, error } = useProjects();
   const [filter, setFilter] = useState<Filter>("ALL");
   const ref = useRef<HTMLElement>(null!);
-  const inView = useInView(ref, { once: true, margin: "-10%" as any });
+  const inView = useInView(ref, { once: true, margin: "-10%" });
 
   const filtered = useMemo(() => {
     const base = filter === "ALL" ? projects : projects.filter((p) => p.category === filter);

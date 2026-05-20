@@ -1,759 +1,426 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
+import { SAKURA_POINT_FSH, SAKURA_POINT_VSH } from "@/lib/sakura-shaders";
 
-const sakura_point_vsh = `
-uniform mat4 uProjection;
-uniform mat4 uModelview;
-uniform vec3 uResolution;
-uniform vec3 uOffset;
-uniform vec3 uDOF;  //x:focus distance, y:focus radius, z:max radius
-uniform vec3 uFade; //x:start distance, y:half distance, z:near fade start
+type Vec3 = { x: number; y: number; z: number; array?: Float32Array };
 
-attribute vec3 aPosition;
-attribute vec3 aEuler;
-attribute vec2 aMisc; //x:size, y:fade
+type SakuraProgram = WebGLProgram & {
+  uniforms: {
+    uProjection: WebGLUniformLocation | null;
+    uModelview: WebGLUniformLocation | null;
+    uResolution: WebGLUniformLocation | null;
+    uOffset: WebGLUniformLocation | null;
+    uDOF: WebGLUniformLocation | null;
+    uFade: WebGLUniformLocation | null;
+  };
+  attributes: {
+    aPosition: number;
+    aEuler: number;
+    aMisc: number;
+  };
+};
 
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
+type RenderSpec = {
+  width: number;
+  height: number;
+  aspect: number;
+  dpr: number;
+  resolution: Float32Array;
+};
 
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
+const PARTICLE_COUNT = 1150;
+const SORT_EVERY_FRAMES = 5;
+const MAX_DELTA = 0.045;
+const FIELD_HEIGHT = 20;
+const FIELD_DEPTH = 22;
+const PI2 = Math.PI * 2;
 
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
+const createVec3 = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
 
-void main(void) {
-    // Projection is based on vertical angle
-    vec4 pos = uModelview * vec4(aPosition + uOffset, 1.0);
-    gl_Position = uProjection * pos;
-    gl_PointSize = aMisc.x * uProjection[1][1] / -pos.z * uResolution.y * 0.5;
-    
-    pposition = pos.xyz;
-    psize = aMisc.x;
-    pdist = length(pos.xyz);
-    palpha = smoothstep(0.0, 1.0, (pdist - 0.1) / uFade.z);
-    
-    vec3 elrsn = sin(aEuler);
-    vec3 elrcs = cos(aEuler);
-    mat3 rotx = mat3(
-        1.0, 0.0, 0.0,
-        0.0, elrcs.x, elrsn.x,
-        0.0, -elrsn.x, elrcs.x
-    );
-    mat3 roty = mat3(
-        elrcs.y, 0.0, -elrsn.y,
-        0.0, 1.0, 0.0,
-        elrsn.y, 0.0, elrcs.y
-    );
-    mat3 rotz = mat3(
-        elrcs.z, elrsn.z, 0.0, 
-        -elrsn.z, elrcs.z, 0.0,
-        0.0, 0.0, 1.0
-    );
-    mat3 rotmat = rotx * roty * rotz;
-    normal = rotmat[2];
-    
-    mat3 trrotm = mat3(
-        rotmat[0][0], rotmat[1][0], rotmat[2][0],
-        rotmat[0][1], rotmat[1][1], rotmat[2][1],
-        rotmat[0][2], rotmat[1][2], rotmat[2][2]
-    );
-    normX = trrotm[0];
-    normY = trrotm[1];
-    normZ = trrotm[2];
-    
-    const vec3 lit = vec3(0.6917144638660746, 0.6917144638660746, -0.20751433915982237);
-    
-    float tmpdfs = dot(lit, normal);
-    if(tmpdfs < 0.0) {
-        normal = -normal;
-        tmpdfs = dot(lit, normal);
+const normalize = (v: Vec3) => {
+  const len = Math.hypot(v.x, v.y, v.z);
+  if (len > 0.00001) {
+    v.x /= len;
+    v.y /= len;
+    v.z /= len;
+  }
+  return v;
+};
+
+const cross = (a: Vec3, b: Vec3): Vec3 => ({
+  x: a.y * b.z - a.z * b.y,
+  y: a.z * b.x - a.x * b.z,
+  z: a.x * b.y - a.y * b.x,
+});
+
+const vecArray = (v: Vec3) => {
+  if (!v.array) v.array = new Float32Array(3);
+  v.array[0] = v.x;
+  v.array[1] = v.y;
+  v.array[2] = v.z;
+  return v.array;
+};
+
+const identityMatrix = () =>
+  new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+
+const loadProjection = (matrix: Float32Array, aspect: number, angle: number, near: number, far: number) => {
+  const h = near * Math.tan((angle * Math.PI) / 360) * 2;
+  const w = h * aspect;
+
+  matrix[0] = (2 * near) / w;
+  matrix[1] = 0;
+  matrix[2] = 0;
+  matrix[3] = 0;
+  matrix[4] = 0;
+  matrix[5] = (2 * near) / h;
+  matrix[6] = 0;
+  matrix[7] = 0;
+  matrix[8] = 0;
+  matrix[9] = 0;
+  matrix[10] = -(far + near) / (far - near);
+  matrix[11] = -1;
+  matrix[12] = 0;
+  matrix[13] = 0;
+  matrix[14] = (-2 * far * near) / (far - near);
+  matrix[15] = 0;
+};
+
+const loadLookAt = (matrix: Float32Array, position: Vec3, lookAt: Vec3, up: Vec3) => {
+  const front = normalize(createVec3(position.x - lookAt.x, position.y - lookAt.y, position.z - lookAt.z));
+  const side = normalize(cross(up, front));
+  const top = normalize(cross(front, side));
+
+  matrix[0] = side.x;
+  matrix[1] = top.x;
+  matrix[2] = front.x;
+  matrix[3] = 0;
+  matrix[4] = side.y;
+  matrix[5] = top.y;
+  matrix[6] = front.y;
+  matrix[7] = 0;
+  matrix[8] = side.z;
+  matrix[9] = top.z;
+  matrix[10] = front.z;
+  matrix[11] = 0;
+  matrix[12] = -(position.x * matrix[0] + position.y * matrix[4] + position.z * matrix[8]);
+  matrix[13] = -(position.x * matrix[1] + position.y * matrix[5] + position.z * matrix[9]);
+  matrix[14] = -(position.x * matrix[2] + position.y * matrix[6] + position.z * matrix[10]);
+  matrix[15] = 1;
+};
+
+const rand = (min: number, max: number) => min + Math.random() * (max - min);
+
+class SakuraParticle {
+  position = [0, 0, 0];
+  velocity = [0, 0, 0];
+  rotation = [0, 0, 0];
+  euler = [0, 0, 0];
+  size = 1;
+  alpha = 1;
+  zkey = 0;
+  sway = Math.random() * PI2;
+  swaySpeed = 1;
+
+  reset(areaX: number, areaY: number, areaZ: number, randomY = true) {
+    const drift = normalize(createVec3(rand(0.55, 1.05), rand(-1.28, -0.76), rand(0.08, 0.58)));
+    const speed = rand(1.7, 3.3);
+
+    this.velocity[0] = drift.x * speed;
+    this.velocity[1] = drift.y * speed;
+    this.velocity[2] = drift.z * speed;
+    this.rotation[0] = rand(-Math.PI, Math.PI) * 0.42;
+    this.rotation[1] = rand(-Math.PI, Math.PI) * 0.58;
+    this.rotation[2] = rand(-Math.PI, Math.PI) * 0.72;
+    this.position[0] = rand(-areaX, areaX);
+    this.position[1] = randomY ? rand(-areaY, areaY) : areaY + rand(0.2, 2.4);
+    this.position[2] = rand(-areaZ, areaZ);
+    this.euler[0] = rand(0, PI2);
+    this.euler[1] = rand(0, PI2);
+    this.euler[2] = rand(0, PI2);
+    this.size = rand(0.82, 1.1);
+    this.alpha = rand(0.68, 0.98);
+    this.swaySpeed = rand(0.68, 1.08);
+  }
+
+  update(delta: number, elapsed: number, areaX: number, areaY: number, areaZ: number) {
+    this.sway += delta * this.swaySpeed;
+    const wave = Math.sin(this.sway + elapsed * 0.68);
+
+    this.position[0] += (this.velocity[0] + wave * 0.35) * delta;
+    this.position[1] += this.velocity[1] * delta;
+    this.position[2] += (this.velocity[2] + Math.cos(this.sway) * 0.18) * delta;
+
+    this.euler[0] = (this.euler[0] + this.rotation[0] * delta) % PI2;
+    this.euler[1] = (this.euler[1] + this.rotation[1] * delta) % PI2;
+    this.euler[2] = (this.euler[2] + this.rotation[2] * delta) % PI2;
+
+    if (this.position[1] < -areaY - 1.8 || this.position[0] > areaX + 2.2 || this.position[2] > areaZ + 2) {
+      this.reset(areaX, areaY, areaZ, false);
+      this.position[0] = rand(-areaX * 1.15, areaX * 0.35);
     }
-    diffuse = 0.4 + tmpdfs;
-    
-    vec3 eyev = normalize(-pos.xyz);
-    if(dot(eyev, normal) > 0.0) {
-        vec3 hv = normalize(eyev + lit);
-        specular = pow(max(dot(hv, normal), 0.0), 20.0);
-    }
-    else {
-        specular = 0.0;
-    }
-    
-    rstop = clamp((abs(pdist - uDOF.x) - uDOF.y) / uDOF.z, 0.0, 1.0);
-    rstop = pow(rstop, 0.5);
-    //-0.69315 = ln(0.5)
-    distancefade = min(1.0, exp((uFade.x - pdist) * 0.69315 / uFade.y));
+    if (this.position[0] < -areaX - 2) this.position[0] = areaX + 1.2;
+    if (this.position[2] < -areaZ - 2) this.position[2] = areaZ + 1.2;
+  }
 }
-`;
 
-const sakura_point_fsh = `
-#ifdef GL_ES
-//precision mediump float;
-precision highp float;
-#endif
+const compileShader = (gl: WebGLRenderingContext, type: number, source: string) => {
+  const shader = gl.createShader(type);
+  if (!shader) return null;
 
-uniform vec3 uDOF;  //x:focus distance, y:focus radius, z:max radius
-uniform vec3 uFade; //x:start distance, y:half distance, z:near fade start
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
 
-const vec3 fadeCol = vec3(0.08, 0.03, 0.06);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
 
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
+  return shader;
+};
 
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
+const createSakuraProgram = (gl: WebGLRenderingContext): SakuraProgram | null => {
+  const vertex = compileShader(gl, gl.VERTEX_SHADER, SAKURA_POINT_VSH);
+  const fragment = compileShader(gl, gl.FRAGMENT_SHADER, SAKURA_POINT_FSH);
+  if (!vertex || !fragment) return null;
 
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
+  const program = gl.createProgram() as SakuraProgram | null;
+  if (!program) return null;
 
-float ellipse(vec2 p, vec2 o, vec2 r) {
-    vec2 lp = (p - o) / r;
-    return length(lp) - 1.0;
-}
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  gl.deleteShader(vertex);
+  gl.deleteShader(fragment);
 
-void main(void) {
-    vec3 p = vec3(gl_PointCoord - vec2(0.5, 0.5), 0.0) * 2.0;
-    vec3 d = vec3(0.0, 0.0, -1.0);
-    float nd = normZ.z; 
-    if(abs(nd) < 0.0001) discard;
-    
-    float np = dot(normZ, p);
-    vec3 tp = p + d * np / nd;
-    vec2 coord = vec2(dot(normX, tp), dot(normY, tp));
-    
-    //angle = 15 degree
-    const float flwrsn = 0.258819045102521;
-    const float flwrcs = 0.965925826289068;
-    mat2 flwrm = mat2(flwrcs, -flwrsn, flwrsn, flwrcs);
-    vec2 flwrp = vec2(abs(coord.x), coord.y) * flwrm;
-    
-    float r;
-    if(flwrp.x < 0.0) {
-        r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.36, 0.96) * 0.5);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+    return null;
+  }
+
+  program.uniforms = {
+    uProjection: gl.getUniformLocation(program, "uProjection"),
+    uModelview: gl.getUniformLocation(program, "uModelview"),
+    uResolution: gl.getUniformLocation(program, "uResolution"),
+    uOffset: gl.getUniformLocation(program, "uOffset"),
+    uDOF: gl.getUniformLocation(program, "uDOF"),
+    uFade: gl.getUniformLocation(program, "uFade"),
+  };
+  program.attributes = {
+    aPosition: gl.getAttribLocation(program, "aPosition"),
+    aEuler: gl.getAttribLocation(program, "aEuler"),
+    aMisc: gl.getAttribLocation(program, "aMisc"),
+  };
+
+  return program;
+};
+
+const SakuraBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const gl = canvas.getContext("webgl", {
+      alpha: true,
+      antialias: true,
+      depth: true,
+      premultipliedAlpha: false,
+    });
+
+    if (!gl) {
+      console.error("WebGL context could not be initialized.");
+      return;
     }
-    else {
-        r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.58, 0.96) * 0.5);
-    }
-    
-    if(r > rstop) discard;
-    
-    vec3 col = mix(vec3(1.0, 0.78, 0.88), vec3(1.0, 0.9, 0.94), r);
-    float grady = mix(0.0, 1.0, pow(coord.y * 0.5 + 0.5, 0.35));
-    col *= vec3(1.0, grady, grady);
-    col *= mix(0.8, 1.0, pow(abs(coord.x), 0.3));
-    col = col * diffuse + specular;
-    
-    col = mix(fadeCol, col, distancefade);
-    
-    float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
-    alpha = min(1.0, smoothstep(0.0, 1.0, alpha) * palpha * 1.35);
-    
-    gl_FragColor = vec4(col * 0.78, alpha);
-}
-`;
 
+    const program = createSakuraProgram(gl);
+    if (!program) return;
 
-const SakuraBackground: React.FC = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const render: RenderSpec = {
+      width: 0,
+      height: 0,
+      aspect: 1,
+      dpr: 1,
+      resolution: new Float32Array(3),
+    };
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+    const projection = {
+      angle: 60,
+      near: 0.1,
+      far: 100,
+      matrix: identityMatrix(),
+    };
+    const camera = {
+      position: createVec3(0, 0, 100),
+      lookAt: createVec3(0, 0, 0),
+      up: createVec3(0, 1, 0),
+      dof: createVec3(10, 4.6, 8.5),
+      matrix: identityMatrix(),
+    };
+    const field = {
+      x: 20,
+      y: FIELD_HEIGHT,
+      z: FIELD_DEPTH,
+      fade: createVec3(10, FIELD_DEPTH, 0.1),
+      offset: new Float32Array([0, 0, 0]),
+    };
 
-        const perf = {
-            sortEvery: 4,
-            maxDelta: 0.05
-        };
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => new SakuraParticle());
+    const data = new Float32Array(PARTICLE_COUNT * 8);
+    const buffer = gl.createBuffer();
+    let animationFrame = 0;
+    let frame = 0;
+    let visible = true;
+    let previousTime = performance.now();
+    let elapsed = 0;
 
-        let gl: WebGLRenderingContext | null;
-        try {
-            gl = (canvas.getContext('experimental-webgl', { alpha: true }) ||
-                  canvas.getContext('webgl', { alpha: true })) as WebGLRenderingContext;
-        } catch (e) {
-            console.error('WebGL not supported.', e);
-            return;
+    const updateSize = () => {
+      const rect = canvas.getBoundingClientRect();
+      render.dpr = Math.min(window.devicePixelRatio || 1, 2);
+      render.width = Math.max(1, Math.floor(rect.width * render.dpr));
+      render.height = Math.max(1, Math.floor(rect.height * render.dpr));
+      render.aspect = render.width / render.height;
+      render.resolution[0] = render.width;
+      render.resolution[1] = render.height;
+      render.resolution[2] = render.aspect;
+
+      canvas.width = render.width;
+      canvas.height = render.height;
+      gl.viewport(0, 0, render.width, render.height);
+
+      field.x = FIELD_HEIGHT * render.aspect;
+      field.fade.x = 10;
+      field.fade.y = field.z;
+      field.fade.z = 0.1;
+      camera.position.z = field.z + projection.near;
+      projection.angle = (Math.atan2(field.y, camera.position.z + field.z) * 360) / Math.PI;
+      loadProjection(projection.matrix, render.aspect, projection.angle, projection.near, projection.far);
+
+      particles.forEach((particle) => particle.reset(field.x, field.y, field.z));
+    };
+
+    const onResize = () => updateSize();
+
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    });
+
+    observer.observe(canvas);
+    window.addEventListener("resize", onResize);
+
+    updateSize();
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthMask(false);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    const renderParticles = (delta: number) => {
+      particles.forEach((particle) => {
+        particle.update(delta, elapsed, field.x, field.y, field.z);
+        particle.zkey =
+          camera.matrix[2] * particle.position[0] +
+          camera.matrix[6] * particle.position[1] +
+          camera.matrix[10] * particle.position[2] +
+          camera.matrix[14];
+      });
+
+      if (frame % SORT_EVERY_FRAMES === 0) {
+        particles.sort((a, b) => a.zkey - b.zkey);
+      }
+
+      particles.forEach((particle, index) => {
+        const offset = index * 8;
+        data[offset] = particle.position[0];
+        data[offset + 1] = particle.position[1];
+        data[offset + 2] = particle.position[2];
+        data[offset + 3] = particle.euler[0];
+        data[offset + 4] = particle.euler[1];
+        data[offset + 5] = particle.euler[2];
+        data[offset + 6] = particle.size;
+        data[offset + 7] = particle.alpha;
+      });
+
+      gl.useProgram(program);
+      gl.uniformMatrix4fv(program.uniforms.uProjection, false, projection.matrix);
+      gl.uniformMatrix4fv(program.uniforms.uModelview, false, camera.matrix);
+      gl.uniform3fv(program.uniforms.uResolution, render.resolution);
+      gl.uniform3fv(program.uniforms.uDOF, vecArray(camera.dof));
+      gl.uniform3fv(program.uniforms.uFade, vecArray(field.fade));
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(program.attributes.aPosition);
+      gl.enableVertexAttribArray(program.attributes.aEuler);
+      gl.enableVertexAttribArray(program.attributes.aMisc);
+      gl.vertexAttribPointer(program.attributes.aPosition, 3, gl.FLOAT, false, 32, 0);
+      gl.vertexAttribPointer(program.attributes.aEuler, 3, gl.FLOAT, false, 32, 12);
+      gl.vertexAttribPointer(program.attributes.aMisc, 2, gl.FLOAT, false, 32, 24);
+
+      for (let ix = -1; ix <= 1; ix += 1) {
+        for (let iy = -1; iy <= 1; iy += 1) {
+          field.offset[0] = ix * field.x * 2;
+          field.offset[1] = iy * field.y * 2;
+          field.offset[2] = 0;
+          gl.uniform3fv(program.uniforms.uOffset, field.offset);
+          gl.drawArrays(gl.POINTS, 0, PARTICLE_COUNT);
         }
+      }
 
-        if (!gl) {
-            console.error('WebGL context could not be initialized.');
-            return;
-        }
+      gl.disableVertexAttribArray(program.attributes.aPosition);
+      gl.disableVertexAttribArray(program.attributes.aEuler);
+      gl.disableVertexAttribArray(program.attributes.aMisc);
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      gl.useProgram(null);
+    };
 
-        // Utilities
-        const Vector3: any = {};
-        const Matrix44: any = {};
+    const animate = (now: number) => {
+      animationFrame = requestAnimationFrame(animate);
+      if (!visible || document.hidden) {
+        previousTime = now;
+        return;
+      }
 
-        Vector3.create = function(x: number, y: number, z: number) {
-            return {'x':x, 'y':y, 'z':z};
-        };
-        Vector3.dot = function (v0: any, v1: any) {
-            return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
-        };
-        Vector3.cross = function (v: any, v0: any, v1: any) {
-            v.x = v0.y * v1.z - v0.z * v1.y;
-            v.y = v0.z * v1.x - v0.x * v1.z;
-            v.z = v0.x * v1.y - v0.y * v1.x;
-        };
-        Vector3.normalize = function (v: any) {
-            let l = v.x * v.x + v.y * v.y + v.z * v.z;
-            if(l > 0.00001) {
-                l = 1.0 / Math.sqrt(l);
-                v.x *= l;
-                v.y *= l;
-                v.z *= l;
-            }
-        };
-        Vector3.arrayForm = function(v: any) {
-            if(v.array) {
-                v.array[0] = v.x;
-                v.array[1] = v.y;
-                v.array[2] = v.z;
-            } else {
-                v.array = new Float32Array([v.x, v.y, v.z]);
-            }
-            return v.array;
-        };
+      const delta = Math.min((now - previousTime) / 1000, MAX_DELTA);
+      previousTime = now;
+      elapsed += delta;
+      frame += 1;
 
-        Matrix44.createIdentity = function () {
-            return new Float32Array([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
-        };
-        Matrix44.loadProjection = function (m: any, aspect: number, vdeg: number, near: number, far: number) {
-            let h = near * Math.tan(vdeg * Math.PI / 180.0 * 0.5) * 2.0;
-            let w = h * aspect;
-            
-            m[0] = 2.0 * near / w;
-            m[1] = 0.0;
-            m[2] = 0.0;
-            m[3] = 0.0;
-            
-            m[4] = 0.0;
-            m[5] = 2.0 * near / h;
-            m[6] = 0.0;
-            m[7] = 0.0;
-            
-            m[8] = 0.0;
-            m[9] = 0.0;
-            m[10] = -(far + near) / (far - near);
-            m[11] = -1.0;
-            
-            m[12] = 0.0;
-            m[13] = 0.0;
-            m[14] = -2.0 * far * near / (far - near);
-            m[15] = 0.0;
-        };
-        Matrix44.loadLookAt = function (m: any, vpos: any, vlook: any, vup: any) {
-            let frontv = Vector3.create(vpos.x - vlook.x, vpos.y - vlook.y, vpos.z - vlook.z);
-            Vector3.normalize(frontv);
-            let sidev = Vector3.create(1.0, 0.0, 0.0);
-            Vector3.cross(sidev, vup, frontv);
-            Vector3.normalize(sidev);
-            let topv = Vector3.create(1.0, 0.0, 0.0);
-            Vector3.cross(topv, frontv, sidev);
-            Vector3.normalize(topv);
-            
-            m[0] = sidev.x;
-            m[1] = topv.x;
-            m[2] = frontv.x;
-            m[3] = 0.0;
-            
-            m[4] = sidev.y;
-            m[5] = topv.y;
-            m[6] = frontv.y;
-            m[7] = 0.0;
-            
-            m[8] = sidev.z;
-            m[9] = topv.z;
-            m[10] = frontv.z;
-            m[11] = 0.0;
-            
-            m[12] = -(vpos.x * m[0] + vpos.y * m[4] + vpos.z * m[8]);
-            m[13] = -(vpos.x * m[1] + vpos.y * m[5] + vpos.z * m[9]);
-            m[14] = -(vpos.x * m[2] + vpos.y * m[6] + vpos.z * m[10]);
-            m[15] = 1.0;
-        };
+      loadLookAt(camera.matrix, camera.position, camera.lookAt, camera.up);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      renderParticles(delta);
+    };
 
-        const timeInfo = {
-            'start': 0, 'prev': 0,
-            'delta': 0, 'elapsed': 0
-        };
+    animationFrame = requestAnimationFrame(animate);
 
-        const renderSpec: any = {
-            'width': 0,
-            'height': 0,
-            'aspect': 1,
-            'array': new Float32Array(3)
-        };
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      observer.disconnect();
+      window.removeEventListener("resize", onResize);
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+    };
+  }, []);
 
-        renderSpec.setSize = function(w: number, h: number) {
-            renderSpec.width = w;
-            renderSpec.height = h;
-            renderSpec.aspect = renderSpec.width / renderSpec.height;
-            renderSpec.array[0] = renderSpec.width;
-            renderSpec.array[1] = renderSpec.height;
-            renderSpec.array[2] = renderSpec.aspect;
-        };
-
-
-        function compileShader(shtype: number, shsrc: string) {
-            const retsh = gl!.createShader(shtype);
-            if (!retsh) return null;
-
-            gl!.shaderSource(retsh, shsrc);
-            gl!.compileShader(retsh);
-            
-            if(!gl!.getShaderParameter(retsh, gl!.COMPILE_STATUS)) {
-                const errlog = gl!.getShaderInfoLog(retsh);
-                gl!.deleteShader(retsh);
-                console.error(errlog);
-                return null;
-            }
-            return retsh;
-        }
-
-        function createShader(vtxsrc: string, frgsrc: string, uniformlist: string[] | null, attrlist: string[] | null) {
-            const vsh = compileShader(gl!.VERTEX_SHADER, vtxsrc);
-            const fsh = compileShader(gl!.FRAGMENT_SHADER, frgsrc);
-            
-            if(vsh == null || fsh == null) {
-                return null;
-            }
-            
-            const prog: any = gl!.createProgram();
-            gl!.attachShader(prog, vsh);
-            gl!.attachShader(prog, fsh);
-            
-            gl!.deleteShader(vsh);
-            gl!.deleteShader(fsh);
-            
-            gl!.linkProgram(prog);
-            if (!gl!.getProgramParameter(prog, gl!.LINK_STATUS)) {
-                const errlog = gl!.getProgramInfoLog(prog);
-                console.error(errlog);
-                return null;
-            }
-            
-            if(uniformlist) {
-                prog.uniforms = {};
-                for(let i = 0; i < uniformlist.length; i++) {
-                    prog.uniforms[uniformlist[i]] = gl!.getUniformLocation(prog, uniformlist[i]);
-                }
-            }
-            
-            if(attrlist) {
-                prog.attributes = {};
-                for(let i = 0; i < attrlist.length; i++) {
-                    const attr = attrlist[i];
-                    prog.attributes[attr] = gl!.getAttribLocation(prog, attr);
-                }
-            }
-            
-            return prog;
-        }
-
-        function useShader(prog: any) {
-            gl!.useProgram(prog);
-            for(const attr in prog.attributes) {
-                gl!.enableVertexAttribArray(prog.attributes[attr]);
-            }
-        }
-
-        function unuseShader(prog: any) {
-            for(const attr in prog.attributes) {
-                gl!.disableVertexAttribArray(prog.attributes[attr]);
-            }
-            gl!.useProgram(null);
-        }
-
-        const projection: any = {
-            'angle': 60,
-            'nearfar': new Float32Array([0.1, 100.0]),
-            'matrix': Matrix44.createIdentity()
-        };
-        const camera: any = {
-            'position': Vector3.create(0, 0, 100),
-            'lookat': Vector3.create(0, 0, 0),
-            'up': Vector3.create(0, 1, 0),
-            'dof': Vector3.create(10.0, 4.0, 8.0),
-            'matrix': Matrix44.createIdentity()
-        };
-
-        const pointFlower: any = {};
-        let sceneStandBy = false;
-        let frameCount = 0;
-
-        class BlossomParticle {
-            velocity: number[];
-            rotation: number[];
-            position: number[];
-            euler: number[];
-            size: number;
-            alpha: number;
-            zkey: number;
-
-            constructor() {
-                this.velocity = new Array(3);
-                this.rotation = new Array(3);
-                this.position = new Array(3);
-                this.euler = new Array(3);
-                this.size = 1.0;
-                this.alpha = 1.0;
-                this.zkey = 0.0;
-            }
-
-            setVelocity(vx: number, vy: number, vz: number) {
-                this.velocity[0] = vx;
-                this.velocity[1] = vy;
-                this.velocity[2] = vz;
-            }
-
-            setRotation(rx: number, ry: number, rz: number) {
-                this.rotation[0] = rx;
-                this.rotation[1] = ry;
-                this.rotation[2] = rz;
-            }
-
-            setPosition(nx: number, ny: number, nz: number) {
-                this.position[0] = nx;
-                this.position[1] = ny;
-                this.position[2] = nz;
-            }
-
-            setEulerAngles(rx: number, ry: number, rz: number) {
-                this.euler[0] = rx;
-                this.euler[1] = ry;
-                this.euler[2] = rz;
-            }
-
-            setSize(s: number) {
-                this.size = s;
-            }
-
-            update(dt: number, et: number) {
-                this.position[0] += this.velocity[0] * dt;
-                this.position[1] += this.velocity[1] * dt;
-                this.position[2] += this.velocity[2] * dt;
-                
-                this.euler[0] += this.rotation[0] * dt;
-                this.euler[1] += this.rotation[1] * dt;
-                this.euler[2] += this.rotation[2] * dt;
-            }
-        }
-
-        function createPointFlowers() {
-            const prm = gl!.getParameter(gl!.ALIASED_POINT_SIZE_RANGE);
-            renderSpec.pointSize = {'min': prm[0], 'max': prm[1]};
-            
-            pointFlower.program = createShader(
-                sakura_point_vsh, sakura_point_fsh,
-                ['uProjection', 'uModelview', 'uResolution', 'uOffset', 'uDOF', 'uFade'],
-                ['aPosition', 'aEuler', 'aMisc']
-            );
-            
-            useShader(pointFlower.program);
-            pointFlower.offset = new Float32Array([0.0, 0.0, 0.0]);
-            pointFlower.fader = Vector3.create(0.0, 10.0, 0.0);
-            
-            pointFlower.numFlowers = 1500;
-            pointFlower.particles = new Array(pointFlower.numFlowers);
-            pointFlower.dataArray = new Float32Array(pointFlower.numFlowers * (3 + 3 + 2));
-            pointFlower.positionArrayOffset = 0;
-            pointFlower.eulerArrayOffset = pointFlower.numFlowers * 3;
-            pointFlower.miscArrayOffset = pointFlower.numFlowers * 6;
-            
-            pointFlower.buffer = gl!.createBuffer();
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, pointFlower.buffer);
-            gl!.bufferData(gl!.ARRAY_BUFFER, pointFlower.dataArray, gl!.DYNAMIC_DRAW);
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, null);
-            
-            unuseShader(pointFlower.program);
-            
-            for(let i = 0; i < pointFlower.numFlowers; i++) {
-                pointFlower.particles[i] = new BlossomParticle();
-            }
-        }
-
-        function initPointFlowers() {
-            pointFlower.area = Vector3.create(20.0, 20.0, 20.0);
-            pointFlower.area.x = pointFlower.area.y * renderSpec.aspect;
-            
-            pointFlower.fader.x = 10.0;
-            pointFlower.fader.y = pointFlower.area.z;
-            pointFlower.fader.z = 0.1;
-            
-            const PI2 = Math.PI * 2.0;
-            const tmpv3 = Vector3.create(0, 0, 0);
-            let tmpv = 0;
-            const symmetryrand = function() {return (Math.random() * 2.0 - 1.0);};
-            
-            for(let i = 0; i < pointFlower.numFlowers; i++) {
-                const tmpprtcl = pointFlower.particles[i];
-                
-                tmpv3.x = symmetryrand() * 0.3 + 0.8;
-                tmpv3.y = symmetryrand() * 0.2 - 1.0;
-                tmpv3.z = symmetryrand() * 0.3 + 0.5;
-                Vector3.normalize(tmpv3);
-                tmpv = 2.0 + Math.random() * 1.0;
-                tmpprtcl.setVelocity(tmpv3.x * tmpv, tmpv3.y * tmpv, tmpv3.z * tmpv);
-                
-                tmpprtcl.setRotation(
-                    symmetryrand() * PI2 * 0.5,
-                    symmetryrand() * PI2 * 0.5,
-                    symmetryrand() * PI2 * 0.5
-                );
-                
-                tmpprtcl.setPosition(
-                    symmetryrand() * pointFlower.area.x,
-                    symmetryrand() * pointFlower.area.y,
-                    symmetryrand() * pointFlower.area.z
-                );
-                
-                tmpprtcl.setEulerAngles(
-                    Math.random() * Math.PI * 2.0,
-                    Math.random() * Math.PI * 2.0,
-                    Math.random() * Math.PI * 2.0
-                );
-                
-                tmpprtcl.setSize(0.9 + Math.random() * 0.1);
-            }
-        }
-
-        function renderPointFlowers() {
-            const PI2 = Math.PI * 2.0;
-            const repeatPos = function (prt: any, cmp: number, limit: number) {
-                if(Math.abs(prt.position[cmp]) - prt.size * 0.5 > limit) {
-                    if(prt.position[cmp] > 0) {
-                        prt.position[cmp] -= limit * 2.0;
-                    } else {
-                        prt.position[cmp] += limit * 2.0;
-                    }
-                }
-            };
-            const repeatEuler = function (prt: any, cmp: number) {
-                prt.euler[cmp] = prt.euler[cmp] % PI2;
-                if(prt.euler[cmp] < 0.0) {
-                    prt.euler[cmp] += PI2;
-                }
-            };
-            
-            for(let i = 0; i < pointFlower.numFlowers; i++) {
-                const prtcl = pointFlower.particles[i];
-                prtcl.update(timeInfo.delta, timeInfo.elapsed);
-                repeatPos(prtcl, 0, pointFlower.area.x);
-                repeatPos(prtcl, 1, pointFlower.area.y);
-                repeatPos(prtcl, 2, pointFlower.area.z);
-                repeatEuler(prtcl, 0);
-                repeatEuler(prtcl, 1);
-                repeatEuler(prtcl, 2);
-                
-                prtcl.alpha = 1.0;
-                
-                prtcl.zkey = (camera.matrix[2] * prtcl.position[0]
-                            + camera.matrix[6] * prtcl.position[1]
-                            + camera.matrix[10] * prtcl.position[2]
-                            + camera.matrix[14]);
-            }
-            
-            if (frameCount % perf.sortEvery === 0) {
-                pointFlower.particles.sort(function(p0: any, p1: any){return p0.zkey - p1.zkey;});
-            }
-            
-            let ipos = pointFlower.positionArrayOffset;
-            let ieuler = pointFlower.eulerArrayOffset;
-            let imisc = pointFlower.miscArrayOffset;
-            for(let i = 0; i < pointFlower.numFlowers; i++) {
-                const prtcl = pointFlower.particles[i];
-                pointFlower.dataArray[ipos] = prtcl.position[0];
-                pointFlower.dataArray[ipos + 1] = prtcl.position[1];
-                pointFlower.dataArray[ipos + 2] = prtcl.position[2];
-                ipos += 3;
-                pointFlower.dataArray[ieuler] = prtcl.euler[0];
-                pointFlower.dataArray[ieuler + 1] = prtcl.euler[1];
-                pointFlower.dataArray[ieuler + 2] = prtcl.euler[2];
-                ieuler += 3;
-                pointFlower.dataArray[imisc] = prtcl.size;
-                pointFlower.dataArray[imisc + 1] = prtcl.alpha;
-                imisc += 2;
-            }
-            
-            gl!.enable(gl!.BLEND);
-            gl!.blendFunc(gl!.SRC_ALPHA, gl!.ONE_MINUS_SRC_ALPHA);
-            
-            const prog = pointFlower.program;
-            useShader(prog);
-            
-            gl!.uniformMatrix4fv(prog.uniforms.uProjection, false, projection.matrix);
-            gl!.uniformMatrix4fv(prog.uniforms.uModelview, false, camera.matrix);
-            gl!.uniform3fv(prog.uniforms.uResolution, renderSpec.array);
-            gl!.uniform3fv(prog.uniforms.uDOF, Vector3.arrayForm(camera.dof));
-            gl!.uniform3fv(prog.uniforms.uFade, Vector3.arrayForm(pointFlower.fader));
-            
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, pointFlower.buffer);
-            gl!.bufferData(gl!.ARRAY_BUFFER, pointFlower.dataArray, gl!.DYNAMIC_DRAW);
-            
-            gl!.vertexAttribPointer(prog.attributes.aPosition, 3, gl!.FLOAT, false, 0, pointFlower.positionArrayOffset * Float32Array.BYTES_PER_ELEMENT);
-            gl!.vertexAttribPointer(prog.attributes.aEuler, 3, gl!.FLOAT, false, 0, pointFlower.eulerArrayOffset * Float32Array.BYTES_PER_ELEMENT);
-            gl!.vertexAttribPointer(prog.attributes.aMisc, 2, gl!.FLOAT, false, 0, pointFlower.miscArrayOffset * Float32Array.BYTES_PER_ELEMENT);
-            
-            for(let i = 1; i < 2; i++) {
-                const zpos = i * -2.0;
-                pointFlower.offset[0] = pointFlower.area.x * -1.0;
-                pointFlower.offset[1] = pointFlower.area.y * -1.0;
-                pointFlower.offset[2] = pointFlower.area.z * zpos;
-                gl!.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
-                gl!.drawArrays(gl!.POINT, 0, pointFlower.numFlowers);
-                
-                pointFlower.offset[0] = pointFlower.area.x * -1.0;
-                pointFlower.offset[1] = pointFlower.area.y *  1.0;
-                pointFlower.offset[2] = pointFlower.area.z * zpos;
-                gl!.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
-                gl!.drawArrays(gl!.POINT, 0, pointFlower.numFlowers);
-                
-                pointFlower.offset[0] = pointFlower.area.x *  1.0;
-                pointFlower.offset[1] = pointFlower.area.y * -1.0;
-                pointFlower.offset[2] = pointFlower.area.z * zpos;
-                gl!.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
-                gl!.drawArrays(gl!.POINT, 0, pointFlower.numFlowers);
-                
-                pointFlower.offset[0] = pointFlower.area.x *  1.0;
-                pointFlower.offset[1] = pointFlower.area.y *  1.0;
-                pointFlower.offset[2] = pointFlower.area.z * zpos;
-                gl!.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
-                gl!.drawArrays(gl!.POINT, 0, pointFlower.numFlowers);
-            }
-            
-            pointFlower.offset[0] = 0.0;
-            pointFlower.offset[1] = 0.0;
-            pointFlower.offset[2] = 0.0;
-            gl!.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
-            gl!.drawArrays(gl!.POINT, 0, pointFlower.numFlowers);
-            
-            gl!.bindBuffer(gl!.ARRAY_BUFFER, null);
-            unuseShader(prog);
-            
-            gl!.enable(gl!.DEPTH_TEST);
-            gl!.disable(gl!.BLEND);
-        }
-
-
-        function createScene() {
-            createPointFlowers();
-            sceneStandBy = true;
-        }
-
-        function initScene() {
-            initPointFlowers();
-            camera.position.z = pointFlower.area.z + projection.nearfar[0];
-            projection.angle = Math.atan2(pointFlower.area.y, camera.position.z + pointFlower.area.z) * 180.0 / Math.PI * 2.0;
-            Matrix44.loadProjection(projection.matrix, renderSpec.aspect, projection.angle, projection.nearfar[0], projection.nearfar[1]);
-        }
-
-        function renderScene() {
-            Matrix44.loadLookAt(camera.matrix, camera.position, camera.lookat, camera.up);
-            
-            gl!.enable(gl!.DEPTH_TEST);
-            
-            gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
-            gl!.viewport(0, 0, renderSpec.width, renderSpec.height);
-            gl!.clearColor(0.0, 0.0, 0.0, 0.0);
-            gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
-            
-            renderPointFlowers();
-        }
-
-        function makeCanvasFullScreen(canvasElem: HTMLCanvasElement) {
-            canvasElem.width = window.innerWidth;
-            canvasElem.height = window.innerHeight;
-        }
-
-        function setViewports() {
-            makeCanvasFullScreen(canvas!);
-            renderSpec.setSize(gl!.canvas.width, gl!.canvas.height);
-            
-            gl!.clearColor(0.0, 0.0, 0.0, 0.0);
-            gl!.viewport(0, 0, renderSpec.width, renderSpec.height);
-        }
-
-        function onResize() {
-            setViewports();
-            if(sceneStandBy) {
-                initScene();
-            }
-        }
-
-        window.addEventListener('resize', onResize);
-        
-        setViewports();
-        createScene();
-        initScene();
-        
-        timeInfo.start = performance.now();
-        timeInfo.prev = timeInfo.start;
-        
-        let animationFrameId: number;
-        let animating = true;
-        let isVisible = true;
-
-        const observer = new IntersectionObserver((entries) => {
-            isVisible = entries[0].isIntersecting;
-        }, { threshold: 0 });
-        
-        if (canvas) observer.observe(canvas);
-
-        function animate() {
-            if (!animating) return;
-            animationFrameId = requestAnimationFrame(animate);
-            
-            // SKIP HEAVY CALCULATIONS IF NOT VISIBLE
-            if (!isVisible || document.hidden) return;
-
-            const now = performance.now();
-            timeInfo.elapsed = (now - timeInfo.start) / 1000.0;
-            timeInfo.delta = Math.min((now - timeInfo.prev) / 1000.0, perf.maxDelta);
-            timeInfo.prev = now;
-            frameCount += 1;
-            
-            renderScene();
-        }
-
-        animate();
-
-        return () => {
-            animating = false;
-            cancelAnimationFrame(animationFrameId);
-            observer.disconnect();
-            window.removeEventListener('resize', onResize);
-        };
-    }, []);
-
-    return (
-        <canvas 
-            ref={canvasRef} 
-            id="sakura" 
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: -1,
-                pointerEvents: 'none',
-                transform: 'translateZ(0)',
-                willChange: 'transform'
-            }}
-        />
-    );
+  return (
+    <canvas
+      ref={canvasRef}
+      id="sakura"
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: -1,
+        pointerEvents: "none",
+        transform: "translateZ(0)",
+      }}
+    />
+  );
 };
 
 export default SakuraBackground;

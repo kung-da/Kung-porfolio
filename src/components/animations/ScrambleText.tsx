@@ -1,6 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const JAPANESE_CHARS = "アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレゲゼデベペオコソトノホモヨロゴゾドボポ";
+const SCRAMBLE_CHARS = "アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレゲゼデベペオコソトノホモヨロゴゾドボポ";
+
+type ScrambleQueueItem = {
+  from: string;
+  to: string;
+  start: number;
+  end: number;
+  char?: string;
+};
 
 interface ScrambleTextProps {
   text: string;
@@ -9,70 +17,57 @@ interface ScrambleTextProps {
   className?: string;
 }
 
+const randomGlyph = () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+
 export const ScrambleText = ({ text, delay = 0, duration = 1.5, className = "" }: ScrambleTextProps) => {
   const [output, setOutput] = useState("");
   const frameRef = useRef(0);
-  const queueRef = useRef<{ from: string; to: string; start: number; end: number; char?: string }[]>([]);
   const frameCountRef = useRef(0);
+  const queueRef = useRef<ScrambleQueueItem[]>([]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    const setup = () => {
-      const queue = [];
-      for (let i = 0; i < text.length; i++) {
-        const from = JAPANESE_CHARS[Math.floor(Math.random() * JAPANESE_CHARS.length)];
-        const to = text[i];
-        // Reduced ranges for a faster reveal (1.5x faster)
-        const start = Math.floor(Math.random() * 53);
-        const end = start + Math.floor(Math.random() * 67);
-        queue.push({ from, to, start, end });
-      }
-      queueRef.current = queue;
-    };
+    frameCountRef.current = 0;
+    queueRef.current = Array.from(text).map((to) => {
+      const start = Math.floor(Math.random() * 53);
+      const end = start + Math.floor(Math.random() * Math.max(24, duration * 44));
+      return { from: randomGlyph(), to, start, end };
+    });
 
     const update = () => {
       let complete = 0;
-      let newOutput = "";
+      let nextOutput = "";
 
-      for (let i = 0; i < queueRef.current.length; i++) {
-        let { from, to, start, end, char } = queueRef.current[i];
-
-        if (frameCountRef.current >= end) {
-          complete++;
-          newOutput += to;
-        } else if (frameCountRef.current >= start) {
-          // Faster character rotation
-          if (!char || Math.random() < 0.3) {
-            char = JAPANESE_CHARS[Math.floor(Math.random() * JAPANESE_CHARS.length)];
-            queueRef.current[i].char = char;
-          }
-          newOutput += char;
-        } else {
-          newOutput += " ";
+      queueRef.current.forEach((item) => {
+        if (frameCountRef.current >= item.end) {
+          complete += 1;
+          nextOutput += item.to;
+          return;
         }
-      }
 
-      setOutput(newOutput);
+        if (frameCountRef.current >= item.start) {
+          if (!item.char || Math.random() < 0.3) item.char = randomGlyph();
+          nextOutput += item.char;
+          return;
+        }
 
-      if (complete === queueRef.current.length) {
-        cancelAnimationFrame(frameRef.current);
-      } else {
-        frameCountRef.current++;
+        nextOutput += " ";
+      });
+
+      setOutput(nextOutput);
+
+      if (complete < queueRef.current.length) {
+        frameCountRef.current += 1;
         frameRef.current = requestAnimationFrame(update);
       }
     };
 
-    timer = setTimeout(() => {
-      setup();
-      update();
-    }, delay * 1000);
+    const timer = setTimeout(update, delay * 1000);
 
     return () => {
       clearTimeout(timer);
       cancelAnimationFrame(frameRef.current);
     };
-  }, [text, delay]);
+  }, [text, delay, duration]);
 
   return <span className={className}>{output}</span>;
 };

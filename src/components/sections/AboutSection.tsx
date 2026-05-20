@@ -10,7 +10,7 @@ const profileImage = profileImageAsset;
 
 export const AboutSection = () => {
   const ref = useRef<HTMLElement>(null!);
-  const inView = useInView(ref, { once: true, margin: "-12%" as any });
+  const inView = useInView(ref, { once: true, margin: "-12%" });
 
   return (
     <section id="about" ref={ref} className="about-kung-section" aria-labelledby="about-kung-title">

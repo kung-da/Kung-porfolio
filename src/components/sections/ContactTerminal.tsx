@@ -11,7 +11,7 @@ const CONTACTS = [
 
 export const ContactTerminal = () => {
   const ref = useRef<HTMLElement>(null!);
-  const inView = useInView(ref, { once: true, margin: "-10%" as any });
+  const inView = useInView(ref, { once: true, margin: "-10%" });
 
   return (
     <section

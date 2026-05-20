@@ -404,7 +404,7 @@
     animation: glitch-2 0.1s infinite linear alternate-reverse;
   }
 
-  /* ── Glitch Active (triggered by useGlitch hook) ── */
+  /* ── Glitch Active ── */
   .glitch-active {
     animation: glitch-ink 0.4s ease-in-out forwards !important;
   }

@@ -610,7 +610,7 @@ export const AbilitySection = () => {
   const [activeDomain, setActiveDomain] = useState<DomainId>("pipeline");
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const ref = useRef<HTMLElement>(null!);
-  const inView = useInView(ref, { once: true, margin: "-10%" as any });
+  const inView = useInView(ref, { once: true, margin: "-10%" });
   const currentDomain = DOMAINS.find((domain) => domain.id === activeDomain)!;
   const colors = DOMAIN_COLORS[activeDomain];
   const activeSkill = selectedSkill && currentDomain.skills.some((skill) => skill.name === selectedSkill.name)

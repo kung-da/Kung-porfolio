@@ -5,6 +5,26 @@ import { componentTagger } from "lovable-tagger";
 
 const NOTION_VERSION = "2022-06-28";
 
+type NotionRichText = Array<{
+  plain_text?: string;
+  annotations?: Record<string, boolean>;
+  href?: string | null;
+}>;
+
+type NotionProperty = {
+  title?: NotionRichText;
+  rich_text?: NotionRichText;
+  select?: { name?: string } | null;
+  multi_select?: Array<{ name: string }>;
+  url?: string | null;
+  checkbox?: boolean;
+};
+
+type NotionProjectRaw = {
+  id: string;
+  properties: Record<string, NotionProperty | undefined>;
+};
+
 function plain(richText: Array<{ plain_text?: string }> | undefined): string {
   return richText?.map((item) => item.plain_text ?? "").join("") ?? "";
 }
@@ -36,7 +56,7 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-function mapProject(raw: any, detail = false) {
+function mapProject(raw: NotionProjectRaw, detail = false) {
   const props = raw.properties;
   const name = plain(props.Name?.title);
   const base = {
@@ -104,17 +124,17 @@ function notionProjectsDevApi(env: Record<string, string>): Plugin {
             throw new Error(`Notion API error ${notionRes.status}: ${await notionRes.text()}`);
           }
 
-          const data = await notionRes.json();
+          const data = (await notionRes.json()) as { results: NotionProjectRaw[] };
           res.setHeader("Content-Type", "application/json");
 
           if (slug) {
-            const exact = data.results.find((item: any) => plain(item.properties.Slug?.rich_text) === slug);
-            const fallback = data.results.find((item: any) => slugify(plain(item.properties.Name?.title)) === slug);
+            const exact = data.results.find((item) => plain(item.properties.Slug?.rich_text) === slug);
+            const fallback = data.results.find((item) => slugify(plain(item.properties.Name?.title)) === slug);
             res.end(JSON.stringify({ project: exact || fallback ? mapProject(exact || fallback, true) : null, fromCache: false }));
             return;
           }
 
-          const projects = data.results.map((item: any) => mapProject(item));
+          const projects = data.results.map((item) => mapProject(item));
           res.end(JSON.stringify({ projects, total: projects.length, fromCache: false }));
         } catch (error) {
           res.statusCode = 500;
