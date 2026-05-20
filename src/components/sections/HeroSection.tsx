@@ -21,7 +21,7 @@ export const HeroSection = () => {
       />
 
       {/* Sakura Particle System */}
-      <div className="absolute inset-0 z-10 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
+      <div className="sakura-layer absolute inset-0 z-10 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
         <SakuraBackground />
       </div>
 

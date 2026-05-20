@@ -197,7 +197,29 @@
 
   .is-wheel-scrolling .noise-overlay {
     mix-blend-mode: normal !important;
-    opacity: 0.05 !important;
+    opacity: 0.035 !important;
+  }
+
+  .is-wheel-scrolling #sakura {
+    filter: none;
+    opacity: 0.82;
+  }
+
+  .is-wheel-scrolling .sakura-layer {
+    mix-blend-mode: normal !important;
+  }
+
+  #sakura {
+    image-rendering: auto;
+    transform: translate3d(-1px, -1px, 0) scale(1.006) !important;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @supports (filter: blur(0.2px)) {
+    #sakura {
+      filter: blur(0.18px);
+    }
   }
 
   .section-title {
