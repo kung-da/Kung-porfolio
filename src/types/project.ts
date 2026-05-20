@@ -52,23 +52,23 @@ export interface ProjectDetail extends ProjectCard {
 export interface NotionProjectRaw {
   id: string;
   properties: {
-    Name:            { title: NotionRichText };
-    Description:     { rich_text: NotionRichText };
-    Category:        { select: { name: ProjectCategory } | null };
-    TechStack:       { multi_select: Array<{ name: string }> };
-    CoverImage:      { url: string | null };
-    GithubLink:      { url: string | null };
-    DemoLink:        { url: string | null };
-    Featured:        { checkbox: boolean };
-    Published:       { checkbox: boolean };
+    Name?:            { title?: NotionRichText };
+    Description?:     { rich_text?: NotionRichText };
+    Category?:        { select?: { name: ProjectCategory } | null };
+    TechStack?:       { multi_select?: Array<{ name: string }> };
+    CoverImage?:      { url?: string | null };
+    GithubLink?:      { url?: string | null };
+    DemoLink?:        { url?: string | null };
+    Featured?:        { checkbox?: boolean };
+    Published?:       { checkbox?: boolean };
     // Detail page fields (thêm vào Notion — xem Block 3 trong master prompt)
-    Slug:            { rich_text: NotionRichText };
-    LongDescription: { rich_text: NotionRichText };
-    Highlights:      { rich_text: NotionRichText };
-    Timeline:        { rich_text: NotionRichText };
-    Status:          { select: { name: ProjectStatus } | null };
-    Tags:            { multi_select: Array<{ name: string }> };
-    YoutubeEmbed:    { url: string | null };
+    Slug?:            { rich_text?: NotionRichText };
+    LongDescription?: { rich_text?: NotionRichText };
+    Highlights?:      { rich_text?: NotionRichText };
+    Timeline?:        { rich_text?: NotionRichText };
+    Status?:          { select?: { name: ProjectStatus } | null };
+    Tags?:            { multi_select?: Array<{ name: string }> };
+    YoutubeEmbed?:    { url?: string | null };
   };
 }
 
@@ -85,13 +85,13 @@ export interface ProjectDetailResponse {
 }
 
 // ─── Helper: Notion rich text → plain string ─────────────────────
-export function richTextToPlain(richText: NotionRichText): string {
-  return richText.map((block) => block.plain_text).join("");
+export function richTextToPlain(richText?: NotionRichText): string {
+  return richText?.map((block) => block.plain_text).join("") ?? "";
 }
 
 // ─── Helper: Notion rich text → basic HTML ───────────────────────
 // Chuyển bold/italic/code sang HTML tags để render trong detail page.
-export function richTextToHTML(richText: NotionRichText): string {
+export function richTextToHTML(richText?: NotionRichText): string {
   return richText
     .map((block) => {
       let text = block.plain_text
@@ -107,7 +107,7 @@ export function richTextToHTML(richText: NotionRichText): string {
       return text;
     })
     .join("")
-    .replace(/\n/g, "<br />");
+    .replace(/\n/g, "<br />") ?? "";
 }
 
 function slugify(value: string): string {
@@ -121,19 +121,19 @@ function slugify(value: string): string {
 // ─── Mapper: NotionProjectRaw → ProjectCard ──────────────────────
 export function mapToProjectCard(raw: NotionProjectRaw): ProjectCard {
   const props = raw.properties;
-  const name = richTextToPlain(props.Name.title);
-  const slug = richTextToPlain(props.Slug.rich_text) || slugify(name) || raw.id;
+  const name = richTextToPlain(props.Name?.title);
+  const slug = richTextToPlain(props.Slug?.rich_text) || slugify(name) || raw.id;
 
   return {
     id:          raw.id,
     name,
-    description: richTextToPlain(props.Description.rich_text),
-    category:    props.Category.select?.name ?? "Other",
-    techStack:   props.TechStack.multi_select.map((t) => t.name),
-    coverImage:  props.CoverImage.url,
-    githubLink:  props.GithubLink.url,
-    demoLink:    props.DemoLink.url,
-    featured:    props.Featured.checkbox,
+    description: richTextToPlain(props.Description?.rich_text),
+    category:    props.Category?.select?.name ?? "Other",
+    techStack:   props.TechStack?.multi_select?.map((t) => t.name) ?? [],
+    coverImage:  props.CoverImage?.url ?? null,
+    githubLink:  props.GithubLink?.url ?? null,
+    demoLink:    props.DemoLink?.url ?? null,
+    featured:    props.Featured?.checkbox ?? false,
     slug,
   };
 }
@@ -143,11 +143,11 @@ export function mapToProjectDetail(raw: NotionProjectRaw): ProjectDetail {
   const props = raw.properties;
   return {
     ...mapToProjectCard(raw),
-    longDescription: richTextToHTML(props.LongDescription.rich_text),
-    highlights:      richTextToHTML(props.Highlights.rich_text),
-    timeline:        richTextToPlain(props.Timeline.rich_text) || null,
-    status:          props.Status.select?.name ?? "Completed",
-    tags:            props.Tags.multi_select.map((t) => t.name),
-    youtubeEmbed:    props.YoutubeEmbed.url,
+    longDescription: richTextToHTML(props.LongDescription?.rich_text),
+    highlights:      richTextToHTML(props.Highlights?.rich_text),
+    timeline:        richTextToPlain(props.Timeline?.rich_text) || null,
+    status:          props.Status?.select?.name ?? "Completed",
+    tags:            props.Tags?.multi_select?.map((t) => t.name) ?? [],
+    youtubeEmbed:    props.YoutubeEmbed?.url ?? null,
   };
 }
