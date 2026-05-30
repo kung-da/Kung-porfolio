@@ -121,7 +121,7 @@ export const Navigation = () => {
     <header
       id="site-header"
       className={cn(
-        "fixed left-0 right-0 top-5 z-[85] px-3 py-2 transition-[opacity,transform,visibility] duration-500 ease-out sm:px-4",
+        "fixed left-0 right-0 top-5 z-[85] px-2 py-2 transition-[opacity,transform,visibility] duration-500 ease-out sm:px-3",
         isPastHero
           ? "pointer-events-auto visible translate-y-0 opacity-100"
           : "pointer-events-none invisible -translate-y-4 opacity-0"
@@ -132,7 +132,7 @@ export const Navigation = () => {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-[940px]">
+      <div className="relative mx-auto w-full max-w-none">
         <div className="relative overflow-visible rounded-[6px]" style={headerShellStyle}>
           <div
             className="pointer-events-none absolute inset-0 rounded-[6px] bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,0,0,0.18)_3px,rgba(0,0,0,0.18)_4px)]"
