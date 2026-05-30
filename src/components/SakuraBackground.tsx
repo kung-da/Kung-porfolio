@@ -28,6 +28,8 @@ type RenderSpec = {
 };
 
 const PARTICLE_COUNT = 4000;
+const FLOATS_PER_PARTICLE = 8;
+const BYTES_PER_PARTICLE = FLOATS_PER_PARTICLE * Float32Array.BYTES_PER_ELEMENT;
 const SORT_EVERY_FRAMES = 5;
 const MAX_DELTA = 0.045;
 const FIELD_HEIGHT = 20;
@@ -227,7 +229,9 @@ const SakuraBackground = () => {
       alpha: true,
       antialias: true,
       depth: true,
+      powerPreference: "high-performance",
       premultipliedAlpha: false,
+      preserveDrawingBuffer: false,
     });
 
     if (!gl) {
@@ -268,19 +272,33 @@ const SakuraBackground = () => {
     };
 
     const particles = Array.from({ length: PARTICLE_COUNT }, () => new SakuraParticle());
-    const data = new Float32Array(PARTICLE_COUNT * 8);
+    const data = new Float32Array(PARTICLE_COUNT * FLOATS_PER_PARTICLE);
     const buffer = gl.createBuffer();
+    if (!buffer) {
+      gl.deleteProgram(program);
+      return;
+    }
+
     let animationFrame = 0;
+    let resizeFrame = 0;
     let frame = 0;
     let visible = true;
     let previousTime = performance.now();
     let elapsed = 0;
 
-    const updateSize = () => {
+    const updateSize = (resetParticles = false) => {
       const rect = canvas.getBoundingClientRect();
-      render.dpr = Math.min(window.devicePixelRatio || 1, 2);
-      render.width = Math.max(1, Math.floor(rect.width * render.dpr));
-      render.height = Math.max(1, Math.floor(rect.height * render.dpr));
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+      const nextWidth = Math.max(1, Math.floor(rect.width * nextDpr));
+      const nextHeight = Math.max(1, Math.floor(rect.height * nextDpr));
+
+      if (nextWidth === render.width && nextHeight === render.height && nextDpr === render.dpr) {
+        return;
+      }
+
+      render.dpr = nextDpr;
+      render.width = nextWidth;
+      render.height = nextHeight;
       render.aspect = render.width / render.height;
       render.resolution[0] = render.width;
       render.resolution[1] = render.height;
@@ -298,41 +316,64 @@ const SakuraBackground = () => {
       projection.angle = (Math.atan2(field.y, camera.position.z + field.z) * 360) / Math.PI;
       loadProjection(projection.matrix, render.aspect, projection.angle, projection.near, projection.far);
 
-      particles.forEach((particle) => particle.reset(field.x, field.y, field.z));
+      if (resetParticles) {
+        for (let i = 0; i < PARTICLE_COUNT; i += 1) {
+          particles[i].reset(field.x, field.y, field.z);
+        }
+      }
     };
 
-    const onResize = () => updateSize();
+    const scheduleSizeUpdate = () => {
+      if (resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        updateSize();
+      });
+    };
 
     const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
+      visible = entry.isIntersecting && entry.intersectionRatio > 0.02;
+    }, { threshold: [0, 0.02] });
 
     observer.observe(canvas);
-    window.addEventListener("resize", onResize);
+    const resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(scheduleSizeUpdate) : null;
+    resizeObserver?.observe(canvas);
+    window.addEventListener("resize", scheduleSizeUpdate, { passive: true });
 
-    updateSize();
+    updateSize(true);
 
     gl.enable(gl.DEPTH_TEST);
     gl.depthMask(false);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data.byteLength, gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(program.attributes.aPosition);
+    gl.enableVertexAttribArray(program.attributes.aEuler);
+    gl.enableVertexAttribArray(program.attributes.aMisc);
+    gl.vertexAttribPointer(program.attributes.aPosition, 3, gl.FLOAT, false, BYTES_PER_PARTICLE, 0);
+    gl.vertexAttribPointer(program.attributes.aEuler, 3, gl.FLOAT, false, BYTES_PER_PARTICLE, 12);
+    gl.vertexAttribPointer(program.attributes.aMisc, 2, gl.FLOAT, false, BYTES_PER_PARTICLE, 24);
 
     const renderParticles = (delta: number) => {
-      particles.forEach((particle) => {
+      for (let i = 0; i < PARTICLE_COUNT; i += 1) {
+        const particle = particles[i];
         particle.update(delta, elapsed, field.x, field.y, field.z);
         particle.zkey =
           camera.matrix[2] * particle.position[0] +
           camera.matrix[6] * particle.position[1] +
           camera.matrix[10] * particle.position[2] +
           camera.matrix[14];
-      });
+      }
 
       if (frame % SORT_EVERY_FRAMES === 0) {
         particles.sort((a, b) => a.zkey - b.zkey);
       }
 
-      particles.forEach((particle, index) => {
-        const offset = index * 8;
+      for (let index = 0; index < PARTICLE_COUNT; index += 1) {
+        const particle = particles[index];
+        const offset = index * FLOATS_PER_PARTICLE;
         data[offset] = particle.position[0];
         data[offset + 1] = particle.position[1];
         data[offset + 2] = particle.position[2];
@@ -341,7 +382,7 @@ const SakuraBackground = () => {
         data[offset + 5] = particle.euler[2];
         data[offset + 6] = particle.size;
         data[offset + 7] = particle.alpha;
-      });
+      }
 
       gl.useProgram(program);
       gl.uniformMatrix4fv(program.uniforms.uProjection, false, projection.matrix);
@@ -351,13 +392,7 @@ const SakuraBackground = () => {
       gl.uniform3fv(program.uniforms.uFade, vecArray(field.fade));
 
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-      gl.enableVertexAttribArray(program.attributes.aPosition);
-      gl.enableVertexAttribArray(program.attributes.aEuler);
-      gl.enableVertexAttribArray(program.attributes.aMisc);
-      gl.vertexAttribPointer(program.attributes.aPosition, 3, gl.FLOAT, false, 32, 0);
-      gl.vertexAttribPointer(program.attributes.aEuler, 3, gl.FLOAT, false, 32, 12);
-      gl.vertexAttribPointer(program.attributes.aMisc, 2, gl.FLOAT, false, 32, 24);
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
 
       for (let ix = -1; ix <= 1; ix += 1) {
         for (let iy = -1; iy <= 1; iy += 1) {
@@ -368,12 +403,6 @@ const SakuraBackground = () => {
           gl.drawArrays(gl.POINTS, 0, PARTICLE_COUNT);
         }
       }
-
-      gl.disableVertexAttribArray(program.attributes.aPosition);
-      gl.disableVertexAttribArray(program.attributes.aEuler);
-      gl.disableVertexAttribArray(program.attributes.aMisc);
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      gl.useProgram(null);
     };
 
     const animate = (now: number) => {
@@ -398,8 +427,10 @@ const SakuraBackground = () => {
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
       observer.disconnect();
-      window.removeEventListener("resize", onResize);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleSizeUpdate);
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
     };
@@ -417,6 +448,9 @@ const SakuraBackground = () => {
         height: "100%",
         zIndex: -1,
         pointerEvents: "none",
+        display: "block",
+        contain: "strict",
+        willChange: "transform",
         transform: "translateZ(0)",
       }}
     />
