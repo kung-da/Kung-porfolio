@@ -252,7 +252,7 @@ const CategoryNav = ({
               key={domain.id}
               onClick={() => onSelect(domain)}
               className={[
-                "group relative flex w-full items-center gap-3 border-b border-white/[0.05] px-4 py-4 text-left transition-all duration-300",
+                "group relative flex w-full items-center gap-3 border-b border-white/[0.05] px-4 py-3 text-left transition-all duration-300",
                 "hover:bg-white/[0.025]",
                 active ? "shadow-[inset_2px_0_0_var(--domain-accent)]" : "text-zinc-300/80",
               ].join(" ")}
@@ -317,7 +317,7 @@ const SkillCard = memo(({
     transition={{ delay: index * 0.022, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     whileHover={{ y: -3, opacity: selected ? 1 : 0.95 }}
     className={[
-      "group relative h-full overflow-hidden p-4 text-left transition-colors duration-300 md:p-5",
+      "group relative h-full overflow-hidden p-3.5 text-left transition-colors duration-300 md:p-4",
       "border bg-black/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg",
       "[clip-path:polygon(6%_0,100%_0,100%_88%,94%_100%,0_100%,0_8%)]",
       selected ? "opacity-100" : hasSelection ? "opacity-[0.68] hover:opacity-95" : "opacity-95 hover:opacity-100",
@@ -363,11 +363,11 @@ const SkillCard = memo(({
       </span>
     </div>
 
-    <div className="relative mt-6">
-      <h3 className="font-title text-lg font-semibold tracking-wide text-zinc-100 md:text-xl">
+    <div className="relative mt-4">
+      <h3 className="font-title text-base font-semibold tracking-wide text-zinc-100 md:text-lg">
         {skill.name}
       </h3>
-      <div className="mt-4 flex min-w-0 items-center justify-between gap-3">
+      <div className="mt-3 flex min-w-0 items-center justify-between gap-3">
         <SegmentedBar value={skill.lvl} colors={colors} />
         <span
           className="shrink-0 font-mono text-base font-semibold tabular-nums md:text-lg"
@@ -378,7 +378,7 @@ const SkillCard = memo(({
       </div>
     </div>
 
-    <div className="relative mt-5 flex items-center justify-between">
+    <div className="relative mt-3 flex items-center justify-between">
       <div className="flex flex-1 items-center gap-3">
         <span className="text-[10px] uppercase tracking-[0.15em] text-zinc-500">Proficiency</span>
         <span className="h-px flex-1 bg-white/[0.08]" />
@@ -404,7 +404,7 @@ const DossierField = memo(({
   colors: ColorTheme;
 }) => (
   <div
-    className="relative overflow-hidden border px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(255,255,255,0.02)] backdrop-blur-sm"
+    className="relative overflow-hidden border px-3.5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(255,255,255,0.02)] backdrop-blur-sm"
     style={{
       borderColor: `${colors.accent}22`,
       background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.008) 45%, rgba(0,0,0,0.22)), rgba(0,0,0,0.24)",
@@ -433,7 +433,7 @@ const SkillDossier = memo(({
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 24 }}
     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-    className="relative min-h-[620px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+    className="relative min-h-[430px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] xl:min-h-[500px]"
     style={{
       borderColor: `${colors.accent}33`,
       background: `linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.012) 34%, transparent 72%), linear-gradient(135deg, ${colors.bgActive}, rgba(0,0,0,0.5) 52%, ${colors.bg}), rgba(0,0,0,0.52)`,
@@ -469,16 +469,16 @@ const SkillDossier = memo(({
       </div>
     </div>
 
-    <div className="relative mt-6 space-y-4">
+    <div className="relative mt-4 space-y-3">
       <DossierField label="Skill" colors={colors}>
-        <span className="font-title text-2xl font-semibold" style={{ color: colors.accent }}>
+        <span className="font-title text-xl font-semibold" style={{ color: colors.accent }}>
           {skill.name}
         </span>
       </DossierField>
 
       <DossierField label="Proficiency" colors={colors}>
-        <div className="flex flex-wrap items-center gap-6">
-          <span className="font-mono text-2xl font-light text-zinc-100">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="font-mono text-xl font-light text-zinc-100">
             <span className="font-semibold" style={{ color: colors.accent }}>{skill.lvl}</span>
             <span className="text-zinc-200"> / 100</span>
           </span>
@@ -505,7 +505,7 @@ const SkillDossier = memo(({
       </DossierField>
     </div>
 
-    <div className="relative mt-6 border-t border-white/[0.08] pt-4">
+    <div className="relative mt-4 border-t border-white/[0.08] pt-4">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
           {DOSSIER_SIGNAL_BARS.map((_, index) => (
@@ -533,7 +533,7 @@ SkillDossier.displayName = "SkillDossier";
 
 const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
   <aside
-    className="relative min-h-[620px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] lg:p-6"
+    className="relative min-h-[430px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] xl:min-h-[500px]"
     style={{
       borderColor: `${colors.accent}24`,
       background: "linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01) 34%, transparent 72%), rgba(0,0,0,0.5)",
@@ -556,9 +556,9 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
       </div>
     </div>
 
-    <div className="relative mt-6 space-y-4">
+    <div className="relative mt-4 space-y-3">
       <div
-        className="min-h-[118px] border px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm"
+        className="min-h-[88px] border px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-sm"
         style={{
           borderColor: `${colors.accent}18`,
           background: "linear-gradient(180deg, rgba(255,255,255,0.028), rgba(0,0,0,0.22)), rgba(0,0,0,0.18)",
@@ -572,14 +572,14 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
         </p>
       </div>
       <div
-        className="min-h-[118px] border px-4 py-5 opacity-55 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] backdrop-blur-sm"
+        className="min-h-[88px] border px-4 py-4 opacity-55 shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] backdrop-blur-sm"
         style={{
           borderColor: `${colors.accent}14`,
           background: "linear-gradient(180deg, rgba(255,255,255,0.022), rgba(0,0,0,0.2)), rgba(0,0,0,0.16)",
         }}
       />
       <div
-        className="min-h-[102px] border px-4 py-5 opacity-45 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-sm"
+        className="min-h-[76px] border px-4 py-4 opacity-45 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-sm"
         style={{
           borderColor: `${colors.accent}12`,
           background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18)), rgba(0,0,0,0.14)",
@@ -587,7 +587,7 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
       />
     </div>
 
-    <div className="relative mt-6 border-t border-white/[0.08] pt-4 opacity-45">
+    <div className="relative mt-4 border-t border-white/[0.08] pt-4 opacity-45">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
           {DOSSIER_SIGNAL_BARS.map((_, index) => (
@@ -638,7 +638,7 @@ export const AbilitySection = () => {
           initial={{ opacity: 0, y: -16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-8 md:mb-9"
+          className="mb-5 md:mb-6"
         >
           <div className="flex max-w-[720px] items-center gap-4">
             <Database size={17} className="text-crimson" strokeWidth={1.6} />
@@ -654,13 +654,13 @@ export const AbilitySection = () => {
           </div>
 
           <h2
-            className="section-title mt-5 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="section-title mt-3 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl"
             data-text="TECHNICAL SKILLS"
           >
             Technical Skills
           </h2>
 
-          <div className="mt-5 flex flex-wrap items-center gap-4">
+          <div className="mt-4 flex flex-wrap items-center gap-4">
             <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-zinc-400 sm:text-sm">
               Core modules loaded
             </span>
@@ -671,8 +671,8 @@ export const AbilitySection = () => {
 
         <div
           className={[
-            "grid gap-6 lg:grid-cols-[270px_minmax(0,1fr)]",
-            "xl:grid-cols-[280px_minmax(0,1fr)_340px] 2xl:grid-cols-[300px_minmax(0,1fr)_360px]",
+            "grid gap-4 lg:grid-cols-[250px_minmax(0,1fr)]",
+            "xl:grid-cols-[260px_minmax(0,1fr)_320px] 2xl:grid-cols-[280px_minmax(0,1fr)_340px]",
           ].join(" ")}
         >
           <motion.div
@@ -720,7 +720,7 @@ export const AbilitySection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="grid content-start items-start gap-4 self-start sm:grid-cols-2 sm:auto-rows-[170px] 2xl:grid-cols-3 2xl:auto-rows-[184px]"
+            className="grid content-start items-start gap-4 self-start sm:grid-cols-2 sm:auto-rows-[150px] 2xl:grid-cols-3 2xl:auto-rows-[160px]"
           >
             {currentDomain.skills.map((skill, index) => (
               <SkillCard
@@ -743,7 +743,7 @@ export const AbilitySection = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 18 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-2 xl:col-span-1"
+              className="hidden xl:block"
             >
               {activeSkill ? (
                 <SkillDossier skill={activeSkill} colors={colors} />
@@ -754,7 +754,7 @@ export const AbilitySection = () => {
           </AnimatePresence>
         </div>
 
-        <footer className="mt-8 flex flex-wrap gap-x-12 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+        <footer className="mt-5 flex flex-wrap gap-x-12 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-500">
           <span><span className="text-crimson">//</span> User: Kung</span>
           <span><span className="text-crimson">//</span> Role: Data Engineer</span>
         </footer>

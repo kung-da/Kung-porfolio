@@ -16,7 +16,7 @@ const headerShellStyle = {
     "linear-gradient(180deg, rgba(10,10,10,0.92) 0%, rgba(5,5,5,0.82) 100%), linear-gradient(90deg, rgba(143,239,255,0.10), rgba(255,255,255,0.035), rgba(143,239,255,0.08))",
   clipPath: "polygon(14px 0%, calc(100% - 14px) 0%, 100% 14px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 14px), 0% 10px)",
   boxShadow:
-    "0 0 0 1px rgba(143,239,255,0.16), 0 0 0 2px rgba(255,255,255,0.025), 0 18px 42px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.05)",
+    "0 0 0 1px rgba(143,239,255,0.16), 0 0 0 2px rgba(255,255,255,0.025), 0 14px 34px rgba(0,0,0,0.54), inset 0 1px 0 rgba(255,255,255,0.05)",
 } satisfies React.CSSProperties;
 
 const cyanPanelStyle = {
@@ -121,62 +121,62 @@ export const Navigation = () => {
     <header
       id="site-header"
       className={cn(
-        "fixed left-0 right-0 top-7 z-[85] px-3 py-2.5 transition-[opacity,transform,visibility] duration-500 ease-out sm:px-4",
+        "fixed left-0 right-0 top-5 z-[85] px-3 py-2 transition-[opacity,transform,visibility] duration-500 ease-out sm:px-4",
         isPastHero
           ? "pointer-events-auto visible translate-y-0 opacity-100"
           : "pointer-events-none invisible -translate-y-4 opacity-0"
       )}
     >
       <div
-        className="pointer-events-none absolute inset-x-[14%] top-2.5 h-px bg-gradient-to-r from-transparent via-wez-cyan/70 to-transparent shadow-[0_0_12px_rgba(143,239,255,0.3)]"
+        className="pointer-events-none absolute inset-x-[14%] top-2 h-px bg-gradient-to-r from-transparent via-wez-cyan/70 to-transparent shadow-[0_0_12px_rgba(143,239,255,0.3)]"
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-5xl">
+      <div className="relative mx-auto w-full max-w-[940px]">
         <div className="relative overflow-visible rounded-[6px]" style={headerShellStyle}>
           <div
             className="pointer-events-none absolute inset-0 rounded-[6px] bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,0,0,0.18)_3px,rgba(0,0,0,0.18)_4px)]"
             aria-hidden="true"
           />
-          <span className="pointer-events-none absolute left-[4px] top-[4px] h-3 w-3 border-l border-t border-wez-cyan/60" />
-          <span className="pointer-events-none absolute bottom-[4px] right-[4px] h-3 w-3 border-b border-r border-wez-cyan/60" />
-          <div className="absolute left-1/2 top-2 flex -translate-x-1/2 gap-1.5" aria-hidden="true">
+          <span className="pointer-events-none absolute left-[4px] top-[4px] h-2.5 w-2.5 border-l border-t border-wez-cyan/60" />
+          <span className="pointer-events-none absolute bottom-[4px] right-[4px] h-2.5 w-2.5 border-b border-r border-wez-cyan/60" />
+          <div className="absolute left-1/2 top-1.5 flex -translate-x-1/2 gap-1.5" aria-hidden="true">
             {Array.from({ length: 5 }).map((_, index) => (
-              <span key={index} className="h-0.5 w-2 bg-wez-cyan/45" />
+              <span key={index} className="h-0.5 w-1.5 bg-wez-cyan/45" />
             ))}
           </div>
 
-          <div className="relative flex min-h-[58px] items-center justify-between gap-3 px-3.5 py-2.5 sm:px-5">
+          <div className="relative flex min-h-[48px] items-center justify-between gap-2.5 px-3 py-2 sm:px-4">
             <a
               href="#home"
               onClick={(event) => {
                 event.preventDefault();
                 scrollTo("home");
               }}
-              className="group flex shrink-0 items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               aria-label="Go to top"
             >
               <span
-                className="relative grid size-9 shrink-0 place-items-center border border-wez-cyan/45 bg-[#080808] transition-all duration-300 group-hover:border-wez-cyan/80 group-hover:shadow-[0_0_18px_rgba(143,239,255,0.24),inset_0_0_18px_rgba(143,239,255,0.08)]"
+                className="relative grid size-8 shrink-0 place-items-center border border-wez-cyan/45 bg-[#080808] transition-all duration-300 group-hover:border-wez-cyan/80 group-hover:shadow-[0_0_18px_rgba(143,239,255,0.24),inset_0_0_18px_rgba(143,239,255,0.08)]"
                 style={{ clipPath: "polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px)" }}
               >
-                <CircuitBoard className="size-4 text-wez-cyan" strokeWidth={1.5} aria-hidden="true" />
+                <CircuitBoard className="size-3.5 text-wez-cyan" strokeWidth={1.5} aria-hidden="true" />
                 <span className="absolute left-0.5 top-0.5 h-1.5 w-1.5 border-l border-t border-wez-cyan/70" />
                 <span className="absolute bottom-0.5 right-0.5 h-1.5 w-1.5 border-b border-r border-wez-cyan/70" />
               </span>
 
               <span className="hidden sm:block">
-                <span className="block font-display text-xs font-bold leading-tight tracking-[0.22em] text-[#E0E0E0] transition-colors group-hover:text-wez-cyan">
+                <span className="block font-display text-[11px] font-bold leading-tight tracking-[0.2em] text-[#E0E0E0] transition-colors group-hover:text-wez-cyan">
                   DATA WANDERER
                 </span>
-                <span className="mt-0.5 block font-jp text-[9px] tracking-[0.18em] text-crimson/75">
+                <span className="mt-0.5 block font-jp text-[8px] tracking-[0.16em] text-crimson/75">
                   データ
                 </span>
               </span>
             </a>
 
             <nav className="hidden flex-1 items-center justify-center md:flex" aria-label="Primary">
-              <div className="flex items-center rounded-[4px] px-2 py-1.5" style={cyanPanelStyle}>
+              <div className="flex items-center rounded-[4px] px-1.5 py-1" style={cyanPanelStyle}>
                 {LINKS.map((link, index) => {
                   const isActive = active === link.id;
 
@@ -190,7 +190,7 @@ export const Navigation = () => {
                         }}
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                          "group relative flex min-h-8 items-center px-3 py-1.5 font-display text-[11px] font-semibold tracking-[0.18em] transition-all duration-200 lg:px-4",
+                          "group relative flex min-h-7 items-center px-2.5 py-1 font-display text-[10px] font-semibold tracking-[0.16em] transition-all duration-200 lg:px-3",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                           isActive
                             ? "text-[#E0E0E0] drop-shadow-[0_0_10px_rgba(143,239,255,0.4)]"
@@ -216,15 +216,15 @@ export const Navigation = () => {
 
             <div className="flex shrink-0 items-center gap-3">
               <div
-                className="hidden items-center gap-2 border border-status-active/20 bg-[#050806]/80 px-3 py-1.5 shadow-[inset_0_0_12px_rgba(0,255,136,0.04)] sm:flex"
+                className="hidden items-center gap-1.5 border border-status-active/20 bg-[#050806]/80 px-2.5 py-1 shadow-[inset_0_0_12px_rgba(0,255,136,0.04)] sm:flex"
                 aria-label="System online"
               >
                 <motion.span
                   animate={{ opacity: [1, 0.4, 1] }}
                   transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                  className="size-2 rounded-full bg-status-active shadow-[0_0_6px_#00ff88,0_0_14px_rgba(0,255,136,0.6)]"
+                  className="size-1.5 rounded-full bg-status-active shadow-[0_0_6px_#00ff88,0_0_14px_rgba(0,255,136,0.6)]"
                 />
-                <span className="whitespace-nowrap font-mono text-[10px] font-medium tracking-[0.15em] text-status-active">
+                <span className="whitespace-nowrap font-mono text-[9px] font-medium tracking-[0.14em] text-status-active">
                   SYS: ONLINE
                 </span>
               </div>
@@ -237,7 +237,7 @@ export const Navigation = () => {
 
               <button
                 type="button"
-                className="border border-wez-cyan/30 p-2 text-wez-cyan transition-colors hover:border-wez-cyan/70 hover:text-[#E0E0E0] md:hidden"
+                className="border border-wez-cyan/30 p-1.5 text-wez-cyan transition-colors hover:border-wez-cyan/70 hover:text-[#E0E0E0] md:hidden"
                 onClick={() => setOpen((value) => !value)}
                 aria-expanded={open}
                 aria-controls="mobile-navigation"

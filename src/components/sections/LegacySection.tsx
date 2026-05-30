@@ -39,7 +39,7 @@ export const LegacySection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 0.5 }}
-          className="mb-8 md:mb-9"
+          className="mb-5 md:mb-6"
         >
           <div className="flex max-w-[760px] items-center gap-4">
             <BriefcaseBusiness size={17} className="text-crimson" strokeWidth={1.6} />
@@ -50,14 +50,14 @@ export const LegacySection = () => {
           </div>
 
           <h2
-            className="section-title mt-5 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="section-title mt-3 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl"
             data-text="EXPERIENCE"
           >
             Experience
           </h2>
         </motion.header>
 
-        <div className="grid gap-6 xl:grid-cols-[420px_minmax(0,1fr)] 2xl:grid-cols-[460px_minmax(0,1fr)]">
+        <div className="grid gap-4 xl:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[380px_minmax(0,1fr)]">
           <motion.aside
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -66,7 +66,7 @@ export const LegacySection = () => {
             className="relative overflow-hidden border border-crimson/25 bg-[rgba(5,11,17,0.72)] shadow-[inset_0_1px_0_rgba(214,58,74,0.08),0_18px_44px_rgba(0,0,0,0.3)]"
           >
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-crimson/70 to-transparent" />
-            <div className="relative h-[320px] overflow-hidden sm:h-[420px] xl:h-full xl:min-h-[620px]">
+            <div className="relative h-[250px] overflow-hidden sm:h-[320px] xl:h-full xl:min-h-[460px]">
               <img
                 src={experienceImage}
                 alt="Experience visual"
@@ -90,17 +90,17 @@ export const LegacySection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-            className="grid content-start gap-4"
+            className="grid content-start gap-3"
           >
             {EXPERIENCE.map((item, index) => {
               const Icon = item.icon;
               return (
                 <article
                   key={item.title}
-                  className="group relative overflow-hidden border border-white/[0.08] bg-[rgba(5,11,17,0.72)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_14px_34px_rgba(0,0,0,0.24)] transition-all duration-300 hover:border-wez-cyan/30 hover:bg-[rgba(8,15,23,0.9)]"
+                  className="group relative overflow-hidden border border-white/[0.08] bg-[rgba(5,11,17,0.72)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_14px_34px_rgba(0,0,0,0.24)] transition-all duration-300 hover:border-wez-cyan/30 hover:bg-[rgba(8,15,23,0.9)]"
                 >
                   <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-wez-cyan/50 to-transparent opacity-60" />
-                  <div className="grid gap-5 lg:grid-cols-[160px_minmax(0,1fr)]">
+                  <div className="grid gap-3 lg:grid-cols-[140px_minmax(0,1fr)]">
                     <div className="flex items-start gap-3">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-wez-cyan/25 bg-wez-cyan/[0.04] text-wez-cyan">
                         <Icon size={17} strokeWidth={1.7} />
@@ -117,13 +117,13 @@ export const LegacySection = () => {
                     </div>
 
                     <div>
-                      <h3 className="font-display text-xl font-bold leading-tight text-zinc-50 group-hover:text-wez-cyan">
+                      <h3 className="font-display text-lg font-bold leading-tight text-zinc-50 group-hover:text-wez-cyan">
                         {item.title}
                       </h3>
-                      <p className="mt-2 font-mono text-sm leading-relaxed text-zinc-400">
+                      <p className="mt-2 font-mono text-sm leading-snug text-zinc-400">
                         {item.role}
                       </p>
-                      <div className="mt-4 flex flex-wrap gap-2">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         {item.details.map((detail) => (
                           <span
                             key={detail}
@@ -139,7 +139,7 @@ export const LegacySection = () => {
               );
             })}
 
-            <div className="flex flex-wrap items-center gap-4 border border-crimson/20 bg-crimson/[0.055] p-4 font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
+            <div className="flex flex-wrap items-center gap-4 border border-crimson/20 bg-crimson/[0.055] p-3 font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
               <LineChart size={15} className="text-crimson" strokeWidth={1.7} />
               <span><span className="text-crimson">//</span> Trajectory: data systems, interface craft, applied AI</span>
             </div>

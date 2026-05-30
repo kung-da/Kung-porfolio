@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: clamp(7rem, 13vh, 10rem) 1.5rem clamp(6rem, 12vh, 9rem);
+  padding: clamp(4.5rem, 8vh, 6.25rem) 1.5rem clamp(3rem, 5.5vh, 4.25rem);
   background: transparent;
 }
 
@@ -101,16 +101,16 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: clamp(3rem, 5.5vw, 5.25rem);
+  gap: clamp(2.25rem, 4.4vw, 4rem);
   width: 100%;
-  max-width: 1120px;
+  max-width: 1040px;
   transform: translateY(0);
 }
 
 .about-kung-card {
   position: relative;
   flex-shrink: 0;
-  width: clamp(320px, 23vw, 390px);
+  width: clamp(280px, 21vw, 350px);
   margin: 0;
   overflow: hidden;
   border: 1px solid rgba(160, 180, 190, 0.24);
@@ -188,8 +188,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  min-height: 58px;
-  padding: 0 22px;
+  min-height: 50px;
+  padding: 0 18px;
   border-bottom: 1px solid rgba(160, 180, 190, 0.12);
   background: rgba(5, 8, 12, 0.36);
   backdrop-filter: blur(12px);
@@ -234,7 +234,7 @@
 
 .about-kung-card__image-area {
   position: relative;
-  height: clamp(390px, 30vw, 500px);
+  height: clamp(300px, 25vw, 390px);
   overflow: hidden;
   background:
     radial-gradient(circle at 70% 38%, rgba(255, 45, 45, 0.08), transparent 26%),
@@ -416,7 +416,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 6px 14px;
   align-items: end;
-  padding: 16px 20px 14px;
+  padding: 12px 16px 11px;
   border-top: 1px solid rgba(160, 180, 190, 0.12);
   background: rgba(5, 8, 12, 0.58);
   backdrop-filter: blur(12px);
@@ -528,7 +528,7 @@
   --about-kung-sweep-ease: ease-in-out;
   margin-bottom: 14px;
   font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
-  font-size: clamp(56px, 5.2vw, 88px);
+  font-size: clamp(46px, 4.4vw, 72px);
   line-height: 0.95;
   letter-spacing: 0.04em;
   color: #fff;
@@ -551,7 +551,7 @@
 .about-kung-red-dashes {
   display: flex;
   gap: 5px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   overflow: hidden;
   --about-kung-sweep-duration: 2.45s;
   --about-kung-sweep-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -611,10 +611,10 @@
 
 .about-kung-bio {
   max-width: 640px;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
   font-family: Barlow, Inter, system-ui, sans-serif;
-  font-size: clamp(15px, 0.96vw, 17px);
-  line-height: 1.75;
+  font-size: clamp(14px, 0.9vw, 16px);
+  line-height: 1.62;
   color: rgba(209, 213, 219, 0.88);
 }
 
@@ -671,8 +671,8 @@
 @media (max-width: 760px) {
   .about-kung-section {
     padding-inline: 1rem;
-    min-height: auto;
-    padding-block: 4rem 5.5rem;
+    min-height: 100svh;
+    padding-block: 2.75rem 3rem;
   }
 
   .about-kung-inner {
@@ -689,7 +689,7 @@
   }
 
   .about-kung-card__image-area {
-    height: 390px;
+    height: min(38svh, 260px);
   }
 
   .about-kung-card__footer {

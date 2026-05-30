@@ -36,7 +36,7 @@ const SkeletonCard = ({ i }: { i: number }) => (
     initial={{ opacity: 0 }}
     animate={{ opacity: [0.28, 0.58, 0.28] }}
     transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.15 }}
-    className="min-h-[340px] border border-white/[0.08] bg-[rgba(5,11,17,0.68)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+    className="min-h-[240px] border border-white/[0.08] bg-[rgba(5,11,17,0.68)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
   />
 );
 
@@ -94,14 +94,14 @@ const MissionCard = ({ project: p, index }: CardProps) => {
           openDetail();
         }
       }}
-      className="group relative flex min-h-[300px] cursor-pointer flex-col overflow-hidden border border-white/[0.09] bg-[rgba(5,11,17,0.72)] shadow-[inset_0_1px_0_rgba(255,255,255,0.045),0_18px_44px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1 hover:border-wez-cyan/35 hover:bg-[rgba(8,15,23,0.9)] hover:shadow-[0_0_28px_rgba(143,239,255,0.10),0_24px_54px_rgba(0,0,0,0.32)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wez-cyan"
+    className="group relative flex min-h-[240px] cursor-pointer flex-col overflow-hidden border border-white/[0.09] bg-[rgba(5,11,17,0.72)] shadow-[inset_0_1px_0_rgba(255,255,255,0.045),0_18px_44px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1 hover:border-wez-cyan/35 hover:bg-[rgba(8,15,23,0.9)] hover:shadow-[0_0_28px_rgba(143,239,255,0.10),0_24px_54px_rgba(0,0,0,0.32)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wez-cyan"
     >
       <div className="absolute inset-x-0 top-0 h-px opacity-90" style={{ background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)` }} aria-hidden="true" />
       <div className="absolute inset-0 opacity-80" style={{ background: `radial-gradient(circle at 16% 0%, ${meta.tint}, transparent 34%), radial-gradient(circle at 96% 16%, rgba(214,58,74,0.07), transparent 30%)` }} aria-hidden="true" />
       <div className="absolute bottom-0 left-0 top-0 w-1 opacity-80" style={{ background: meta.color }} aria-hidden="true" />
 
-      <div className="relative z-10 flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-5 flex items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
+      <div className="relative z-10 flex flex-1 flex-col p-4 sm:p-5">
+        <div className="mb-3 flex items-center justify-between gap-4 border-b border-white/[0.08] pb-3">
           <div className="flex min-w-0 items-center gap-3">
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-500">
               #{String(index + 1).padStart(2, "0")}
@@ -119,15 +119,15 @@ const MissionCard = ({ project: p, index }: CardProps) => {
           )}
         </div>
 
-        <h3 className="font-display text-2xl font-bold leading-tight text-zinc-50 transition-colors duration-200 group-hover:text-wez-cyan">
+        <h3 className="font-display text-xl font-bold leading-tight text-zinc-50 transition-colors duration-200 group-hover:text-wez-cyan">
           {p.name}
         </h3>
 
-        <p className="mt-4 min-h-[72px] font-mono text-sm leading-7 text-zinc-400 line-clamp-3">
+        <p className="mt-3 min-h-[48px] font-mono text-sm leading-6 text-zinc-400 line-clamp-2">
           {p.description}
         </p>
 
-        <div className="mt-5 flex min-h-[60px] flex-wrap content-start gap-2">
+        <div className="mt-4 flex min-h-[38px] flex-wrap content-start gap-2">
           {visibleTech.map((tech) => (
             <span
               key={tech}
@@ -143,7 +143,7 @@ const MissionCard = ({ project: p, index }: CardProps) => {
           )}
         </div>
 
-        <div className="mt-auto flex items-center gap-2 border-t border-white/[0.08] pt-5">
+        <div className="mt-auto flex items-center gap-2 border-t border-white/[0.08] pt-4">
           <span className="flex flex-1 items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-zinc-300 transition-colors group-hover:text-wez-cyan">
             View dossier
             <ArrowUpRight size={14} strokeWidth={1.7} />
@@ -205,7 +205,7 @@ export const RaidArchives = () => {
           variants={headerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="mb-8 md:mb-9"
+          className="mb-5 md:mb-6"
         >
           <div className="flex max-w-[760px] items-center gap-4">
             <Database size={17} className="text-crimson" strokeWidth={1.6} />
@@ -216,13 +216,13 @@ export const RaidArchives = () => {
           </div>
 
           <h2
-            className="section-title mt-5 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="section-title mt-3 max-w-4xl font-display text-4xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_18px_rgba(214,58,74,0.34)] sm:text-5xl lg:text-6xl"
             data-text="PROJECTS"
           >
             Projects
           </h2>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-3">
             <StatPill label="Total" value={total} />
             <StatPill label="Featured" value={featured} tone="crimson" />
             <StatPill label="Archive" value={other} tone="zinc" />
@@ -233,7 +233,7 @@ export const RaidArchives = () => {
           initial={{ opacity: 0, y: 14 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.12, duration: 0.35 }}
-          className="mb-6 grid gap-4 border border-white/[0.09] bg-[rgba(5,11,17,0.72)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.045),0_16px_34px_rgba(0,0,0,0.2)] lg:grid-cols-[minmax(0,1fr)_auto]"
+          className="mb-4 grid gap-3 border border-white/[0.09] bg-[rgba(5,11,17,0.72)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.045),0_16px_34px_rgba(0,0,0,0.2)] lg:grid-cols-[minmax(0,1fr)_auto]"
         >
           <div className="flex min-w-0 items-center gap-3">
             <Search size={16} className="shrink-0 text-wez-cyan" strokeWidth={1.6} />
@@ -263,7 +263,7 @@ export const RaidArchives = () => {
             Project database unavailable
           </div>
         ) : loading ? (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <div data-native-scroll className="snap-scroll-region grid grid-cols-1 gap-4 pr-1 sm:grid-cols-2 xl:grid-cols-3">
             {[0, 1, 2].map((i) => <SkeletonCard key={i} i={i} />)}
           </div>
         ) : filtered.length === 0 ? (
@@ -272,7 +272,7 @@ export const RaidArchives = () => {
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
-            <motion.div layout className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-3">
+            <motion.div data-native-scroll layout className="snap-scroll-region grid grid-cols-1 gap-4 pr-1 lg:grid-cols-2 2xl:grid-cols-3">
               {filtered.map((project, index) => (
                 <MissionCard key={project.id} project={project} index={index} />
               ))}

@@ -28,7 +28,7 @@ export const ContactTerminal = () => {
           initial={{ opacity: 0, y: -16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-7 text-center"
+          className="mb-5 text-center"
         >
           <div className="mx-auto flex max-w-[380px] items-center justify-center gap-3">
             <span className="h-px flex-1 bg-gradient-to-r from-transparent via-crimson/50 to-crimson/20" />
@@ -40,7 +40,7 @@ export const ContactTerminal = () => {
           </div>
 
           <h2
-            className="section-title mt-4 font-display text-3xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_16px_rgba(214,58,74,0.28)] sm:text-4xl"
+            className="section-title mt-3 font-display text-3xl font-bold uppercase leading-none tracking-[0.04em] text-zinc-50 drop-shadow-[0_0_16px_rgba(214,58,74,0.28)] sm:text-4xl"
             data-text="CONTACT"
           >
             Contact

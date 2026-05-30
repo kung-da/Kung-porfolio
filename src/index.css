@@ -133,13 +133,13 @@
 
   .content-section {
     scroll-margin-top: var(--fixed-header-space);
-    min-height: calc(100svh - var(--fixed-header-space));
+    min-height: 100svh;
     display: flex;
     align-items: center;
     content-visibility: auto;
     contain-intrinsic-size: 900px;
-    padding-top: clamp(7rem, 13vh, 10rem);
-    padding-bottom: clamp(6rem, 12vh, 9rem);
+    padding-top: clamp(4.5rem, 8vh, 6.25rem);
+    padding-bottom: clamp(3rem, 5.5vh, 4.25rem);
   }
 
   .section-continuum {
@@ -182,6 +182,47 @@
     isolation: isolate;
     overflow: hidden;
     background: #000;
+  }
+
+  .site-page-snap {
+    scroll-padding-top: 0;
+    scroll-snap-type: y proximity;
+    overscroll-behavior-y: contain;
+  }
+
+  .site-page-snap body {
+    overscroll-behavior-y: contain;
+  }
+
+  .snap-panel {
+    min-height: 100svh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .snap-panel > .content-section,
+  .snap-panel > .about-kung-section {
+    min-height: 100svh;
+  }
+
+  .snap-scroll-region {
+    max-height: min(54svh, 560px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(214, 58, 74, 0.7) rgba(255, 255, 255, 0.04);
+  }
+
+  .snap-scroll-region::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .snap-scroll-region::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .snap-scroll-region::-webkit-scrollbar-thumb {
+    background: rgba(214, 58, 74, 0.72);
   }
 
   .is-wheel-scrolling .content-section:not(.skills-section) .backdrop-blur-sm,
@@ -418,9 +459,14 @@
 
 @media (max-width: 760px) {
   .content-section {
-    min-height: auto;
-    padding-top: 4rem;
-    padding-bottom: 5.5rem;
+    min-height: 100svh;
+    padding-top: 3.25rem;
+    padding-bottom: 4rem;
+  }
+
+  .snap-scroll-region {
+    max-height: none;
+    overflow: visible;
   }
 }
 
