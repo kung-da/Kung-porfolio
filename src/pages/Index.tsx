@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useCallback, useState, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { BossHPBar } from "@/components/BossHPBar";
@@ -43,7 +43,24 @@ const getCurrentSnapIndex = (sections: HTMLElement[]) => {
   return current;
 };
 
+const canScrollInDirection = (element: HTMLElement, direction: number) => {
+  const canScrollDown = element.scrollTop + element.clientHeight < element.scrollHeight - 1;
+  const canScrollUp = element.scrollTop > 1;
+  return (direction > 0 && canScrollDown) || (direction < 0 && canScrollUp);
+};
+
 const shouldLetNativeScrollHandle = (event: WheelEvent, direction: number) => {
+  const targetElement = event.target instanceof Element
+    ? event.target
+    : event.target instanceof Node
+      ? event.target.parentElement
+      : null;
+  const nativeScrollRegion = targetElement?.closest("[data-native-scroll]");
+
+  if (nativeScrollRegion instanceof HTMLElement && canScrollInDirection(nativeScrollRegion, direction)) {
+    return true;
+  }
+
   let node = event.target as Node | null;
 
   while (node && node !== document.body) {
@@ -53,9 +70,7 @@ const shouldLetNativeScrollHandle = (event: WheelEvent, direction: number) => {
         /(auto|scroll|overlay)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 1;
 
       if (canScrollY) {
-        const canScrollDown = node.scrollTop + node.clientHeight < node.scrollHeight - 1;
-        const canScrollUp = node.scrollTop > 1;
-        if ((direction > 0 && canScrollDown) || (direction < 0 && canScrollUp)) return true;
+        if (canScrollInDirection(node, direction)) return true;
       }
     }
 
@@ -70,6 +85,7 @@ const Index = () => {
     typeof window !== "undefined" && !sessionStorage.getItem("booted")
   );
   useEnragedMode();
+  const handleLoadingComplete = useCallback(() => setIsLoading(false), []);
 
   useEffect(() => {
     if (!isLoading) sessionStorage.setItem("booted", "true");
@@ -156,7 +172,7 @@ const Index = () => {
       <Navigation />
 
       <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+        {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
       </AnimatePresence>
 
       {/* Main content with optimized entrance animation */}

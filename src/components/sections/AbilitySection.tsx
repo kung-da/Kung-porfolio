@@ -1,5 +1,5 @@
 // Skills section
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import type { ElementType, ReactNode } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
@@ -181,6 +181,7 @@ type Domain = typeof DOMAINS[number];
 type Skill = typeof DOMAINS[number]["skills"][number];
 const BAR_SEGMENTS = Array.from({ length: 10 });
 const DOSSIER_SIGNAL_BARS = Array.from({ length: 18 });
+const DOSSIER_SIGNAL_BAR_HEIGHTS = DOSSIER_SIGNAL_BARS.map((_, index) => 14 + ((index * 7) % 22));
 const STATUS_DOTS = Array.from({ length: 4 });
 
 const SegmentedBar = ({
@@ -216,7 +217,7 @@ const SegmentedBar = ({
   );
 };
 
-const CategoryNav = ({
+const CategoryNav = memo(({
   activeDomain,
   onSelect,
 }: {
@@ -290,7 +291,9 @@ const CategoryNav = ({
       />
     </aside>
   );
-};
+});
+
+CategoryNav.displayName = "CategoryNav";
 
 const SkillCard = memo(({
   skill,
@@ -508,11 +511,11 @@ const SkillDossier = memo(({
     <div className="relative mt-4 border-t border-white/[0.08] pt-4">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
-          {DOSSIER_SIGNAL_BARS.map((_, index) => (
+          {DOSSIER_SIGNAL_BAR_HEIGHTS.map((height, index) => (
             <span
               key={index}
               className="w-[2px] bg-zinc-200/75"
-              style={{ height: `${14 + ((index * 7) % 22)}px` }}
+              style={{ height: `${height}px` }}
             />
           ))}
         </div>
@@ -531,7 +534,7 @@ const SkillDossier = memo(({
 
 SkillDossier.displayName = "SkillDossier";
 
-const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
+const EmptySkillDossier = memo(({ colors }: { colors: ColorTheme }) => (
   <aside
     className="relative min-h-[430px] overflow-hidden border bg-black/50 p-5 shadow-[0_18px_48px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(7%_0,94%_0,100%_7%,100%_93%,93%_100%,7%_100%,0_93%,0_7%)] xl:min-h-[500px]"
     style={{
@@ -590,11 +593,11 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
     <div className="relative mt-4 border-t border-white/[0.08] pt-4 opacity-45">
       <div className="flex items-end justify-between gap-5">
         <div className="flex h-8 min-w-0 items-end gap-[3px] overflow-hidden">
-          {DOSSIER_SIGNAL_BARS.map((_, index) => (
+          {DOSSIER_SIGNAL_BAR_HEIGHTS.map((height, index) => (
             <span
               key={index}
               className="w-[2px] bg-zinc-500/45"
-              style={{ height: `${14 + ((index * 7) % 22)}px` }}
+              style={{ height: `${height}px` }}
             />
           ))}
         </div>
@@ -604,27 +607,35 @@ const EmptySkillDossier = ({ colors }: { colors: ColorTheme }) => (
       </div>
     </div>
   </aside>
-);
+));
+
+EmptySkillDossier.displayName = "EmptySkillDossier";
 
 export const AbilitySection = () => {
   const [activeDomain, setActiveDomain] = useState<DomainId>("pipeline");
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const ref = useRef<HTMLElement>(null!);
   const inView = useInView(ref, { once: true, margin: "-10%" });
-  const currentDomain = DOMAINS.find((domain) => domain.id === activeDomain)!;
+  const currentDomain = useMemo(
+    () => DOMAINS.find((domain) => domain.id === activeDomain)!,
+    [activeDomain]
+  );
   const colors = DOMAIN_COLORS[activeDomain];
-  const activeSkill = selectedSkill && currentDomain.skills.some((skill) => skill.name === selectedSkill.name)
-    ? selectedSkill
-    : null;
+  const activeSkill = useMemo(
+    () => selectedSkill && currentDomain.skills.some((skill) => skill.name === selectedSkill.name)
+      ? selectedSkill
+      : null,
+    [currentDomain, selectedSkill]
+  );
   const overviewScore = useMemo(() => {
     const allSkills = DOMAINS.flatMap((domain) => domain.skills);
     return Math.round(allSkills.reduce((sum, skill) => sum + skill.lvl, 0) / allSkills.length);
   }, []);
 
-  const selectDomain = (domain: Domain) => {
+  const selectDomain = useCallback((domain: Domain) => {
     setActiveDomain(domain.id);
     setSelectedSkill(null);
-  };
+  }, []);
 
   return (
     <section

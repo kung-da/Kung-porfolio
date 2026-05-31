@@ -70,7 +70,11 @@ export const LegacySection = () => {
               <img
                 src={experienceImage}
                 alt="Experience visual"
+                width={1600}
+                height={914}
                 loading="lazy"
+                decoding="async"
+                sizes="(min-width: 1280px) 380px, calc(100vw - 40px)"
                 className="h-full w-full object-cover opacity-85 saturate-[0.86]"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,8,0.86)),radial-gradient(circle_at_70%_20%,rgba(214,58,74,0.24),transparent_30%)]" />

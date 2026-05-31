@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 type ProfileSystemFrameProps = {
   imageSrc: string;
   imageAlt?: string;
@@ -5,7 +7,7 @@ type ProfileSystemFrameProps = {
 
 const footerBars = Array.from({ length: 28 }, (_, index) => index);
 
-export const ProfileSystemFrame = ({ imageSrc, imageAlt = "Kung profile" }: ProfileSystemFrameProps) => {
+export const ProfileSystemFrame = memo(({ imageSrc, imageAlt = "Kung profile" }: ProfileSystemFrameProps) => {
   return (
     <figure className="about-kung-card" aria-label="Kung profile system frame">
       <span className="about-kung-card__edge about-kung-card__edge--top" aria-hidden="true" />
@@ -21,7 +23,15 @@ export const ProfileSystemFrame = ({ imageSrc, imageAlt = "Kung profile" }: Prof
       </div>
 
       <div className="about-kung-card__image-area">
-        <img src={imageSrc} alt={imageAlt} loading="lazy" className="about-kung-card__image" />
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          width={821}
+          height={895}
+          loading="lazy"
+          decoding="async"
+          className="about-kung-card__image"
+        />
         <span className="about-kung-card__city-glow" aria-hidden="true" />
         <span className="about-kung-card__grid" aria-hidden="true" />
         <span className="about-kung-card__corner about-kung-card__corner--tl" aria-hidden="true" />
@@ -61,4 +71,6 @@ export const ProfileSystemFrame = ({ imageSrc, imageAlt = "Kung profile" }: Prof
       </figcaption>
     </figure>
   );
-};
+});
+
+ProfileSystemFrame.displayName = "ProfileSystemFrame";

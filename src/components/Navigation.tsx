@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CircuitBoard, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,11 @@ const LINKS = [
   { label: "EXPERIENCE", id: "experience", jp: "経験" },
   { label: "CONTACT", id: "contact", jp: "連絡" },
 ];
+
+const HEADER_TICKS = Array.from({ length: 5 }, (_, index) => index);
+const STATUS_LINE_WIDTHS = [14, 10, 14];
+const MOBILE_SCROLL_OFFSET = 48;
+const SCROLL_UNLOCK_MS = 850;
 
 const headerShellStyle = {
   background:
@@ -29,6 +34,7 @@ export const Navigation = () => {
   const [open, setOpen] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
   const isScrollingRef = useRef(false);
+  const scrollUnlockTimerRef = useRef(0);
 
   useEffect(() => {
     let raf = 0;
@@ -37,7 +43,8 @@ export const Navigation = () => {
       raf = 0;
       const hero = document.getElementById("home");
       const heroBottom = hero ? hero.offsetTop + hero.offsetHeight : window.innerHeight;
-      setIsPastHero(window.scrollY > heroBottom - 120);
+      const nextIsPastHero = window.scrollY > heroBottom - 120;
+      setIsPastHero((current) => (current === nextIsPastHero ? current : nextIsPastHero));
     };
 
     const onScroll = () => {
@@ -72,7 +79,7 @@ export const Navigation = () => {
           }
         });
 
-        if (bestId) setActive(bestId);
+        if (bestId) setActive((current) => (current === bestId ? current : bestId));
       },
       { rootMargin: "-22% 0px -28% 0px", threshold: [0.1, 0.25, 0.5, 0.75] }
     );
@@ -100,7 +107,13 @@ export const Navigation = () => {
     if (!isPastHero) setOpen(false);
   }, [isPastHero]);
 
-  const scrollTo = (id: string) => {
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(scrollUnlockTimerRef.current);
+    };
+  }, []);
+
+  const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
 
@@ -108,14 +121,15 @@ export const Navigation = () => {
     setOpen(false);
     isScrollingRef.current = true;
 
-    const offset = id === "home" || window.innerWidth >= 768 ? 0 : 48;
+    const offset = id === "home" || window.innerWidth >= 768 ? 0 : MOBILE_SCROLL_OFFSET;
     const targetTop = el.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top: targetTop, behavior: "smooth" });
 
-    window.setTimeout(() => {
+    window.clearTimeout(scrollUnlockTimerRef.current);
+    scrollUnlockTimerRef.current = window.setTimeout(() => {
       isScrollingRef.current = false;
-    }, 850);
-  };
+    }, SCROLL_UNLOCK_MS);
+  }, []);
 
   return (
     <header
@@ -141,7 +155,7 @@ export const Navigation = () => {
           <span className="pointer-events-none absolute left-[4px] top-[4px] h-2.5 w-2.5 border-l border-t border-wez-cyan/60" />
           <span className="pointer-events-none absolute bottom-[4px] right-[4px] h-2.5 w-2.5 border-b border-r border-wez-cyan/60" />
           <div className="absolute left-1/2 top-1.5 flex -translate-x-1/2 gap-1.5" aria-hidden="true">
-            {Array.from({ length: 5 }).map((_, index) => (
+            {HEADER_TICKS.map((index) => (
               <span key={index} className="h-0.5 w-1.5 bg-wez-cyan/45" />
             ))}
           </div>
@@ -230,7 +244,7 @@ export const Navigation = () => {
               </div>
 
               <div className="hidden flex-col gap-[3px] lg:flex" aria-hidden="true">
-                {[14, 10, 14].map((width, index) => (
+                {STATUS_LINE_WIDTHS.map((width, index) => (
                   <span key={index} className={cn("h-[3px]", index === 1 ? "bg-white/35" : "bg-wez-cyan/55")} style={{ width }} />
                 ))}
               </div>

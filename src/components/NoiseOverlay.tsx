@@ -1,4 +1,6 @@
-export const NoiseOverlay = () => (
+import { memo } from "react";
+
+export const NoiseOverlay = memo(() => (
   <div
     className="noise-overlay fixed inset-0 pointer-events-none z-[9999]"
     style={{
@@ -11,4 +13,6 @@ export const NoiseOverlay = () => (
       transform: "translateZ(0)",
     }}
   />
-);
+));
+
+NoiseOverlay.displayName = "NoiseOverlay";

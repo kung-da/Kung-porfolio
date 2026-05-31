@@ -59,7 +59,10 @@ export const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     <img
                       src={wazaemonImg}
                       alt="Wezaemon"
-                      loading="lazy"
+                      width={1473}
+                      height={827}
+                      loading="eager"
+                      decoding="async"
                       className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 transition-all duration-1000"
                     />
                     <div className="absolute inset-0 bg-gradient-to-tr from-black via-transparent to-white/20 opacity-60" />

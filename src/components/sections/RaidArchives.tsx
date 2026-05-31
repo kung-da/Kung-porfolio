@@ -1,5 +1,6 @@
 // Projects section
-import { useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
+import type { MouseEvent } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { ArrowUpRight, Database, ExternalLink, Github, Layers3, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import { useProjects } from "@/hooks/useProjects";
 
 const FILTERS = ["ALL", "Pipeline", "Dashboard", "Analytics", "Other"] as const;
 type Filter = typeof FILTERS[number];
+const SKELETON_ITEMS = [0, 1, 2];
 
 const CATEGORY_META: Record<string, { code: string; color: string; tint: string }> = {
   Pipeline: { code: "PIPE", color: "#8FEFFF", tint: "rgba(143,239,255,0.08)" },
@@ -31,16 +33,18 @@ const cardVariants = {
   exit: { opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.18 } },
 };
 
-const SkeletonCard = ({ i }: { i: number }) => (
+const SkeletonCard = memo(({ i }: { i: number }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: [0.28, 0.58, 0.28] }}
     transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.15 }}
     className="min-h-[240px] border border-white/[0.08] bg-[rgba(5,11,17,0.68)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
   />
-);
+));
 
-const StatPill = ({ label, value, tone = "cyan" }: { label: string; value: number; tone?: "cyan" | "crimson" | "zinc" }) => {
+SkeletonCard.displayName = "SkeletonCard";
+
+const StatPill = memo(({ label, value, tone = "cyan" }: { label: string; value: number; tone?: "cyan" | "crimson" | "zinc" }) => {
   const tones = {
     cyan: "border-wez-cyan/20 bg-wez-cyan/[0.045] text-wez-cyan",
     crimson: "border-crimson/25 bg-crimson/[0.06] text-enrage",
@@ -53,7 +57,9 @@ const StatPill = ({ label, value, tone = "cyan" }: { label: string; value: numbe
       <span className="text-zinc-500">{label}</span>
     </span>
   );
-};
+});
+
+StatPill.displayName = "StatPill";
 
 interface CardProps {
   project: {
@@ -70,11 +76,14 @@ interface CardProps {
   index: number;
 }
 
-const MissionCard = ({ project: p, index }: CardProps) => {
+const MissionCard = memo(({ project: p, index }: CardProps) => {
   const navigate = useNavigate();
   const meta = CATEGORY_META[p.category] ?? CATEGORY_META.Other;
-  const openDetail = () => navigate(`/projects/${p.slug}`);
-  const visibleTech = p.techStack.slice(0, 4);
+  const visibleTech = useMemo(() => p.techStack.slice(0, 4), [p.techStack]);
+  const openDetail = useCallback(() => navigate(`/projects/${p.slug}`), [navigate, p.slug]);
+  const stopCardClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
+  }, []);
 
   return (
     <motion.article
@@ -154,7 +163,7 @@ const MissionCard = ({ project: p, index }: CardProps) => {
               target="_blank"
               rel="noreferrer"
               aria-label={`View ${p.name} on GitHub`}
-              onClick={(event) => event.stopPropagation()}
+              onClick={stopCardClick}
               className="flex h-9 w-9 items-center justify-center border border-wez-cyan/25 text-wez-cyan/70 transition-colors hover:border-wez-cyan hover:bg-wez-cyan/10 hover:text-wez-cyan"
             >
               <Github size={15} strokeWidth={1.8} />
@@ -166,7 +175,7 @@ const MissionCard = ({ project: p, index }: CardProps) => {
               target="_blank"
               rel="noreferrer"
               aria-label={`View live demo of ${p.name}`}
-              onClick={(event) => event.stopPropagation()}
+              onClick={stopCardClick}
               className="flex h-9 w-9 items-center justify-center border border-crimson/35 text-enrage/80 transition-colors hover:border-crimson hover:bg-crimson/10 hover:text-enrage"
             >
               <ExternalLink size={15} strokeWidth={1.8} />
@@ -176,7 +185,9 @@ const MissionCard = ({ project: p, index }: CardProps) => {
       </div>
     </motion.article>
   );
-};
+});
+
+MissionCard.displayName = "MissionCard";
 
 export const RaidArchives = () => {
   const { projects, loading, error } = useProjects();
@@ -189,9 +200,11 @@ export const RaidArchives = () => {
     return [...base].sort((a, b) => Number(b.featured) - Number(a.featured));
   }, [projects, filter]);
 
-  const total = projects.length;
-  const featured = projects.filter((p) => p.featured).length;
-  const other = total - featured;
+  const stats = useMemo(() => {
+    const total = projects.length;
+    const featured = projects.reduce((count, project) => count + Number(project.featured), 0);
+    return { total, featured, other: total - featured };
+  }, [projects]);
 
   return (
     <section
@@ -223,9 +236,9 @@ export const RaidArchives = () => {
           </h2>
 
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <StatPill label="Total" value={total} />
-            <StatPill label="Featured" value={featured} tone="crimson" />
-            <StatPill label="Archive" value={other} tone="zinc" />
+            <StatPill label="Total" value={stats.total} />
+            <StatPill label="Featured" value={stats.featured} tone="crimson" />
+            <StatPill label="Archive" value={stats.other} tone="zinc" />
           </div>
         </motion.header>
 
@@ -264,7 +277,7 @@ export const RaidArchives = () => {
           </div>
         ) : loading ? (
           <div data-native-scroll className="snap-scroll-region grid grid-cols-1 gap-4 pr-1 sm:grid-cols-2 xl:grid-cols-3">
-            {[0, 1, 2].map((i) => <SkeletonCard key={i} i={i} />)}
+            {SKELETON_ITEMS.map((i) => <SkeletonCard key={i} i={i} />)}
           </div>
         ) : filtered.length === 0 ? (
           <div className="border border-white/[0.08] bg-[rgba(5,11,17,0.6)] py-16 text-center font-mono text-xs uppercase tracking-[0.2em] text-crimson/70">

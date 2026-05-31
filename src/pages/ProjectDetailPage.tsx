@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import type { ProjectCard, ProjectDetail } from "../types/project";
 
+const PROJECTS_ENDPOINT = "/api/notion-projects";
+const PROJECT_REQUEST_TIMEOUT_MS = 10_000;
+const PROJECTS_SCROLL_DELAY_MS = 80;
+
 const CATEGORY_META: Record<string, { code: string; color: string }> = {
   Pipeline: { code: "PIPE", color: "#8FEFFF" },
   Dashboard: { code: "DASH", color: "#00FF88" },
@@ -101,7 +105,9 @@ function ProjectError({ type, onRetry }: { type: "not-found" | "network"; onRetr
             onClick={() => {
               sessionStorage.setItem("booted", "true");
               navigate("/");
-              setTimeout(() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }), 80);
+              window.setTimeout(() => {
+                document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+              }, PROJECTS_SCROLL_DELAY_MS);
             }}
             className="border border-wez-cyan/35 px-4 py-2 font-mono text-xs uppercase tracking-[0.14em] text-wez-cyan transition-colors hover:bg-wez-cyan/10"
           >
@@ -166,6 +172,7 @@ export default function ProjectDetailPage() {
   const [allCards, setAllCards] = useState<ProjectCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"not-found" | "network" | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     sessionStorage.setItem("booted", "true");
@@ -175,46 +182,56 @@ export default function ProjectDetailPage() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [slug]);
 
-  const fetchProject = useCallback(async () => {
+  useEffect(() => {
     if (!slug) return;
+
+    const controller = new AbortController();
+    let didTimeout = false;
 
     setLoading(true);
     setError(null);
 
-    const timeout = setTimeout(() => {
-      setLoading(false);
-      setError("network");
-    }, 10_000);
+    const timeout = window.setTimeout(() => {
+      didTimeout = true;
+      controller.abort();
+    }, PROJECT_REQUEST_TIMEOUT_MS);
 
-    try {
-      const [detailRes, listRes] = await Promise.all([
-        fetch(`/api/notion-projects?slug=${encodeURIComponent(slug)}`),
-        fetch("/api/notion-projects"),
-      ]);
+    const loadProject = async () => {
+      try {
+        const [detailRes, listRes] = await Promise.all([
+          fetch(`${PROJECTS_ENDPOINT}?slug=${encodeURIComponent(slug)}`, { signal: controller.signal }),
+          fetch(PROJECTS_ENDPOINT, { signal: controller.signal }),
+        ]);
 
-      clearTimeout(timeout);
+        if (!detailRes.ok || !listRes.ok) throw new Error("API error");
 
-      if (!detailRes.ok || !listRes.ok) throw new Error("API error");
+        const [detailData, listData] = await Promise.all([detailRes.json(), listRes.json()]);
 
-      const detailData = await detailRes.json();
-      const listData = await listRes.json();
+        if (controller.signal.aborted) return;
 
-      if (!detailData.project) {
-        setProject(null);
-        setError("not-found");
-      } else {
-        setProject(detailData.project);
-        setAllCards(listData.projects ?? []);
+        if (!detailData.project) {
+          setProject(null);
+          setError("not-found");
+        } else {
+          setProject(detailData.project);
+          setAllCards(listData.projects ?? []);
+        }
+      } catch {
+        if (controller.signal.aborted && !didTimeout) return;
+        setError("network");
+      } finally {
+        window.clearTimeout(timeout);
+        if (!controller.signal.aborted || didTimeout) setLoading(false);
       }
-    } catch {
-      clearTimeout(timeout);
-      setError("network");
-    } finally {
-      setLoading(false);
-    }
-  }, [slug]);
+    };
 
-  useEffect(() => { fetchProject(); }, [fetchProject]);
+    loadProject();
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [slug, retryCount]);
 
   useEffect(() => {
     if (!project) return;
@@ -236,8 +253,20 @@ export default function ProjectDetailPage() {
     };
   }, [project]);
 
+  const retryProject = useCallback(() => {
+    setRetryCount((count) => count + 1);
+  }, []);
+
+  const backToProjects = useCallback(() => {
+    sessionStorage.setItem("booted", "true");
+    navigate("/");
+    window.setTimeout(() => {
+      document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+    }, PROJECTS_SCROLL_DELAY_MS);
+  }, [navigate]);
+
   if (loading) return <ProjectDetailSkeleton />;
-  if (error) return <ProjectError type={error} onRetry={fetchProject} />;
+  if (error) return <ProjectError type={error} onRetry={retryProject} />;
   if (!project) return <ProjectError type="not-found" />;
 
   const currentIdx = allCards.findIndex((card) => card.slug === slug);
@@ -245,12 +274,6 @@ export default function ProjectDetailPage() {
   const nextProject = currentIdx >= 0 && currentIdx < allCards.length - 1 ? allCards[currentIdx + 1] : null;
   const category = CATEGORY_META[project.category] ?? CATEGORY_META.Other;
   const statusColor = STATUS_COLOR[project.status] ?? "#A1A1AA";
-
-  const backToProjects = () => {
-    sessionStorage.setItem("booted", "true");
-    navigate("/");
-    setTimeout(() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }), 80);
-  };
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#050505] text-zinc-100">
@@ -388,6 +411,8 @@ export default function ProjectDetailPage() {
                 alt={`${project.name} cover`}
                 className="h-full w-full object-cover opacity-85"
                 loading="lazy"
+                decoding="async"
+                sizes="(min-width: 1024px) 1360px, calc(100vw - 40px)"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.62)),radial-gradient(circle_at_70%_20%,rgba(143,239,255,0.14),transparent_34%)]" />
             </div>
