@@ -207,7 +207,7 @@ export const Navigation = () => {
                           "group relative flex min-h-7 items-center px-2.5 py-1 font-display text-[10px] font-semibold tracking-[0.16em] transition-all duration-200 lg:px-3",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                           isActive
-                            ? "text-[#E0E0E0] drop-shadow-[0_0_10px_rgba(143,239,255,0.4)]"
+                            ? "text-wez-cyan drop-shadow-[0_0_10px_rgba(143,239,255,0.4)]"
                             : "text-stone hover:text-wez-cyan"
                         )}
                       >
@@ -216,7 +216,7 @@ export const Navigation = () => {
                           className={cn(
                             "pointer-events-none absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-opacity duration-200",
                             isActive
-                              ? "bg-gradient-to-r from-transparent via-wez-cyan to-transparent opacity-100 shadow-[0_0_8px_rgba(143,239,255,0.55)]"
+                              ? "bg-wez-cyan opacity-70 shadow-[0_0_6px_rgba(143,239,255,0.45)]"
                               : "bg-wez-cyan opacity-0 shadow-[0_0_6px_rgba(143,239,255,0.45)] group-hover:opacity-70"
                           )}
                         />
