@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { BriefcaseBusiness, CalendarClock, Database, GitBranch, LineChart, Sparkles } from "lucide-react";
-import experienceImage from "@/assets/cleanest.jpeg";
+import experienceImage from "@/assets/master.png";
 
 const EXPERIENCE = [
   {
@@ -83,7 +83,7 @@ export const LegacySection = () => {
                   Current profile
                 </p>
                 <p className="mt-2 font-display text-2xl font-bold text-zinc-50">
-                  Data-focused builder
+                  Rank
                 </p>
               </div>
             </div>
