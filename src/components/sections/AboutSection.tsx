@@ -80,7 +80,7 @@ export const AboutSection = () => {
             className="about-kung-bio"
           >
             I'm Kung, a builder who loves turning ideas into impactful digital experiences. I focus on{" "}
-            <span>Data Engineering, Frontend</span> development, and <span>AI-assisted</span> projects to solve
+            <span>Data Engineering, Data Analysis</span> , and <span>AI-assisted</span> projects to solve
             real-world problems.
           </motion.p>
 
