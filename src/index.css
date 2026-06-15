@@ -239,6 +239,8 @@
   .skills-section {
     content-visibility: visible;
     contain-intrinsic-size: auto;
+    align-items: flex-start;
+    padding-top: max(var(--fixed-header-space), 12vh);
   }
 
   .is-wheel-scrolling .noise-overlay {

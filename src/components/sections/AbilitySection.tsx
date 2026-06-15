@@ -229,7 +229,7 @@ const CategoryNav = memo(({
 
   return (
     <aside
-      className="relative overflow-hidden border bg-black/50 shadow-[0_18px_46px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(4%_0,100%_0,100%_92%,93%_100%,0_100%,0_4%)]"
+      className="relative self-start overflow-hidden border bg-black/50 shadow-[0_18px_46px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(255,255,255,0.025)] backdrop-blur-lg [clip-path:polygon(4%_0,100%_0,100%_92%,93%_100%,0_100%,0_4%)]"
       style={{
         borderColor: "rgba(255,255,255,0.115)",
         boxShadow: "0 18px 46px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.025)",
@@ -254,7 +254,7 @@ const CategoryNav = memo(({
               key={domain.id}
               onClick={() => onSelect(domain)}
               className={[
-                "group relative flex w-full items-center gap-3 border-b border-white/[0.05] px-4 py-3 text-left transition-all duration-300",
+                "group relative flex min-h-[58px] w-full items-center gap-3 overflow-hidden border-b border-white/[0.05] px-4 py-2 text-left transition-colors duration-300",
                 "hover:bg-white/[0.025]",
                 active ? "shadow-[inset_2px_0_0_var(--domain-accent)]" : "text-zinc-300/80",
               ].join(" ")}
@@ -276,11 +276,11 @@ const CategoryNav = memo(({
               >
                 <Icon size={16} strokeWidth={1.65} />
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.12em] md:text-sm">
+              <span className="min-w-0 flex-1 text-xs font-medium uppercase leading-5 tracking-[0.12em] md:text-sm">
                 {domain.label}
               </span>
               {active && (
-                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-crimson/85" />
+                <span className="absolute right-4 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-crimson/85" />
               )}
             </button>
           );
@@ -683,7 +683,7 @@ export const AbilitySection = () => {
 
         <div
           className={[
-            "grid gap-4 lg:grid-cols-[250px_minmax(0,1fr)]",
+            "grid items-start gap-4 lg:grid-cols-[250px_minmax(0,1fr)]",
             "xl:grid-cols-[260px_minmax(0,1fr)_320px] 2xl:grid-cols-[280px_minmax(0,1fr)_340px]",
           ].join(" ")}
         >
@@ -691,7 +691,7 @@ export const AbilitySection = () => {
             initial={{ opacity: 0, x: -24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block"
+            className="hidden self-start lg:block"
           >
             <CategoryNav activeDomain={activeDomain} onSelect={selectDomain} />
           </motion.div>
@@ -755,7 +755,7 @@ export const AbilitySection = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 18 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden xl:block"
+              className="hidden self-start xl:block"
             >
               {activeSkill ? (
                 <SkillDossier skill={activeSkill} colors={colors} />
