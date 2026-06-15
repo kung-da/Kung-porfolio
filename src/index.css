@@ -243,6 +243,11 @@
     padding-top: max(var(--fixed-header-space), 12vh);
   }
 
+  .experience-section {
+    align-items: flex-start;
+    padding-top: max(var(--fixed-header-space), 11vh);
+  }
+
   .is-wheel-scrolling .noise-overlay {
     mix-blend-mode: normal !important;
     opacity: 0.035 !important;

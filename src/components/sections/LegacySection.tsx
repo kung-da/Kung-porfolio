@@ -1,6 +1,14 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { BriefcaseBusiness, CalendarClock, Database, GitBranch, LineChart, Sparkles } from "lucide-react";
-import experienceImage from "@/assets/master.png";
+import coastalCatImage from "@/assets/experience/coastal-cat.jpg";
+import coastalPortraitImage from "@/assets/experience/coastal-portrait.jpg";
+import mirrorPortraitImage from "@/assets/experience/mirror-portrait.jpg";
+import redPavilionImage from "@/assets/experience/red-pavilion.jpg";
+import vietnamCoastImage from "@/assets/experience/vietnam-coast.jpg";
+import vngCampusImage from "@/assets/experience/vng-campus.jpg";
+import vngPeopleWallImage from "@/assets/experience/vng-people-wall.jpg";
+import { Stack } from "@/components/ui/Stack";
 
 const EXPERIENCE = [
   {
@@ -27,10 +35,77 @@ const EXPERIENCE = [
 ];
 
 export const LegacySection = () => {
+  const experienceCards = useMemo(
+    () => [
+      {
+        image: coastalCatImage,
+        label: "Life archive",
+        title: "Quiet Moments",
+        position: "object-center",
+      },
+      {
+        image: vietnamCoastImage,
+        label: "Journey log",
+        title: "Vietnam Coast",
+        position: "object-center",
+      },
+      {
+        image: coastalPortraitImage,
+        label: "Personal archive",
+        title: "Open Horizon",
+        position: "object-center",
+      },
+      {
+        image: mirrorPortraitImage,
+        label: "Profile log",
+        title: "Daily Build",
+        position: "object-center",
+      },
+      {
+        image: redPavilionImage,
+        label: "Journey log",
+        title: "Exploration",
+        position: "object-center",
+      },
+      {
+        image: vngCampusImage,
+        label: "Experience archive",
+        title: "VNG Campus",
+        position: "object-center",
+      },
+      {
+        image: vngPeopleWallImage,
+        label: "Experience archive",
+        title: "We Are VNG",
+        position: "object-center",
+      },
+    ].map((card) => (
+      <div key={card.title} className="relative h-full w-full overflow-hidden bg-[#050b11]">
+        <img
+          src={card.image}
+          alt={`${card.title} experience`}
+          loading="lazy"
+          decoding="async"
+          className={`h-full w-full object-cover opacity-95 saturate-[0.9] ${card.position}`}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_48%,rgba(5,5,8,0.92)),radial-gradient(circle_at_70%_20%,rgba(214,58,74,0.12),transparent_34%)]" />
+        <div className="absolute inset-x-5 bottom-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-crimson/85">
+            {card.label}
+          </p>
+          <p className="mt-2 font-display text-xl font-bold text-zinc-50">
+            {card.title}
+          </p>
+        </div>
+      </div>
+    )),
+    []
+  );
+
   return (
     <section
       id="experience"
-      className="content-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
+      className="content-section experience-section relative isolate overflow-hidden px-5 text-zinc-100 sm:px-8 lg:px-12 xl:px-16"
       style={{ background: "#000" }}
     >
       <div className="container relative z-10 mx-auto w-full max-w-[1760px]">
@@ -57,36 +132,28 @@ export const LegacySection = () => {
           </h2>
         </motion.header>
 
-        <div className="grid gap-4 xl:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[380px_minmax(0,1fr)]">
+        <div className="grid items-start gap-5 xl:grid-cols-[320px_minmax(0,1fr)] 2xl:grid-cols-[350px_minmax(0,1fr)]">
           <motion.aside
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
-            className="relative overflow-hidden border border-crimson/25 bg-[rgba(5,11,17,0.72)] shadow-[inset_0_1px_0_rgba(214,58,74,0.08),0_18px_44px_rgba(0,0,0,0.3)]"
+            className="relative self-start overflow-hidden rounded-[28px] border border-crimson/20 bg-[rgba(5,11,17,0.45)] p-4 shadow-[inset_0_1px_0_rgba(214,58,74,0.08),0_18px_44px_rgba(0,0,0,0.3)]"
           >
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-crimson/70 to-transparent" />
-            <div className="relative h-[250px] overflow-hidden sm:h-[320px] xl:h-full xl:min-h-[460px]">
-              <img
-                src={experienceImage}
-                alt="Experience visual"
-                width={1600}
-                height={914}
-                loading="lazy"
-                decoding="async"
-                sizes="(min-width: 1280px) 380px, calc(100vw - 40px)"
-                className="h-full w-full object-cover opacity-85 saturate-[0.86]"
+            <div className="relative mx-auto aspect-square w-full max-w-[320px]">
+              <Stack
+                cards={experienceCards}
+                randomRotation
+                sensitivity={120}
+                sendToBackOnClick
+                mobileClickOnly
+                animationConfig={{ stiffness: 240, damping: 24 }}
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,8,0.86)),radial-gradient(circle_at_70%_20%,rgba(214,58,74,0.24),transparent_30%)]" />
-              <div className="absolute bottom-5 left-5 right-5">
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-crimson/80">
-                  Current profile
-                </p>
-                <p className="mt-2 font-display text-2xl font-bold text-zinc-50">
-                  Rank
-                </p>
-              </div>
             </div>
+            <p className="mt-3 text-center font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+              Drag or click to inspect stack
+            </p>
           </motion.aside>
 
           <motion.div
