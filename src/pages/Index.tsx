@@ -15,7 +15,7 @@ const RaidArchives = lazy(() => import("@/components/sections/RaidArchives").the
 const LegacySection = lazy(() => import("@/components/sections/LegacySection").then(m => ({ default: m.LegacySection })));
 const ContactTerminal = lazy(() => import("@/components/sections/ContactTerminal").then(m => ({ default: m.ContactTerminal })));
 
-const SNAP_SECTION_IDS = ["home", "about", "skills", "projects", "experience", "contact"];
+const SNAP_SECTION_IDS = ["home", "about", "skills", "projects", "experience", "contact", "footer"];
 const SNAP_LOCK_MS = 720;
 const SNAP_WHEEL_THRESHOLD = 18;
 

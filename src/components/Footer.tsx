@@ -28,7 +28,10 @@ export const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative flex flex-col items-center overflow-hidden bg-black pb-8 pt-16">
+    <footer
+      id="footer"
+      className="relative flex flex-col items-center overflow-hidden bg-black pb-8 pt-16 [scroll-snap-align:start]"
+    >
       <div className="absolute left-0 right-0 top-0 h-[2px] bg-[#D63A4A33]" />
       <div className="absolute left-0 right-0 top-0 h-px bg-[#D63A4A] opacity-40 shadow-[0_0_8px_#D63A4A44]" />
 
